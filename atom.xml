@@ -1,0 +1,2020 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://RoromoriYuzu.github.io</id>
+    <title>路路森</title>
+    <updated>2022-08-01T08:42:39.270Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://RoromoriYuzu.github.io"/>
+    <link rel="self" href="https://RoromoriYuzu.github.io/atom.xml"/>
+    <subtitle>生命不息，折腾不止</subtitle>
+    <logo>https://RoromoriYuzu.github.io/images/avatar.png</logo>
+    <icon>https://RoromoriYuzu.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2022, 路路森</rights>
+    <entry>
+        <title type="html"><![CDATA[教育优惠申请记录]]></title>
+        <id>https://RoromoriYuzu.github.io/post/egmmcpejT/</id>
+        <link href="https://RoromoriYuzu.github.io/post/egmmcpejT/">
+        </link>
+        <updated>2022-08-01T03:12:40.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#jetbrains">JetBrains</a>
+<ul>
+<li><a href="#%E4%BD%BF%E7%94%A8%E6%95%99%E8%82%B2%E9%82%AE%E7%AE%B1%E8%AE%A4%E8%AF%81">使用教育邮箱认证</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8%E5%AE%98%E6%96%B9%E6%96%87%E4%BB%B6%E8%AE%A4%E8%AF%81">使用官方文件认证</a></li>
+<li><a href="#%E6%B3%A8%E6%84%8F">注意</a></li>
+</ul>
+</li>
+<li><a href="#github-%E5%AD%A6%E7%94%9F%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7%E5%8C%85">GitHub 学生开发工具包</a>
+<ul>
+<li><a href="#%E6%95%99%E8%82%B2%E9%82%AE%E7%AE%B1">教育邮箱</a></li>
+<li><a href="#%E5%AD%A6%E7%94%9F%E8%AF%81%E4%BB%B6">学生证件</a>
+<ul>
+<li><a href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">注意事项</a></li>
+<li><a href="#%E7%94%B3%E8%AF%B7%E7%90%86%E7%94%B1%E6%A8%A1%E6%9D%BF">申请理由模板</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AD%A6%E7%94%9F%E5%8C%85%E9%87%8C%E7%9A%84%E5%86%85%E5%AE%B9%E7%89%A9">学生包里的内容物</a></li>
+<li><a href="#%E6%9B%B4%E5%A4%9A%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B">更多详细教程</a></li>
+</ul>
+</li>
+<li><a href="#azure-for-students">Azure for Students</a>
+<ul>
+<li><a href="#%E9%80%9A%E8%BF%87-github-%E8%B4%A6%E5%8F%B7%E6%8E%88%E6%9D%83%E7%99%BB%E5%BD%95">通过 Github 账号授权登录</a></li>
+<li><a href="#%E9%80%9A%E8%BF%87%E6%95%99%E8%82%B2%E9%82%AE%E7%AE%B1%E7%94%B3%E8%AF%B7">通过教育邮箱申请</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E8%AE%A2%E9%98%85">查看订阅</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E5%89%A9%E4%BD%99%E9%A2%9D%E5%BA%A6">查看剩余额度</a></li>
+<li><a href="#azure-%E4%B8%BB%E6%9C%BA%E7%94%B3%E8%AF%B7">Azure 主机申请</a>
+<ul>
+<li><a href="#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8">创建服务器</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8%E9%9D%99%E6%80%81-ip%E5%8F%AF%E9%80%89">使用静态 ip（可选）</a></li>
+<li><a href="#%E5%A2%9E%E5%8A%A0%E5%85%A5%E7%AB%99%E5%87%BA%E7%AB%99%E7%AB%AF%E5%8F%A3%E5%8F%AF%E9%80%89">增加入站出站端口（可选）</a></li>
+<li><a href="#%E5%A2%9E%E5%8A%A0%E4%B8%80%E5%9D%97-p6-%E7%A1%AC%E7%9B%98%E5%8F%AF%E9%80%89">增加一块 p6 硬盘（可选）</a></li>
+<li><a href="#%E5%BC%BA%E5%88%B6%E5%BC%80%E5%90%AF-root-%E8%B4%A6%E5%8F%B7%E5%8F%AF%E9%80%89">强制开启 root 账号（可选）</a></li>
+<li><a href="#%E5%BF%AB%E7%85%A7%E8%BF%98%E5%8E%9F">快照还原</a>
+<ul>
+<li><a href="#%E5%88%9B%E5%BB%BA%E5%BF%AB%E7%85%A7">创建快照</a></li>
+<li><a href="#%E8%BF%98%E5%8E%9F%E5%BF%AB%E7%85%A7">还原快照</a></li>
+</ul>
+</li>
+<li><a href="#%E5%90%8E%E7%BB%AD%E8%AE%A1%E8%B4%B9">后续计费</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#office-a1-%E8%AE%B8%E5%8F%AF%E8%AF%81">Office A1 许可证</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="jetbrains">JetBrains</h2>
+<p>申请 <a href="https://www.jetbrains.com/shop/eform/students">地址</a></p>
+<h3 id="使用教育邮箱认证">使用教育邮箱认证</h3>
+<p>邮箱要填已经激活的学校提供的学生邮箱。<br>
+如果点击申请后出现提示说邮箱没有被列入 <a href="https://www.edumails.cn/jetbrains%E5%85%A8%E5%AE%B6%E6%A1%B6%E6%95%99%E8%82%B2%E6%8E%88%E6%9D%83%E8%AE%B8%E5%8F%AFedu%E9%82%AE%E7%AE%B1%E9%BB%91%E5%90%8D%E5%8D%95%E5%88%97%E8%A1%A8.html">名单</a> 中，则要提交你学校的邮箱，获取身份认证。<br>
+这个具体按照官方给的提示进行。 收到邮件后之后可直接按照邮件内容操作。</p>
+<h3 id="使用官方文件认证">使用官方文件认证</h3>
+<blockquote>
+<p>只针对有国家承认学历专科及以上学历人使用</p>
+</blockquote>
+<ol>
+<li>进入学信网并登录 <a href="https://account.chsi.com.cn/passport/login?service=https://my.chsi.com.cn/archive/j_spring_cas_security_check">入口</a></li>
+<li>选择高等教育信息下的 <a href="https://my.chsi.com.cn/archive/gdjy/check/show.action?from=xj">学籍</a></li>
+<li>选择 查看该学籍的在线验证报告 （没有的话申请一个）然后选择 查看 ，下载PDF</li>
+<li>在 JetBrains 的申请页面选择官方文件，依次填写最后提交等待审核通过。</li>
+</ol>
+<h3 id="注意">注意</h3>
+<p>申请这一次后，可以免费使用JetBrains全家桶 一年。时间到了之后 每年可重新去官网认证，每次持续一年。</p>
+<h2 id="github-学生开发工具包">GitHub 学生开发工具包</h2>
+<blockquote>
+<p>认证方式：校园邮箱，学生证</p>
+</blockquote>
+<p>进入 <a href="https://education.github.com/students">Github学生包</a> 点击按钮 Get benefits for students，进入申请页面。申请需要身份认证</p>
+<h3 id="教育邮箱">教育邮箱</h3>
+<p>​	如果你有学校的 edu 邮箱，可以添加进 <a href="https://github.com/settings/emails">GitHub 账户邮箱</a> 中，以认证学生身份，来提高成功率。</p>
+<h3 id="学生证件">学生证件</h3>
+<h4 id="注意事项">注意事项</h4>
+<ul>
+<li>在纯色背景（白色最佳，例如在 A4 打印纸上）拍摄学生证件，具有明确学校名称，日期，姓名等。</li>
+<li>附上关键部分的英文翻译，可参考网上模板（出国留学者经常需要翻译学生证件）</li>
+<li>其中务必需要包含几个内容：
+<ul>
+<li>学籍信息以及有效时间。</li>
+<li>身份信息。</li>
+</ul>
+</li>
+<li>关掉梯子，在申请时会获取你的地址，要确保当前地址和学校地址一致，否则有很大机率秒拒。</li>
+<li>(可选)身份证 ID 建议打码并在图片角落注明打码原因。</li>
+<li>(可选)学生证件照片添加签注（在证件头像附近添加，保证难以 PS 掉），以防他用。</li>
+</ul>
+<h4 id="申请理由模板">申请理由模板</h4>
+<blockquote>
+<ol>
+<li>Contribute to other open source projects. GitHub has a very nice way of making people learn to give credits to someone’s code if they are using it. Learn those etiquettes</li>
+<li>Star cool projects or lists. Staring is a kind of bookmarking on GitHub</li>
+<li>Follow people, you feel, you can learn something from their activity and if you want to use GitHub as a socialnetwork</li>
+<li>I want to use the github student package to build a private repository managing project courses and conducting related research.</li>
+</ol>
+</blockquote>
+<h3 id="学生包里的内容物">学生包里的内容物</h3>
+<p>这里只举例受欢迎排名前30的资源：</p>
+<ul>
+<li><a href="https://www.xiaolanhhy.com/go?_=3fa82a9ea1aHR0cHM6Ly9ha2EubXMvYXp1cmU0c3R1ZGVudHM%3D">Microsoft Azure</a>：免费访问 25 种以上的 Microsoft Azure 云服务，<strong>外加 100 美元的 Azure 积分</strong>。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=63d40f552baHR0cHM6Ly93d3cuZGlnaXRhbG9jZWFuLmNvbS9naXRodWItc3R1ZGVudHMvP3V0bV9tZWRpdW09cGFydG5lcnNoaXBzJmFtcDt1dG1fc291cmNlPWdpdGh1YiZhbXA7dXRtX2NhbXBhaWduPXN0dWRlbnRkZXZwYWNr">DigitalOcean</a>：新用户的平台<strong>信用额度为100美元</strong>。（通过Github方式注册一个新账号）</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=b92090e4aeaHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9jYW52YS1zdHVkZW50">Canva</a>：免费订阅 12 个月的 Canva 专业版。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=d242e47a22aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9uYW1lY2hlYXAtZG9tYWluLXN0dWRlbnQ%3D">Namecheap</a>：在 .me TLD 上<strong>注册 1 年的域名</strong>，包含SSL证书。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=59d69aeb50aHR0cHM6Ly93d3cuamV0YnJhaW5zLmNvbS9zdHVkZW50Lz9hdXRoTWV0aG9kPWdpdGh1Yg%3D%3D">JetBrains</a>：<strong>一年的JetBrains家全家桶订阅，在校生一年后需要可以再认证一次，直到你毕业。</strong></li>
+<li><a href="https://www.xiaolanhhy.com/go?_=b09512a384aHR0cHM6Ly93d3cubmFtZS5jb20vcGFydG5lci9naXRodWItc3R1ZGVudHM%3D">Name.com</a>：<strong>1年免费域名注册</strong>，1年免费高级安全（SSL，隐私保护等）。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=eceecc02f6aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9lZHVjYXRpdmUtc3R1ZGVudA%3D%3D">educative</a>：6 个月的免费课程，60多门课程，涵盖Web开发、Python、Java和机器学习等热门主题。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=b3e72c8690aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9ib290c3RyYXBzdHVkaW8tc3R1ZGVudA%3D%3D">Bootstrap Studio</a>：Bootstrap Studio 的免费许可证。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=df91c6ab76aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS92c2NvZGUtc3R1ZGVudA%3D%3D">Visual Studio Code</a>：这些编码包可帮助您下载开始使用 Java、Python 或 .NET 进行编码所需的一切。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=1ac68eee1eaHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9naHBhZ2VzLXN0dWRlbnQ%3D">GitHub Pages</a>：每个 GitHub 帐户和组织获取一个站点，以及无限的项目站点。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=2d244556cfaHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS90ZWNoLXN0dWRlbnQ%3D">.TECH</a>：一个标准**.TECH域名免费1年**和2个免费电子邮件帐户，具有100 MB免费存储空间。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=483ba05647aHR0cHM6Ly92aXN1YWxzdHVkaW8ubWljcm9zb2Z0LmNvbS9kZXYtZXNzZW50aWFscy8%2Fb2NpZD1BSUQzMDQ1MTcw">Microsoft Visual Studio Dev Essentials</a>：Visual Studio Community、Visual Studio Community for Mac、Access to Pluralsight 培训、1 年免费 Azure 服务，第 1 个月和更长时间的 200 美元信用额度。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=19224a4bf9aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9kYXRhY2FtcC1zdHVkZW50">DataCamp</a>：学生可免费订阅 3 个月的个人订阅。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=b689de4f26aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9naXRsZW5zLXN0dWRlbnQ%3D">GitLens</a>：免费 GitLens+ Pro，因为您是一名学生。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=bc01d12ca1aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9naXRodWItc3R1ZGVudC1wcm8%3D">GitHub Pro</a>：<strong>免费 GitHub Pro</strong>，因为您是学生。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=4ce4749e34aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9mcm9udGVuZG1hc3RlcnMtc3R1ZGVudA%3D%3D">FrontendMasters</a>：免费使用 6 个月的所有课程和研讨会。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=6dde3f5fa0aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9pY29uc2NvdXQtc3R1ZGVudA%3D%3D">Iconscout</a>：每月下载 60 个高级图标，持续 1 年。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=b91f658773aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9wb2x5cGFuZS1zdHVkZW50">Polypane</a>：1年内免费。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=845ff6dd92aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9naXRrcmFrZW4tc3R1ZGVudA%3D%3D">GitKraken</a>：免费 GitKraken Client Pro（价值 59 美元），因为您是一名学生。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=1d34455613aHR0cHM6Ly90ZXJtaXVzLmNvbS9lZHVjYXRpb24vP3V0bV9zb3VyY2U9Z2l0aHViK3Rlcm1pdXM%3D">Termius</a>：在您还是学生期间<strong>免费访问Termius高级版</strong>计划。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=3a94d013bbaHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9wb21vZG9uZS1zdHVkZW50">PomoDone</a>：PomoDone精简版计划免费2年。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=76e5eabad4aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9zdHJlYW15YXJkLXN0dWRlbnQ%3D">StreamYard</a>：当您是学生时，免费访问基本计划。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=e792cf1a03aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9vbmVtb250aC1zdHVkZW50">OneMonth</a>：30 天一个月免费订阅。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=28a62cace9aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS90ZXN0bWFpbC1zdHVkZW50">Testmail</a>：免费的基本计划，因为你是一个学生。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=aa6b01d3fbaHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9naGRlc2t0b3Atc3R1ZGVudA%3D%3D">GitHub Desktop</a>：GitHub 开源，对所有人免费。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=5c6ac7d195aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS9tYWlsZ3VuLXN0dWRlbnQ%3D">Mailgun</a>：每月 20，000 封免费电子邮件和 100 次免费电子邮件验证，最长可达 12 个月。</li>
+<li><a href="https://www.xiaolanhhy.com/go?_=fca6f2a262aHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL3JlZGVlbS93b3JraW5nY29weS1zdHVkZW50">WorkingCopy</a>：当您还是学生时，所有Pro功能都是免费的。</li>
+<li>……更新于2022.4.22</li>
+<li>还有众多免费服务：<a href="https://www.xiaolanhhy.com/go?_=d780234fcaaHR0cHM6Ly9lZHVjYXRpb24uZ2l0aHViLmNvbS9wYWNrL29mZmVycw%3D%3D">GitHub 学生开发人员包 – GitHub 教育</a>。</li>
+</ul>
+<h3 id="更多详细教程">更多详细教程</h3>
+<ul>
+<li><a href="https://blog.csdn.net/qq_36667170/article/details/79084166">GitHub教程 学生认证 | 申请学生开发包</a></li>
+<li><a href="https://www.xiaolanhhy.com/shares/1364.html">2022最新Github学生包申请教程</a></li>
+</ul>
+<h2 id="azure-for-students">Azure for Students</h2>
+<p>微软的<code>Azure</code>服务器前几年开始就有学生订阅，使用<code>edu</code>邮箱即可获得，不需要信用卡和实名。<br>
+主要配置如下：<br>
+<code>B1s</code>型号配置的虚拟机<code>750</code>小时*<code>12</code>月<br>
+<code>100</code>刀美金的使用额度</p>
+<ul>
+<li>1核心cpu</li>
+<li>1GB内存</li>
+<li>最大64GB * 2固态硬盘</li>
+<li>1Gbps带宽（可上外网）</li>
+</ul>
+<h3 id="通过-github-账号授权登录">通过 Github 账号授权登录</h3>
+<p>在Azure登录绑定Github账号后自动获得Azure for Students订阅</p>
+<h3 id="通过教育邮箱申请">通过教育邮箱申请</h3>
+<p>申请入口：<a href="https://azure.microsoft.com/en-us/free/students/">azure</a></p>
+<p>点击上面的链接，start free，输入你的教育邮箱，然后依次填写信息，申请成功就进入控制台了。</p>
+<h3 id="查看订阅">查看订阅</h3>
+<p>进入<code>Azure</code>控制台：<a href="https://portal.azure.com/">点击跳转</a></p>
+<p>点击“<code>订阅</code>”按钮<br>
+如果出现<code>Azure for student</code>即表示获得学生订阅</p>
+<h3 id="查看剩余额度">查看剩余额度</h3>
+<p>在刚刚的订阅里跳转，或者点：<a href="https://www.microsoftazuresponsorships.com/">点击跳转</a></p>
+<figure data-type="image" tabindex="1"><img src="https://RoromoriYuzu.github.io/post-images/1659327542492.png" alt="剩余额度" loading="lazy"></figure>
+<h3 id="azure-主机申请">Azure 主机申请</h3>
+<p>Azure学生订阅包含有2个免费主机，但大部分人只会用到一个，而且默认情况下并不是真的完全免费，有很多需要注意的地方。</p>
+<h4 id="创建服务器">创建服务器</h4>
+<p>点击<code>虚拟机</code>按钮<br>
+<img src="https://RoromoriYuzu.github.io/post-images/1659327575882.png" alt="" loading="lazy"><br>
+点击<code>创建虚拟机</code>按钮<br>
+<img src="https://RoromoriYuzu.github.io/post-images/1659327618326.png" alt="" loading="lazy"><br>
+自己取一个<code>组名</code>、<code>虚拟机名</code> <code>区域</code>自行选择</p>
+<blockquote>
+<p>不同区域的延迟测试  <a href="https://www.azurespeed.com/Azure/Latency">Azure 延迟测试</a></p>
+</blockquote>
+<p><code>映像</code>选择你需要的系统，一般 <code>linux</code> 使用<code>Ubuntu</code>、<code>CentOS</code>。<br>
+使用 <code>windows</code> 的话记得选前面标有[smalldisk]的映像，对于 b1s 实例建议选择 <code>windows server 2012 r2</code> 的。<br>
+<code>大小</code>是最关键的地方，选择<code>B1s</code>型号<br>
+<img src="https://RoromoriYuzu.github.io/post-images/1659333197929.png" alt="" loading="lazy"><br>
+Windows 机器千万不要选中这个混合权益，否则会和你Linux机器共享免费的时长<br>
+<img src="https://RoromoriYuzu.github.io/post-images/1659333342673.webp" alt="" loading="lazy"><br>
+磁盘 注意：要选择 <code>64GB(P6)</code> 大小，其他大小会产生一些系统盘的费用<br>
+<img src="https://RoromoriYuzu.github.io/post-images/1659333492795.png" alt="" loading="lazy"></p>
+<p>剩余的选项依照自己的喜好来设置就可以，等待部署成功。<br>
+<img src="https://RoromoriYuzu.github.io/post-images/1659333982544.png" alt="" loading="lazy"></p>
+<h4 id="使用静态-ip可选">使用静态 ip（可选）</h4>
+<p>在点击停止虚拟机的时候会提示是否保留IP，如果保留IP的话，会变成静态IP，并收取一定费用。</p>
+<p>点开刚创建的虚拟机 -&gt; 网络，NIC 公共 IP 后面跟着的蓝色数字串是目前的动态 ip 地址，这个 ip 重启后会自动变更，不方便我们使用，点开他，选中左侧的「配置」，在右侧的「分配」处改为静态并保存即可。</p>
+<p>不过静态 ip 每天要花差不多 0.04 刀，用一年可能就差不多十几刀了，如果不用静态 ip 的话建议绑个域名方便记忆，动态 ip 在面板中重启机器时会变换，换了以后再去域名里面改解析，稍微麻烦但还是比直接用域名要方便一些。（在 ssh 中使用 reboot 并不会导致 ip 被更换）</p>
+<p>从动态 ip 改成静态 ip 很简单，但从静态 ip 改回动态 ip 略微麻烦，要先解绑网卡。可能需要先停机。在刚刚设置 ip 的地方，点击左边的「概述」进入概述页面，再点击「取消关联」。<br>
+<img src="https://RoromoriYuzu.github.io/post-images/1659334763886.png" alt="" loading="lazy"><br>
+再次回到「配置」，在右侧的「分配」处改为动态并保存；回到概述页面，点击关联，在右侧弹出的窗口中，「资源类型」改为网络接口，网络接口处点击下拉按钮就会显示有刚刚解绑的设备，选上并确定即可。<br>
+<img src="https://RoromoriYuzu.github.io/post-images/1659334812898.png" alt="" loading="lazy"></p>
+<h4 id="增加入站出站端口可选">增加入站出站端口（可选）</h4>
+<p>点开刚创建的虚拟机 -&gt; 网络 -&gt; 入站端口规则 -&gt; 添加入站端口规则<br>
+<img src="https://RoromoriYuzu.github.io/post-images/1659335114734.png" alt="" loading="lazy"><br>
+然后出站流量规则那里也照猫画虎整一个就行。</p>
+<h4 id="增加一块-p6-硬盘可选">增加一块 p6 硬盘（可选）</h4>
+<p>学生包 azure 其实带了两块免费的 p6 硬盘，一块给 b1s Linux 用一块给 b1s windows 用，但如果 windows 的虚拟机你用不上，也可以把多出来的 p6 放进 linux 这边。</p>
+<p>转到创建的虚拟机中磁盘这一项，选创建并附加新磁盘，改大小为 64g ，点顶上的保存即可。不过附加的磁盘并不会立刻在虚拟机中生效，需要你自己挂载，而且我也没试过是不是真的能挂上去。。。。所以这条存疑（<br>
+<img src="https://RoromoriYuzu.github.io/post-images/1659335546188.png" alt="" loading="lazy"></p>
+<h4 id="强制开启-root-账号可选">强制开启 root 账号（可选）</h4>
+<p>干完上面那些事就可以通过 ssh 登录 vps 了。默认的用户名是在设置第一屏的时候自己设置的，虽然用 root 而不用 sudo 是个不太好的习惯，但我就想用 root 登录怎么办？</p>
+<p>参考：<a href="https://khaledammar.com/technical-tips-and-tricks/technical-tricks/">How to ssh to your Amazon EC2 instance using by root? | Khaled Ammar</a></p>
+<ol>
+<li>登录后，编辑 <code>/etc/ssh/sshd_config</code> 文件，修改其中的<pre><code class="language-bash">PermitRootLogin forced-commands-only
+</code></pre>
+为<pre><code class="language-bash">PermitRootLogin without-password
+</code></pre>
+</li>
+<li>重启 sshd<pre><code class="language-bash">sudo service sshd restart
+</code></pre>
+</li>
+<li>编辑 <code>/root/.ssh/authorized_keys</code>，定位到<pre><code class="language-bash">ssh-rsa [big long key]
+</code></pre>
+将这串字符前面的内容全部删除。</li>
+<li>此时即可使用 root 用户登录。</li>
+</ol>
+<h4 id="快照还原">快照还原</h4>
+<p>参考：<a href="https://www.makak.ch/azure-restore-vm-disk-from-a-snapshot/?cn-reloaded=1">Azure - Restore VM disk from a snapshot - Makak.ch</a></p>
+<p>azure 的快照和以前用过的 do、vultr 等不一样，仅仅需要对磁盘进行快照即可。</p>
+<h5 id="创建快照">创建快照</h5>
+<ol>
+<li>在需要做快照的对应虚拟机管理界面下，选择左侧边栏的设置 -&gt; 磁盘，点击磁盘进入磁盘管理界面。<br>
+<img src="https://RoromoriYuzu.github.io/post-images/1659335908039.png" alt="" loading="lazy"></li>
+<li>选择「创建快照」，指定好名字后一路下一步即可。</li>
+</ol>
+<h5 id="还原快照">还原快照</h5>
+<ol>
+<li>搜索「快照」关键字，进入快照管理页面，选中相应快照，点击创建磁盘。</li>
+<li>指定好名字一路下一步后，创建磁盘成功。</li>
+<li>回到「创建快照」第一步截图的这个界面，点击「交换 os 磁盘」，找到刚刚创建的磁盘，还原即可</li>
+<li>还原时机器会关机。还原后需要手动打开。如果还原前的磁盘不需要了，还原后可以手动删除以免造成额外支出。</li>
+</ol>
+<h4 id="后续计费">后续计费</h4>
+<p>azure 只计算回程流量，大概算一下，每个月好像是有 15 gb 的免费流量，加上 0.14 刀 / g 的超套流量，正正经经用100 刀 / 年也许够用 800g-900g 这样吧.。</p>
+<p>azure 也没有明确的进度条告诉我还能用多少流量，只能看到已经用了多少流量。一种方法是依赖探针；另一种是通过虚拟机 -&gt; 指标，「度量值」选 Network Out Total，「聚合」选总和，右边的显示方法改成图表，时间跨度改成一个计费周期（计费周期具体是从多少号开始可以去余额那边看到），就能大概看出用了多少了。<br>
+<img src="https://RoromoriYuzu.github.io/post-images/1659335845000.png" alt="" loading="lazy"></p>
+<hr>
+<p>参考来源：</p>
+<ul>
+<li><a href="https://zbttl-github-io.vercel.app/github-xue-sheng-bao-he-azure-yang-mao/">github 学生包和 azure 羊毛</a></li>
+<li><a href="https://www.zyglq.cn/archives/azure100.html">Azure学生套餐完全利用教程</a></li>
+<li><a href="https://51.ruyo.net/11319.html">Windows Azure学生订阅额度完全使用(薅干)指南教程</a></li>
+</ul>
+<h2 id="office-a1-许可证">Office A1 许可证</h2>
+<p>edu.cn 的教育邮箱通常可以申请 A1 版本的 office 许可证，带1T的onedrive。<br>
+申请入口：<a href="https://signup.microsoft.com/signup?skug=Education&amp;sku=94763226-9b3c-4e75-a931-5c89701abe66">教师版</a> 或者 <a href="https://signup.microsoft.com/signup?skug=Education&amp;sku=314c4481-f395-4525-be8b-2ec4bb1e9d91">学生版</a></p>
+<p>这两种许可证并没有区别，都是在线版 Office 365 以及 1T Onedrive，如果学校网络中心的全局管理员设置一下也可能是 5T， 甚至当你存储到 4.5T 之后还可以帮你升级到 25T。</p>
+<p>开始创建账户，设置一个用户名，密码，并填入发送到邮箱的验证码。</p>
+<p><img src="https://RoromoriYuzu.github.io/post-images/1659336951479.png" alt="" loading="lazy"><br>
+创建完成之后可以查看自己的订阅许可证</p>
+<p><img src="https://RoromoriYuzu.github.io/post-images/1659336995099.png" alt="" loading="lazy"><br>
+点击右上角设置图标，选择网站设置，之后选择储存标准，这里可以看到容量和占用率。</p>
+<p><img src="https://RoromoriYuzu.github.io/post-images/1659337557746.png" alt="" loading="lazy"><br>
+也有一些学校也许分发的是 A1P 的许可证，它比 A1 多出了 Office 桌面版 <a href="https://signup.microsoft.com/signup?skug=Education&amp;sku=78e66a63-337a-4a9a-8959-41c6654dfb56">申请地址</a></p>
+<hr>
+<p>参考来源：[用 edu.cn 邮箱申请一个 Office A1 许可证] (https://www.xiangxiang.us/article/000002/onedrive.html)</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Wireshark 使用记录]]></title>
+        <id>https://RoromoriYuzu.github.io/post/SVypL_eT6/</id>
+        <link href="https://RoromoriYuzu.github.io/post/SVypL_eT6/">
+        </link>
+        <updated>2022-07-25T14:47:07.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#wireshakr%E6%8A%93%E5%8C%85%E7%95%8C%E9%9D%A2%E4%BB%8B%E7%BB%8D">Wireshakr抓包界面介绍</a><br>
+*
+<ul>
+<li><a href="#wireshark-%E4%B8%BB%E8%A6%81%E5%88%86%E4%B8%BA%E8%BF%99%E5%87%A0%E4%B8%AA%E7%95%8C%E9%9D%A2">WireShark 主要分为这几个界面</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BD%BF%E7%94%A8-wireshark-%E8%A7%A3%E5%AF%86https">使用 Wireshark 解密HTTPS</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="wireshakr抓包界面介绍">Wireshakr抓包界面介绍</h2>
+<p><a href="https://www.cnblogs.com/linyfeng/p/9496126.html">节选自.....</a><br>
+<img src="https://RoromoriYuzu.github.io/post-images/1658760756372.png" alt="" loading="lazy"></p>
+<p>说明：数据包列表区中不同的协议使用了不同的颜色区分。协议颜色标识定位在菜单栏View --&gt; Coloring Rules。如下所示</p>
+<figure data-type="image" tabindex="1"><img src="https://RoromoriYuzu.github.io/post-images/1658760828696.png" alt="" loading="lazy"></figure>
+<h4 id="wireshark-主要分为这几个界面">WireShark 主要分为这几个界面</h4>
+<ol>
+<li>Display Filter(显示过滤器)，  用于设置过滤条件进行数据包列表过滤。菜单路径：Analyze --&gt; Display Filters。</li>
+</ol>
+<figure data-type="image" tabindex="2"><img src="https://RoromoriYuzu.github.io/post-images/1658760887409.png" alt="" loading="lazy"></figure>
+<ol start="2">
+<li>
+<p>Packet List Pane(数据包列表)， 显示捕获到的数据包，每个数据包包含编号，时间戳，源地址，目标地址，协议，长度，以及数据包信息。 不同协议的数据包使用了不同的颜色区分显示。</p>
+<figure data-type="image" tabindex="3"><img src="https://RoromoriYuzu.github.io/post-images/1658760909400.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>Packet Details Pane(数据包详细信息), 在数据包列表中选择指定数据包，在数据包详细信息中会显示数据包的所有详细信息内容。数据包详细信息面板是最重要的，用来查看协议中的每一个字段。各行信息分别为</p>
+</li>
+</ol>
+<p>（1）Frame:   物理层的数据帧概况</p>
+<p>（2）Ethernet II: 数据链路层以太网帧头部信息</p>
+<p>（3）Internet Protocol Version 4: 互联网层IP包头部信息</p>
+<p>（4）Transmission Control Protocol:  传输层T的数据段头部信息，此处是TCP</p>
+<p>（5）Hypertext Transfer Protocol:  应用层的信息，此处是HTTP协议</p>
+<figure data-type="image" tabindex="4"><img src="https://RoromoriYuzu.github.io/post-images/1658760941078.png" alt="" loading="lazy"></figure>
+<h2 id="使用-wireshark-解密https">使用 Wireshark 解密HTTPS</h2>
+<p>通过设置环境变量截取浏览器的pre_master_secret,进而实现解密HTTPS的目的。</p>
+<p>环境变量中新建用户变量SSLKEYLOGFILE=路径\sslkey.log文件</p>
+<figure data-type="image" tabindex="5"><img src="https://RoromoriYuzu.github.io/post-images/1658760556242.png" alt="" loading="lazy"></figure>
+<p>之后再wireshark中ssl配置中制定该文件位置即可。</p>
+<figure data-type="image" tabindex="6"><img src="https://RoromoriYuzu.github.io/post-images/1658760602911.png" alt="" loading="lazy"></figure>
+<p>即可解密浏览器的访问流量：</p>
+<figure data-type="image" tabindex="7"><img src="https://RoromoriYuzu.github.io/post-images/1658760632775.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[我的第一个 JS 脚本]]></title>
+        <id>https://RoromoriYuzu.github.io/post/M6GTudq1e/</id>
+        <link href="https://RoromoriYuzu.github.io/post/M6GTudq1e/">
+        </link>
+        <updated>2022-07-23T14:43:31.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%8A%93%E5%8C%85%E5%88%86%E6%9E%90">抓包分析</a></li>
+<li><a href="#%E6%89%80%E5%AD%A6%E5%88%B0%E7%9A%84">所学到的</a>
+<ul>
+<li><a href="#%E6%8A%80%E5%B7%A7">技巧</a>
+<ul>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E9%A1%B5-%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F">查看当前页 全局变量</a></li>
+</ul>
+</li>
+<li><a href="#javascript-%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B">JavaScript 异步编程</a>
+<ul>
+<li><a href="#%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90">一个例子 </a></li>
+<li><a href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E9%80%89%E6%8B%A9">一个简单的选择</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81">代码</a></li>
+<li><a href="#%E6%9C%80%E5%90%8E%E5%86%99%E5%AE%8C%E7%9A%84%E9%A9%BE%E6%A0%A1%E9%A2%84%E7%BA%A6%E4%BB%A3%E7%A0%81">最后写完的驾校预约代码</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<blockquote>
+<p>之前搭建了一个青龙来跑脚本，一直找不到要写的目标。最近要考驾照，那么多人一上午才能摸一两把车，预约教练也要抢名额，奈何手速太慢一直抢不到，于是下定决心一定要学会写个脚本，于是就有了本篇。</p>
+</blockquote>
+<h2 id="抓包分析">抓包分析</h2>
+<blockquote>
+<p>分析数据包这个东西吧 , 没法教 ,主要看自己的悟性(就是猜) , 自己的英语水平 (数据包基本没有中文,只有部分中文的提示,基本全是英语) , 还有就是自己的经验(废话) ！</p>
+</blockquote>
+<h2 id="所学到的">所学到的</h2>
+<h3 id="技巧">技巧</h3>
+<h4 id="查看当前页-全局变量">查看当前页 全局变量</h4>
+<pre><code class="language-javascript">for(var p in window){
+    console.log(p);
+    console.log(window[p]);
+    console.log(&quot;--------------------------------------&quot;);
+}
+</code></pre>
+<h3 id="javascript-异步编程"><a href="https://www.runoob.com/js/js-async.html">JavaScript 异步编程</a></h3>
+<pre><code>异步（Asynchronous, async）是与同步（Synchronous, sync）相对的概念。
+</code></pre>
+<p>在我们学习的传统单线程编程中，程序的运行是同步的（同步不意味着所有步骤同时运行，而是指步骤在一个控制流序列中按顺序执行）。而异步的概念则是不保证同步的概念，也就是说，一个异步过程的执行将不再与原有的序列有顺序关系。<br>
+简单来理解就是：同步按你的代码顺序执行，异步不按照代码顺序执行，异步的执行效率更高。<br>
+以上是关于异步的概念的解释，接下来我们通俗地解释一下异步：异步就是从主线程发射一个子线程来完成任务。<br>
+<img src="/post-images/1658632225776.png"></p>
+<h4 id="一个例子"><a href="https://segmentfault.com/a/1190000023490085">一个例子 </a></h4>
+<p>JavaScript 不具有 <code>sleep()</code> 函数，该函数会导致代码在恢复执行之前等待指定的时间段。如果需要JavaScript 等待，该怎么做呢？</p>
+<p>假设您想将三则消息记录到 Javascript 控制台，每条消息之间要延迟一秒钟。JavaScript 中没有 <code>sleep()</code> 方法，所以你可以尝试使用下一个最好的方法 <code>setTimeout()</code>。</p>
+<p>不幸的是，<code>setTimeout()</code> 不能像你期望的那样正常工作，这取决于你如何使用它。你可能已经在JavaScript循环中的某个点上试过了，看到 <code>setTimeout()</code> 似乎根本不起作用。</p>
+<pre><code class="language-javascript">setTimeout(1000)
+console.log(1)
+setTimeout(1000)
+console.log(2)
+setTimeout(1000)
+console.log(3)
+
+for (let i = 0; i &lt;= 3; i++) {
+  setTimeout(1000)
+  console.log(`#${i}`)
+}
+</code></pre>
+<p>这段代码的结果完全没有延迟，就像 <code>setTimeout()</code> 不存在一样。</p>
+<p>回顾文档，你会发现问题在于实际上第一个参数应该是函数调用，而不是延迟。毕竟，<code>setTimeout()</code> 实际上不是 <code>sleep()</code> 方法。</p>
+<p>那么，为什么在我们的第一组代码示例中 <code>setTimeout()</code> 失败？好像我们在正确使用它，每次都重复了1000ms的延迟。</p>
+<p>原因是 <code>setTimeout()</code> 作为同步代码执行，并且对 <code>setTimeout()</code> 的多次调用均同时运行。每次调用 <code>setTimeout()</code> 都会创建异步代码，该代码将在给定延迟后稍后执行。由于代码段中的每个延迟都是相同的（1000毫秒），因此所有排队的代码将在1秒钟的单个延迟后同时运行。</p>
+<p>如前所述，<code>setTimeout()</code> 实际上不是 <code>sleep()</code> 函数，取而代之的是，它只是将异步代码排入队列以供以后执行。幸运的是，可以使用 <code>setTimeout()</code> 在JavaScript中创建自己的 <code>sleep()</code> 函数。</p>
+<h4 id="一个简单的选择">一个简单的选择</h4>
+<p>另外，你可以在第一次调用 <code>setTimeout()</code> 时指定增加的超时时间。</p>
+<p>以下代码等效于上一个示例：</p>
+<pre><code class="language-javascript">setTimeout(() =&gt; console.log(1), 1000)
+setTimeout(() =&gt; console.log(2), 2000)
+setTimeout(() =&gt; console.log(3), 3000)
+</code></pre>
+<p>使用增加超时是可行的，因为代码是同时执行的，所以指定的回调函数将在同步代码执行的1、2和3秒后执行。</p>
+<p>由此，不难在 <code>for</code> 循环中写出等待一定时间执行的方法</p>
+<pre><code class="language-javascript">        for (let index = 0; index &lt; String.length; index++) {
+            setTimeout(() =&gt; {
+                console.log(&quot;开始 ${index + 1} 个循环&quot;)
+             }, index * 3000);
+</code></pre>
+<h2 id="代码">代码</h2>
+<p><a href="https://raw.githubusercontent.com/yml2213/template/master/jiaocheng.js">模板地址</a></p>
+<p>首先去找模板，慢慢理解每一步的意思，结合我自己的理解又给模板多写了点注释</p>
+<pre><code>const jsname = &quot;教程&quot;;
+const $ = Env(jsname);
+const notify = $.isNode() ? require('./sendNotify') : '';      // 这里是 node（青龙属于node环境）通知相关的
+const Notify = 1; //0为关闭通知，1为打开通知,默认为1
+const debug = 1; //0为关闭调试，1为打开调试,默认为0
+//////////////////////
+let jiaocheng_data = process.env.jiaocheng_data;               // 这里是 从青龙的 配置文件 读取你写的变量
+let jiaocheng_dataArr = [];
+let data = '';
+let msg = '';
+
+
+!(async () =&gt; {  //这里是箭头函数 https://blog.csdn.net/weixin_44122062/article/details/105330189 
+                //用到的异步编程 https://www.runoob.com/js/js-async.html
+	if (!(await Envs()))  	//多账号分割 判断变量是否为空  初步处理多账号 //await 关键字是等待函数执行完毕执行下一步
+		return;
+	else {
+
+		console.log(`本地脚本4-11 )`);       // console.log是输出信息的，可以在脚本日志中看到输出（打印）的信息
+
+		console.log(`\n\n=========================================    \n脚本执行 - 北京时间(UTC+8)：${new Date(
+			new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 +
+			8 * 60 * 60 * 1000).toLocaleString()} \n=========================================\n`);
+
+		await wyy();
+
+		console.log(`\n=================== 共找到 ${jiaocheng_dataArr.length} 个账号 ===================`)
+
+		if (debug) {
+			console.log(`【debug】 这是你的全部账号数组:\n ${jiaocheng_dataArr}`);
+		}
+
+
+		for (let index = 0; index &lt; jiaocheng_dataArr.length; index++) {
+
+
+			let num = index + 1
+			console.log(`\n========= 开始【第 ${num} 个账号】=========\n`)
+
+			data = jiaocheng_dataArr[index].split('&amp;');      // 这里是分割你每个账号的每个小项   
+
+			if (debug) {
+				console.log(`\n 【debug】 这是你第 ${num} 账号信息:\n ${data}\n`);
+			}
+
+
+			// 这里是开始做任务    需要注意的点
+			// 	1. await只能运行与async函数中
+			// 	2. 函数的名字不可以相同
+			//      3. 不够可以自己复制
+
+			console.log('开始 xx');
+			await signin();
+			await $.wait(2 * 1000);  //等待，然后执行下一个函数
+
+			// 这里是开始做任务   
+			console.log('开始 yy');
+			await yyyy();
+			await $.wait(2 * 1000);
+
+
+			// 这里是开始做任务   
+			console.log('开始 zz');
+			await zzzzz();
+			await $.wait(2 * 1000);
+
+
+
+			await SendMsg(msg);    // 与发送通知有关系
+		}
+	}
+
+})()
+	.catch((e) =&gt; console.log(e))  //这里是捕获错误
+	.finally(() =&gt; $.done())       //这里是结束
+
+
+
+
+
+
+/**
+ * 签到  骁友会
+ * 下面我们来看看函数需要注意的东西吧
+ */
+ function signin(timeout = 3 * 1000) {
+	return new Promise((resolve) =&gt; {  //这里是Promise函数 https://www.runoob.com/js/js-promise.html
+		let url = {
+			url: `https://qualcomm.growthideadata.com/qualcomm-app/api/user/signIn?userId=${data[1]}`,    // 这是请求的 url 可以直接用我们抓包、精简后的URL
+			headers: {            // headers 是请求体  可以直接用精简后的 hd  也就是服务器校验的部分，他需要啥，我们就给他啥  
+
+				&quot;userId&quot;: data[1],
+				&quot;Content-Type&quot;: &quot;application/x-www-form-urlencoded;charset=UTF-8&quot;,
+				&quot;Host&quot;: &quot;qualcomm.growthideadata.com&quot;,
+				&quot;User-Agent&quot;: UA,
+				&quot;sessionKey&quot;: data[0],
+				&quot;Referer&quot;: &quot;https://servicewechat.com/wx026c06df6adc5d06/176/page-frame.html&quot;,
+				&quot;Connection&quot;: &quot;keep-alive&quot;
+			},
+			// body: '',       // 这是一个 get 请求，没有请求体 body   如果是 post 不要忘记他鸭！
+
+		}
+
+		if (debug) {
+			console.log(`\n【debug】=============== 这是 签到 请求 url ===============`);
+			console.log(JSON.stringify(url));
+		}
+
+		$.get(url, async (error, response, data) =&gt; {     // 这是一个 get 请求 , 如果是 post  记得把这里改了 
+			try {
+				if (debug) {
+					console.log(`\n\n【debug】===============这是 签到 返回data==============`);
+					console.log(data)
+				}
+
+				let result = JSON.parse(data);
+				if (result.code == 200) {        // 这里是根据服务器返回的数据做判断  方便我们知道任务是否完成了
+
+					console.log(`【签到】${result.message} 🎉 `)
+					msg += `\n【签到】${result.message} 🎉` 
+
+				} else if (result.code === 1) {    // 这里是根据服务器返回的数据做判断  方便我们知道任务是否完成了
+
+					console.log(`\n【签到】 失败 ,可能是:${result.message}!\n `)
+					
+
+				} else if (result.code === 40001) {   // 这里是根据服务器返回的数据做判断  方便我们知道任务是否完成了
+
+					console.log(`\n【签到】 失败 ,可能是:${result.message}!\n `)
+					
+
+				} else {    // 这里是根据服务器返回的数据做判断  方便我们知道任务是否完成了
+
+					console.log(`\n【签到】 失败 ❌ 了呢,可能是网络被外星人抓走了!\n `)
+					
+
+				}
+
+			} catch (e) {
+				console.log(e)
+			} finally {
+				resolve();
+			}
+		}, timeout)
+	})
+}
+
+
+
+
+// 如果有更多的需求，直接复制上一个函数，改个名   然后稍微更改一下内容   就可以用了   
+// 不要忘记与上面的 函数调用对应起来鸭
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//#region 固定代码 可以不管他
+// ============================================变量检查============================================ \\
+async function Envs() {
+	if (jiaocheng_data) {
+		if (jiaocheng_data.indexOf(&quot;@&quot;) != -1) {
+			jiaocheng_data.split(&quot;@&quot;).forEach((item) =&gt; {
+				jiaocheng_dataArr.push(item);
+			});
+		} else {
+			jiaocheng_dataArr.push(jiaocheng_data);
+		}
+	} else {
+		console.log(`\n 【${$.name}】：未填写变量 jiaocheng_data`)
+		return;
+	}
+
+	return true;
+}
+
+// ============================================发送消息============================================ \\
+async function SendMsg(message) {
+	if (!message)
+		return;
+
+	if (Notify &gt; 0) {
+		if ($.isNode()) {
+			var notify = require('./sendNotify');
+			await notify.sendNotify($.name, message);
+		} else {
+			$.msg(message);
+		}
+	} else {
+		console.log(message);
+	}
+}
+
+/**
+ * 随机数生成
+ */
+function randomString(e) {
+	e = e || 32;
+	var t = &quot;QWERTYUIOPASDFGHJKLZXCVBNM1234567890&quot;,
+		a = t.length,
+		n = &quot;&quot;;
+	for (i = 0; i &lt; e; i++)
+		n += t.charAt(Math.floor(Math.random() * a));
+	return n
+}
+
+/**
+ * 随机整数生成
+ */
+function randomInt(min, max) {
+	return Math.round(Math.random() * (max - min) + min)
+}
+
+//每日网抑云
+function wyy(timeout = 3 * 1000) {
+	return new Promise((resolve) =&gt; {
+		let url = {
+			url: `https://keai.icu/apiwyy/api`
+		}
+		$.get(url, async (err, resp, data) =&gt; {
+			try {
+				data = JSON.parse(data)
+				console.log(`\n 【网抑云时间】: ${data.content}  by--${data.music}`);
+
+			} catch (e) {
+				console.logErr(e, resp);
+			} finally {
+				resolve()
+			}
+		}, timeout)
+	})
+}
+
+//#endregion
+
+
+// prettier-ignore   固定代码  不用管他
+function Env(t, e) { &quot;undefined&quot; != typeof process &amp;&amp; JSON.stringify(process.env).indexOf(&quot;GITHUB&quot;) &gt; -1 &amp;&amp; process.exit(0); class s { constructor(t) { this.env = t } send(t, e = &quot;GET&quot;) { t = &quot;string&quot; == typeof t ? { url: t } : t; let s = this.get; return &quot;POST&quot; === e &amp;&amp; (s = this.post), new Promise((e, i) =&gt; { s.call(this, t, (t, s, r) =&gt; { t ? i(t) : e(s) }) }) } get(t) { return this.send.call(this.env, t) } post(t) { return this.send.call(this.env, t, &quot;POST&quot;) } } return new class { constructor(t, e) { this.name = t, this.http = new s(this), this.data = null, this.dataFile = &quot;box.dat&quot;, this.logs = [], this.isMute = !1, this.isNeedRewrite = !1, this.logSeparator = &quot;\n&quot;, this.startTime = (new Date).getTime(), Object.assign(this, e), this.log(&quot;&quot;, `🔔${this.name}, 开始!`) } isNode() { return &quot;undefined&quot; != typeof module &amp;&amp; !!module.exports } isQuanX() { return &quot;undefined&quot; != typeof $task } isSurge() { return &quot;undefined&quot; != typeof $httpClient &amp;&amp; &quot;undefined&quot; == typeof $loon } isLoon() { return &quot;undefined&quot; != typeof $loon } toObj(t, e = null) { try { return JSON.parse(t) } catch { return e } } toStr(t, e = null) { try { return JSON.stringify(t) } catch { return e } } getjson(t, e) { let s = e; const i = this.getdata(t); if (i) try { s = JSON.parse(this.getdata(t)) } catch { } return s } setjson(t, e) { try { return this.setdata(JSON.stringify(t), e) } catch { return !1 } } getScript(t) { return new Promise(e =&gt; { this.get({ url: t }, (t, s, i) =&gt; e(i)) }) } runScript(t, e) { return new Promise(s =&gt; { let i = this.getdata(&quot;@chavy_boxjs_userCfgs.httpapi&quot;); i = i ? i.replace(/\n/g, &quot;&quot;).trim() : i; let r = this.getdata(&quot;@chavy_boxjs_userCfgs.httpapi_timeout&quot;); r = r ? 1 * r : 20, r = e &amp;&amp; e.timeout ? e.timeout : r; const [o, h] = i.split(&quot;@&quot;), n = { url: `http://${h}/v1/scripting/evaluate`, body: { script_text: t, mock_type: &quot;cron&quot;, timeout: r }, headers: { &quot;X-Key&quot;: o, Accept: &quot;*/*&quot; } }; this.post(n, (t, e, i) =&gt; s(i)) }).catch(t =&gt; this.logErr(t)) } loaddata() { if (!this.isNode()) return {}; { this.fs = this.fs ? this.fs : require(&quot;fs&quot;), this.path = this.path ? this.path : require(&quot;path&quot;); const t = this.path.resolve(this.dataFile), e = this.path.resolve(process.cwd(), this.dataFile), s = this.fs.existsSync(t), i = !s &amp;&amp; this.fs.existsSync(e); if (!s &amp;&amp; !i) return {}; { const i = s ? t : e; try { return JSON.parse(this.fs.readFileSync(i)) } catch (t) { return {} } } } } writedata() { if (this.isNode()) { this.fs = this.fs ? this.fs : require(&quot;fs&quot;), this.path = this.path ? this.path : require(&quot;path&quot;); const t = this.path.resolve(this.dataFile), e = this.path.resolve(process.cwd(), this.dataFile), s = this.fs.existsSync(t), i = !s &amp;&amp; this.fs.existsSync(e), r = JSON.stringify(this.data); s ? this.fs.writeFileSync(t, r) : i ? this.fs.writeFileSync(e, r) : this.fs.writeFileSync(t, r) } } lodash_get(t, e, s) { const i = e.replace(/\[(\d+)\]/g, &quot;.$1&quot;).split(&quot;.&quot;); let r = t; for (const t of i) if (r = Object(r)[t], void 0 === r) return s; return r } lodash_set(t, e, s) { return Object(t) !== t ? t : (Array.isArray(e) || (e = e.toString().match(/[^.[\]]+/g) || []), e.slice(0, -1).reduce((t, s, i) =&gt; Object(t[s]) === t[s] ? t[s] : t[s] = Math.abs(e[i + 1]) &gt;&gt; 0 == +e[i + 1] ? [] : {}, t)[e[e.length - 1]] = s, t) } getdata(t) { let e = this.getval(t); if (/^@/.test(t)) { const [, s, i] = /^@(.*?)\.(.*?)$/.exec(t), r = s ? this.getval(s) : &quot;&quot;; if (r) try { const t = JSON.parse(r); e = t ? this.lodash_get(t, i, &quot;&quot;) : e } catch (t) { e = &quot;&quot; } } return e } setdata(t, e) { let s = !1; if (/^@/.test(e)) { const [, i, r] = /^@(.*?)\.(.*?)$/.exec(e), o = this.getval(i), h = i ? &quot;null&quot; === o ? null : o || &quot;{}&quot; : &quot;{}&quot;; try { const e = JSON.parse(h); this.lodash_set(e, r, t), s = this.setval(JSON.stringify(e), i) } catch (e) { const o = {}; this.lodash_set(o, r, t), s = this.setval(JSON.stringify(o), i) } } else s = this.setval(t, e); return s } getval(t) { return this.isSurge() || this.isLoon() ? $persistentStore.read(t) : this.isQuanX() ? $prefs.valueForKey(t) : this.isNode() ? (this.data = this.loaddata(), this.data[t]) : this.data &amp;&amp; this.data[t] || null } setval(t, e) { return this.isSurge() || this.isLoon() ? $persistentStore.write(t, e) : this.isQuanX() ? $prefs.setValueForKey(t, e) : this.isNode() ? (this.data = this.loaddata(), this.data[e] = t, this.writedata(), !0) : this.data &amp;&amp; this.data[e] || null } initGotEnv(t) { this.got = this.got ? this.got : require(&quot;got&quot;), this.cktough = this.cktough ? this.cktough : require(&quot;tough-cookie&quot;), this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar, t &amp;&amp; (t.headers = t.headers ? t.headers : {}, void 0 === t.headers.Cookie &amp;&amp; void 0 === t.cookieJar &amp;&amp; (t.cookieJar = this.ckjar)) } get(t, e = (() =&gt; { })) { t.headers &amp;&amp; (delete t.headers[&quot;Content-Type&quot;], delete t.headers[&quot;Content-Length&quot;]), this.isSurge() || this.isLoon() ? (this.isSurge() &amp;&amp; this.isNeedRewrite &amp;&amp; (t.headers = t.headers || {}, Object.assign(t.headers, { &quot;X-Surge-Skip-Scripting&quot;: !1 })), $httpClient.get(t, (t, s, i) =&gt; { !t &amp;&amp; s &amp;&amp; (s.body = i, s.statusCode = s.status), e(t, s, i) })) : this.isQuanX() ? (this.isNeedRewrite &amp;&amp; (t.opts = t.opts || {}, Object.assign(t.opts, { hints: !1 })), $task.fetch(t).then(t =&gt; { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t =&gt; e(t))) : this.isNode() &amp;&amp; (this.initGotEnv(t), this.got(t).on(&quot;redirect&quot;, (t, e) =&gt; { try { if (t.headers[&quot;set-cookie&quot;]) { const s = t.headers[&quot;set-cookie&quot;].map(this.cktough.Cookie.parse).toString(); s &amp;&amp; this.ckjar.setCookieSync(s, null), e.cookieJar = this.ckjar } } catch (t) { this.logErr(t) } }).then(t =&gt; { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t =&gt; { const { message: s, response: i } = t; e(s, i, i &amp;&amp; i.body) })) } post(t, e = (() =&gt; { })) { if (t.body &amp;&amp; t.headers &amp;&amp; !t.headers[&quot;Content-Type&quot;] &amp;&amp; (t.headers[&quot;Content-Type&quot;] = &quot;application/x-www-form-urlencoded&quot;), t.headers &amp;&amp; delete t.headers[&quot;Content-Length&quot;], this.isSurge() || this.isLoon()) this.isSurge() &amp;&amp; this.isNeedRewrite &amp;&amp; (t.headers = t.headers || {}, Object.assign(t.headers, { &quot;X-Surge-Skip-Scripting&quot;: !1 })), $httpClient.post(t, (t, s, i) =&gt; { !t &amp;&amp; s &amp;&amp; (s.body = i, s.statusCode = s.status), e(t, s, i) }); else if (this.isQuanX()) t.method = &quot;POST&quot;, this.isNeedRewrite &amp;&amp; (t.opts = t.opts || {}, Object.assign(t.opts, { hints: !1 })), $task.fetch(t).then(t =&gt; { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t =&gt; e(t)); else if (this.isNode()) { this.initGotEnv(t); const { url: s, ...i } = t; this.got.post(s, i).then(t =&gt; { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t =&gt; { const { message: s, response: i } = t; e(s, i, i &amp;&amp; i.body) }) } } time(t, e = null) { const s = e ? new Date(e) : new Date; let i = { &quot;M+&quot;: s.getMonth() + 1, &quot;d+&quot;: s.getDate(), &quot;H+&quot;: s.getHours(), &quot;m+&quot;: s.getMinutes(), &quot;s+&quot;: s.getSeconds(), &quot;q+&quot;: Math.floor((s.getMonth() + 3) / 3), S: s.getMilliseconds() }; /(y+)/.test(t) &amp;&amp; (t = t.replace(RegExp.$1, (s.getFullYear() + &quot;&quot;).substr(4 - RegExp.$1.length))); for (let e in i) new RegExp(&quot;(&quot; + e + &quot;)&quot;).test(t) &amp;&amp; (t = t.replace(RegExp.$1, 1 == RegExp.$1.length ? i[e] : (&quot;00&quot; + i[e]).substr((&quot;&quot; + i[e]).length))); return t } msg(e = t, s = &quot;&quot;, i = &quot;&quot;, r) { const o = t =&gt; { if (!t) return t; if (&quot;string&quot; == typeof t) return this.isLoon() ? t : this.isQuanX() ? { &quot;open-url&quot;: t } : this.isSurge() ? { url: t } : void 0; if (&quot;object&quot; == typeof t) { if (this.isLoon()) { let e = t.openUrl || t.url || t[&quot;open-url&quot;], s = t.mediaUrl || t[&quot;media-url&quot;]; return { openUrl: e, mediaUrl: s } } if (this.isQuanX()) { let e = t[&quot;open-url&quot;] || t.url || t.openUrl, s = t[&quot;media-url&quot;] || t.mediaUrl; return { &quot;open-url&quot;: e, &quot;media-url&quot;: s } } if (this.isSurge()) { let e = t.url || t.openUrl || t[&quot;open-url&quot;]; return { url: e } } } }; if (this.isMute || (this.isSurge() || this.isLoon() ? $notification.post(e, s, i, o(r)) : this.isQuanX() &amp;&amp; $notify(e, s, i, o(r))), !this.isMuteLog) { let t = [&quot;&quot;, &quot;==============📣系统通知📣==============&quot;]; t.push(e), s &amp;&amp; t.push(s), i &amp;&amp; t.push(i), console.log(t.join(&quot;\n&quot;)), this.logs = this.logs.concat(t) } } log(...t) { t.length &gt; 0 &amp;&amp; (this.logs = [...this.logs, ...t]), console.log(t.join(this.logSeparator)) } logErr(t, e) { const s = !this.isSurge() &amp;&amp; !this.isQuanX() &amp;&amp; !this.isLoon(); s ? this.log(&quot;&quot;, `❗️${this.name}, 错误!`, t.stack) : this.log(&quot;&quot;, `❗️${this.name}, 错误!`, t) } wait(t) { return new Promise(e =&gt; setTimeout(e, t)) } done(t = {}) { const e = (new Date).getTime(), s = (e - this.startTime) / 1e3; this.log(&quot;&quot;, `🔔${this.name}, 结束! 🕛 ${s} 秒`), this.log(), (this.isSurge() || this.isQuanX() || this.isLoon()) &amp;&amp; $done(t) } }(t, e) }
+</code></pre>
+<h2 id="最后写完的驾校预约代码">最后写完的驾校预约代码</h2>
+<p>写的一塌糊涂，可不想再看第二遍了，能跑就行😒</p>
+<pre><code class="language-javascript">/**
+ * 
+ * ========= 青龙 =========
+ * 变量格式：export DrivingSchool=' xxxx &amp; xxx @  xxxx &amp; xxx '  多个账号用 @分割  我也不知道我写的支不支持多账号,反正也就我自己用
+ * export AppointmentTime='1@2@3' //  时间段 【0 7:00、1 8:00、2 9:00、3 10:00、4 11:00、5 14:00、6 15:00、7 16:00、8 17:00、9 18:00】
+ * 
+ */
+
+const $ = Env('驾校预约');
+const notify = $.isNode() ? require('./sendNotify') : ''; // 这里是 node（青龙属于node环境）通知相关的
+const Notify = 1; //0为关闭通知，1为打开通知,默认为1
+const debug = 1; //0为关闭调试，1为打开调试,默认为0
+//////////////////////													// 这里是 从青龙的 配置文件 读取你写的变量
+let DrivingSchool = process.env.DrivingSchool; // 账号变量
+let AppointmentTime = process.env.AppointmentTime //预约时间段
+let DrivingSchoolArr = []; //转换为账号数组
+let AppointmentTimeArr = []; //转换为时间段数组;
+let AppointmentDate = &quot;&quot;; //约考时间参数
+let AppointmentClassList = []; //待预约教练列表
+let ClassArrangeListId = []; //待预约课程组id
+let i = 0;
+let WaitTime = -1;
+let UserData = &quot;&quot;;
+let num = 0;
+let msg = &quot;&quot;;
+let result = [];
+
+
+
+!(async() =&gt; { // 箭头函数 https://blog.csdn.net/weixin_44122062/article/details/105330189
+
+    if (!(await Envs())) //多账号分割 判断变量是否为空  初步处理多账号
+        return;
+    else {
+        console.log(`\n\n=========================================    \n脚本执行 - 北京时间(UTC+8): ${new Date(
+				   new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 +
+				   8 * 60 * 60 * 1000).toLocaleString()} \n=========================================\n`);
+        msg += `\n\n=========================================    \n脚本执行 - 北京时间(UTC+8): ${new Date(
+				   new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 +
+				   8 * 60 * 60 * 1000).toLocaleString()} \n=========================================\n`;
+
+        console.log(`\n=================== 共找到 ${DrivingSchoolArr.length} 个账号 ===================`)
+        console.log(`\n=================== 共找到 ${AppointmentTimeArr.length} 个时间段 (${AppointmentTimeArr}) ===================`)
+
+
+        if (debug) {
+            console.log(`【debug】 这是你的全部账号数组:\n ${DrivingSchoolArr}`);
+            console.log(`【debug】 这是你的全部时间段数组:\n ${AppointmentTimeArr}`);
+        }
+        var myDate=new Date();
+        myDate.setDate(myDate.getDate()+2); //预约时间距今+2
+        AppointmentDate = 'timestamp=' + Date.parse(myDate) + '&amp;date=' + myDate.getFullYear() + '-' + (myDate.getMonth() + 1).toString().padStart(2, '0') + '-' + (myDate.getDate()).toString().padStart(2, '0');
+        //AppointmentDate = 'timestamp=' + Date.parse(myDate) + '&amp;date=' + myDate.getFullYear() + '-' + (myDate.getMonth() + 1).toString().padStart(2, '0') + '-' + '25';
+
+        console.log(`\n获取预约时间参数为 ${AppointmentDate} \n`)
+        msg += `\n获取预约时间参数为 ${AppointmentDate} \n`
+
+        for (let index = 0; index &lt; DrivingSchoolArr.length; index++) {
+            num = index + 1
+            console.log(`\n========= 开始【第 ${num} 个账号】=========\n`)
+            UserData = DrivingSchoolArr[index];
+            if (debug) {
+                console.log(`\n 【debug】 这是你第 ${num} 账号信息:\n ${UserData}\n`);
+            }
+
+
+            // 这里是开始做任务    需要注意的点
+            // 	1. await只能运行与async函数中
+            // 	2. 函数的名字不可以相同
+            //      3. 不够可以自己复制
+
+            await GetList();
+            await PostAppointment();
+
+
+            await SendMsg(msg); // 与发送通知有关系
+        }
+    }
+
+})()
+.catch((e) =&gt; console.log(e))
+    .finally(() =&gt; $.done())
+
+
+
+/**
+ * 下面我们来看看函数需要注意的东西吧
+ */
+function GetList(timeout = 3 * 1000) {
+                console.log('开始 获取预约列表');
+            msg += `\n开始 获取预约列表`
+    return new Promise((resolve) =&gt; {
+        let url = {
+            url: `https://mainapp.duolunxc.com/mobileRest/school/schoolstudy/trainOrderGrid.do?${UserData}&amp;${AppointmentDate}`, // 这是请求的 url 可以直接用我们抓包、精简后的URL
+            headers: { // headers 是请求体  可以直接用精简后的 hd  也就是服务器校验的部分，他需要啥，我们就给他啥  
+                &quot;Content-Type&quot;: &quot;application/x-www-form-urlencoded;charset=UTF-8&quot;,
+                &quot;Host&quot;: &quot;mainapp.duolunxc.com&quot;,
+                &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36&quot;,
+                &quot;Connection&quot;: &quot;keep-alive&quot;
+            },
+            // body: '',       // 这是一个 get 请求，没有请求体 body   如果是 post 不要忘记他鸭！
+
+        }
+
+        if (debug) {
+            console.log(`\n【debug】=============== 这是 请求 url ===============`);
+            console.log(JSON.stringify(url));
+            console.log(`\n 【debug】 这是你第 ${num} 账号信息:\n ${UserData}\n`);
+
+        }
+
+        $.get(url, async(error, response, data) =&gt; { // 这是一个 get 请求 , 如果是 post  记得把这里改了 
+            try {
+                if (debug) {
+                    console.log(`\n\n【debug】===============这是 返回data==============`);
+                    console.log(data)
+                }
+
+                result = JSON.parse(data); //https://www.runoob.com/js/javascript-json-parse.html
+
+                if (result.code == 1) { // 这里是根据服务器返回的数据做判断  方便我们知道任务是否完成了
+
+                    console.log(`【获取预约数据】成功 🎉 `)
+                    msg += `\n【获取预约数据】成功 🎉`
+
+                } else{ // 这里是根据服务器返回的数据做判断  方便我们知道任务是否完成了
+
+                    console.log(`\n【获取预约】 失败 ❌ , ${result.msg}\n `)
+                    console.log(result);
+                    msg += `\n【获取预约】 失败 ❌ , ${result.msg}\n `
+
+                }
+
+            } catch (e) {
+                console.log(e);
+            } finally {
+                resolve();
+            }
+        }, timeout)
+    })
+}
+
+
+function PostAppointment(timeout = 3 * 1000) {
+    console.log(`\n开始预约`)
+    msg += `\n开始预约`
+    console.log('=============== 筛选预约数据 ===============')
+    msg += `\n=============== 筛选预约数据 ===============`
+    for (let index = result.data.classList.length - 1, n = 0; index &gt;= 0; index--) { //倒序
+        //for (let index = 0, n = 0; index &lt; result.data.classList.length; index++) {    正序
+        if (result.data.classList[index].coachName.slice(0, 4) == '（总校）') {
+            AppointmentClassList[n] = result.data.classList[index];
+            n++;
+        }
+    }
+    for (let index = 0, n = 0; index &lt; AppointmentClassList.length; index++) {
+        for (let i = 0; i &lt; AppointmentTimeArr.length; i++, n++) {
+            ClassArrangeListId[n] = AppointmentClassList[index].classArrangeList[AppointmentTimeArr[i]].id;
+        }
+    }
+    // if (AppointmentClassList.length&lt;100)
+    // {
+    //     console.log(&quot;教练数量异常，重新获取&quot;);
+    //     setTimeout(() =&gt; {
+    //         GetList();
+    //         }, 1 * 1000) //等待运行完毕时间
+    // }
+    console.log(&quot;筛选成功 共 &quot; + AppointmentClassList.length + &quot; 个教练, &quot; + ClassArrangeListId.length + &quot; 个id 🎉&quot;)
+    msg += `\n筛选成功 共 ${AppointmentClassList.length} 个教练, ${ClassArrangeListId.length} 个id 🎉`
+    if (debug) {
+        console.log(`\n【debug】=============== 这是 筛选教练列表 ===============`);
+        console.log(AppointmentClassList)
+        console.log(ClassArrangeListId);
+
+    }
+    return new Promise((resolve) =&gt; {
+        console.log('=============== 开始提交请求 ===============')
+        for (let index = 0; index &lt; ClassArrangeListId.length; index++) {
+            let url = {
+                url: `https://mainapp.duolunxc.com/mobileRest/school/schoolstudy/orderTrain.do?${UserData}&amp;${AppointmentDate}&amp;classArrangeList=[{&quot;id&quot;:&quot;${ClassArrangeListId[index]}&quot;,&quot;lessonType&quot;:&quot;2&quot;}]`,
+                headers: {
+                    &quot;Content-Type&quot;: &quot;application/x-www-form-urlencoded;charset=UTF-8&quot;,
+                    &quot;Host&quot;: &quot;mainapp.duolunxc.com&quot;,
+                    &quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36&quot;,
+                    &quot;Connection&quot;: &quot;keep-alive&quot;,
+                },
+            }
+            if (debug) {
+                console.log(`\n【debug】=============== 这是 请求 url ===============`);
+                console.log(JSON.stringify(url));
+                console.log(`\n 【debug】 这是你第 ${num} 账号信息:\n ${UserData}\n`);
+            }
+            if (String(ClassArrangeListId[index]) != 'null') {
+                WaitTime++;
+                setTimeout(() =&gt; {
+                    $.get(url, async(error, response, data) =&gt; { // 这是一个 get 请求 , 如果是 post  记得把这里改了 
+                        try {
+                            if (debug) {
+                                console.log(`\n\n【debug】===============这是 返回data==============`);
+                                console.log(data)
+                            }
+                            result = JSON.parse(data); //https://www.runoob.com/js/javascript-json-parse.html
+                            console.log(`\n开始提交第 ${index + 1} 个请求 ${new Date().getHours().toString().padStart(2, '0')}:${new Date().getMinutes().toString().padStart(2, '0')}:${new Date().getSeconds().toString().padStart(2, '0')}  \n` + &quot;ID:&quot; + ClassArrangeListId[index] + &quot;   姓名:&quot; + AppointmentClassList[parseInt(index / AppointmentTimeArr.length)].coachName + &quot;   时间段: &quot; + AppointmentClassList[parseInt(index / AppointmentTimeArr.length)].classArrangeList[AppointmentTimeArr[i]].timeBucket)
+                            msg += `\n开始提交第 ${index + 1} 个请求 ${new Date().getHours().toString().padStart(2, '0')}:${new Date().getMinutes().toString().padStart(2, '0')}:${new Date().getSeconds().toString().padStart(2, '0')}  \n` + &quot;ID:&quot; + ClassArrangeListId[index] + &quot;   姓名:&quot; + AppointmentClassList[parseInt(index / AppointmentTimeArr.length)].coachName + &quot;   时间段: &quot; + AppointmentClassList[parseInt(index / AppointmentTimeArr.length)].classArrangeList[AppointmentTimeArr[i]].timeBucket
+                            console.log(&quot;\n&quot; + result.msg);
+                            msg += &quot;\n&quot; + result.msg;
+                            if (i == AppointmentTimeArr.length - 1) {
+                                i = 0;
+                            } else {
+                                i++;
+                            }
+                        } catch (e) {
+                            console.log(e)
+                        }
+                    }, timeout)
+                }, WaitTime * 3000); // 这里是每个请求间隔时间
+            } else {
+                console.log(`\n第 ${index + 1} 个请求 ID 为 null` + &quot; 姓名 &quot; + AppointmentClassList[parseInt(index / AppointmentTimeArr.length)].coachName + &quot; 时间段 &quot; + AppointmentClassList[parseInt(index / AppointmentTimeArr.length)].classArrangeList[AppointmentTimeArr[i]].timeBucket + &quot; 忽略&quot;)
+                msg += `\n第 ${index + 1} 个请求 ID 为 null` + &quot; 姓名 &quot; + AppointmentClassList[parseInt(index / AppointmentTimeArr.length)].coachName + &quot; 时间段 &quot; + AppointmentClassList[parseInt(index / AppointmentTimeArr.length)].classArrangeList[AppointmentTimeArr[i]].timeBucket + &quot; 忽略&quot;;
+                if (i == AppointmentTimeArr.length - 1) {
+                    i = 0;
+                } else {
+                    i++;
+                }
+            }
+        }
+        setTimeout(() =&gt; {
+                resolve();
+            }, 120 * 1000) //等待运行完毕时间
+    })
+}
+
+//函数解析 https://www.runoob.com/js/js-promise.html
+// 如果有更多的需求，直接复制上一个函数，改个名   然后稍微更改一下内容   就可以用了   
+// 不要忘记与上面的 函数调用对应起来鸭
+
+
+
+
+
+
+
+
+//#region 固定代码 可以不管他
+// ============================================变量检查============================================ \\
+async function Envs() {
+    if (DrivingSchool) {
+        if (DrivingSchool.indexOf(&quot;@&quot;) != -1) {
+            DrivingSchool.split(&quot;@&quot;).forEach((item) =&gt; {
+                DrivingSchoolArr.push(item);
+            });
+        } else {
+            DrivingSchoolArr.push(DrivingSchool);
+        }
+    } else {
+        console.log(`\n 【${$.name}】：未填写变量 DrivingSchool`)
+        return;
+    }
+    if (AppointmentTime) {
+        if (AppointmentTime.indexOf(&quot;@&quot;) != -1) {
+            AppointmentTime.split(&quot;@&quot;).forEach((item) =&gt; {
+                AppointmentTimeArr.push(item);
+            });
+        } else {
+            AppointmentTimeArr.push(AppointmentTime);
+        }
+    } else {
+        console.log(`\n 【${$.name}】：未填写变量 AppointmentTime`)
+        return;
+    }
+    return true;
+}
+
+// ============================================发送消息============================================ \\
+
+
+
+async function SendMsg(message) {
+    if (!message)
+        return;
+
+    if (Notify &gt; 0) {
+        if ($.isNode()) {
+            var notify = require('./sendNotify');
+            await notify.sendNotify($.name, message);
+        } else {
+            $.msg(message);
+        }
+    } else {
+        console.log(message);
+    }
+}
+
+/**
+ * 随机数生成
+ */
+function randomString(e) {
+    e = e || 32;
+    var t = &quot;QWERTYUIOPASDFGHJKLZXCVBNM1234567890&quot;,
+        a = t.length,
+        n = &quot;&quot;;
+    for (i = 0; i &lt; e; i++)
+        n += t.charAt(Math.floor(Math.random() * a));
+    return n
+}
+
+/**
+ * 随机整数生成
+ */
+function randomInt(min, max) {
+    return Math.round(Math.random() * (max - min) + min)
+}
+
+//#endregion
+
+
+// prettier-ignore   固定代码  不用管他
+function Env(t, e) {
+    &quot;undefined&quot; != typeof process &amp;&amp; JSON.stringify(process.env).indexOf(&quot;GITHUB&quot;) &gt; -1 &amp;&amp; process.exit(0);
+    class s {
+        constructor(t) { this.env = t }
+        send(t, e = &quot;GET&quot;) { t = &quot;string&quot; == typeof t ? { url: t } : t; let s = this.get; return &quot;POST&quot; === e &amp;&amp; (s = this.post), new Promise((e, i) =&gt; { s.call(this, t, (t, s, r) =&gt; { t ? i(t) : e(s) }) }) }
+        get(t) { return this.send.call(this.env, t) }
+        post(t) { return this.send.call(this.env, t, &quot;POST&quot;) }
+    }
+    return new class {
+        constructor(t, e) { this.name = t, this.http = new s(this), this.data = null, this.dataFile = &quot;box.dat&quot;, this.logs = [], this.isMute = !1, this.isNeedRewrite = !1, this.logSeparator = &quot;\n&quot;, this.startTime = (new Date).getTime(), Object.assign(this, e), this.log(&quot;&quot;, `🔔${this.name}, 开始!`) }
+        isNode() { return &quot;undefined&quot; != typeof module &amp;&amp; !!module.exports }
+        isQuanX() { return &quot;undefined&quot; != typeof $task }
+        isSurge() { return &quot;undefined&quot; != typeof $httpClient &amp;&amp; &quot;undefined&quot; == typeof $loon }
+        isLoon() { return &quot;undefined&quot; != typeof $loon }
+        toObj(t, e = null) { try { return JSON.parse(t) } catch { return e } }
+        toStr(t, e = null) { try { return JSON.stringify(t) } catch { return e } }
+        getjson(t, e) {
+            let s = e;
+            const i = this.getdata(t);
+            if (i) try { s = JSON.parse(this.getdata(t)) } catch {}
+            return s
+        }
+        setjson(t, e) { try { return this.setdata(JSON.stringify(t), e) } catch { return !1 } }
+        getScript(t) { return new Promise(e =&gt; { this.get({ url: t }, (t, s, i) =&gt; e(i)) }) }
+        runScript(t, e) {
+            return new Promise(s =&gt; {
+                let i = this.getdata(&quot;@chavy_boxjs_userCfgs.httpapi&quot;);
+                i = i ? i.replace(/\n/g, &quot;&quot;).trim() : i;
+                let r = this.getdata(&quot;@chavy_boxjs_userCfgs.httpapi_timeout&quot;);
+                r = r ? 1 * r : 20, r = e &amp;&amp; e.timeout ? e.timeout : r;
+                const [o, h] = i.split(&quot;@&quot;), n = { url: `http://${h}/v1/scripting/evaluate`, body: { script_text: t, mock_type: &quot;cron&quot;, timeout: r }, headers: { &quot;X-Key&quot;: o, Accept: &quot;*/*&quot; } };
+                this.post(n, (t, e, i) =&gt; s(i))
+            }).catch(t =&gt; this.logErr(t))
+        }
+        loaddata() {
+            if (!this.isNode()) return {}; {
+                this.fs = this.fs ? this.fs : require(&quot;fs&quot;), this.path = this.path ? this.path : require(&quot;path&quot;);
+                const t = this.path.resolve(this.dataFile),
+                    e = this.path.resolve(process.cwd(), this.dataFile),
+                    s = this.fs.existsSync(t),
+                    i = !s &amp;&amp; this.fs.existsSync(e);
+                if (!s &amp;&amp; !i) return {}; { const i = s ? t : e; try { return JSON.parse(this.fs.readFileSync(i)) } catch (t) { return {} } }
+            }
+        }
+        writedata() {
+            if (this.isNode()) {
+                this.fs = this.fs ? this.fs : require(&quot;fs&quot;), this.path = this.path ? this.path : require(&quot;path&quot;);
+                const t = this.path.resolve(this.dataFile),
+                    e = this.path.resolve(process.cwd(), this.dataFile),
+                    s = this.fs.existsSync(t),
+                    i = !s &amp;&amp; this.fs.existsSync(e),
+                    r = JSON.stringify(this.data);
+                s ? this.fs.writeFileSync(t, r) : i ? this.fs.writeFileSync(e, r) : this.fs.writeFileSync(t, r)
+            }
+        }
+        lodash_get(t, e, s) {
+            const i = e.replace(/\[(\d+)\]/g, &quot;.$1&quot;).split(&quot;.&quot;);
+            let r = t;
+            for (const t of i)
+                if (r = Object(r)[t], void 0 === r) return s;
+            return r
+        }
+        lodash_set(t, e, s) { return Object(t) !== t ? t : (Array.isArray(e) || (e = e.toString().match(/[^.[\]]+/g) || []), e.slice(0, -1).reduce((t, s, i) =&gt; Object(t[s]) === t[s] ? t[s] : t[s] = Math.abs(e[i + 1]) &gt;&gt; 0 == +e[i + 1] ? [] : {}, t)[e[e.length - 1]] = s, t) }
+        getdata(t) {
+            let e = this.getval(t);
+            if (/^@/.test(t)) {
+                const [, s, i] = /^@(.*?)\.(.*?)$/.exec(t), r = s ? this.getval(s) : &quot;&quot;;
+                if (r) try {
+                    const t = JSON.parse(r);
+                    e = t ? this.lodash_get(t, i, &quot;&quot;) : e
+                } catch (t) { e = &quot;&quot; }
+            }
+            return e
+        }
+        setdata(t, e) {
+            let s = !1;
+            if (/^@/.test(e)) {
+                const [, i, r] = /^@(.*?)\.(.*?)$/.exec(e), o = this.getval(i), h = i ? &quot;null&quot; === o ? null : o || &quot;{}&quot; : &quot;{}&quot;;
+                try {
+                    const e = JSON.parse(h);
+                    this.lodash_set(e, r, t), s = this.setval(JSON.stringify(e), i)
+                } catch (e) {
+                    const o = {};
+                    this.lodash_set(o, r, t), s = this.setval(JSON.stringify(o), i)
+                }
+            } else s = this.setval(t, e);
+            return s
+        }
+        getval(t) { return this.isSurge() || this.isLoon() ? $persistentStore.read(t) : this.isQuanX() ? $prefs.valueForKey(t) : this.isNode() ? (this.data = this.loaddata(), this.data[t]) : this.data &amp;&amp; this.data[t] || null }
+        setval(t, e) { return this.isSurge() || this.isLoon() ? $persistentStore.write(t, e) : this.isQuanX() ? $prefs.setValueForKey(t, e) : this.isNode() ? (this.data = this.loaddata(), this.data[e] = t, this.writedata(), !0) : this.data &amp;&amp; this.data[e] || null }
+        initGotEnv(t) { this.got = this.got ? this.got : require(&quot;got&quot;), this.cktough = this.cktough ? this.cktough : require(&quot;tough-cookie&quot;), this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar, t &amp;&amp; (t.headers = t.headers ? t.headers : {}, void 0 === t.headers.Cookie &amp;&amp; void 0 === t.cookieJar &amp;&amp; (t.cookieJar = this.ckjar)) }
+        get(t, e = (() =&gt; {})) {
+            t.headers &amp;&amp; (delete t.headers[&quot;Content-Type&quot;], delete t.headers[&quot;Content-Length&quot;]), this.isSurge() || this.isLoon() ? (this.isSurge() &amp;&amp; this.isNeedRewrite &amp;&amp; (t.headers = t.headers || {}, Object.assign(t.headers, { &quot;X-Surge-Skip-Scripting&quot;: !1 })), $httpClient.get(t, (t, s, i) =&gt; {!t &amp;&amp; s &amp;&amp; (s.body = i, s.statusCode = s.status), e(t, s, i) })) : this.isQuanX() ? (this.isNeedRewrite &amp;&amp; (t.opts = t.opts || {}, Object.assign(t.opts, { hints: !1 })), $task.fetch(t).then(t =&gt; {
+                const { statusCode: s, statusCode: i, headers: r, body: o } = t;
+                e(null, { status: s, statusCode: i, headers: r, body: o }, o)
+            }, t =&gt; e(t))) : this.isNode() &amp;&amp; (this.initGotEnv(t), this.got(t).on(&quot;redirect&quot;, (t, e) =&gt; {
+                try {
+                    if (t.headers[&quot;set-cookie&quot;]) {
+                        const s = t.headers[&quot;set-cookie&quot;].map(this.cktough.Cookie.parse).toString();
+                        s &amp;&amp; this.ckjar.setCookieSync(s, null), e.cookieJar = this.ckjar
+                    }
+                } catch (t) { this.logErr(t) }
+            }).then(t =&gt; {
+                const { statusCode: s, statusCode: i, headers: r, body: o } = t;
+                e(null, { status: s, statusCode: i, headers: r, body: o }, o)
+            }, t =&gt; {
+                const { message: s, response: i } = t;
+                e(s, i, i &amp;&amp; i.body)
+            }))
+        }
+        post(t, e = (() =&gt; {})) {
+            if (t.body &amp;&amp; t.headers &amp;&amp; !t.headers[&quot;Content-Type&quot;] &amp;&amp; (t.headers[&quot;Content-Type&quot;] = &quot;application/x-www-form-urlencoded&quot;), t.headers &amp;&amp; delete t.headers[&quot;Content-Length&quot;], this.isSurge() || this.isLoon()) this.isSurge() &amp;&amp; this.isNeedRewrite &amp;&amp; (t.headers = t.headers || {}, Object.assign(t.headers, { &quot;X-Surge-Skip-Scripting&quot;: !1 })), $httpClient.post(t, (t, s, i) =&gt; {!t &amp;&amp; s &amp;&amp; (s.body = i, s.statusCode = s.status), e(t, s, i) });
+            else if (this.isQuanX()) t.method = &quot;POST&quot;, this.isNeedRewrite &amp;&amp; (t.opts = t.opts || {}, Object.assign(t.opts, { hints: !1 })), $task.fetch(t).then(t =&gt; {
+                const { statusCode: s, statusCode: i, headers: r, body: o } = t;
+                e(null, { status: s, statusCode: i, headers: r, body: o }, o)
+            }, t =&gt; e(t));
+            else if (this.isNode()) {
+                this.initGotEnv(t);
+                const { url: s, ...i } = t;
+                this.got.post(s, i).then(t =&gt; {
+                    const { statusCode: s, statusCode: i, headers: r, body: o } = t;
+                    e(null, { status: s, statusCode: i, headers: r, body: o }, o)
+                }, t =&gt; {
+                    const { message: s, response: i } = t;
+                    e(s, i, i &amp;&amp; i.body)
+                })
+            }
+        }
+        time(t, e = null) { const s = e ? new Date(e) : new Date; let i = { &quot;M+&quot;: s.getMonth() + 1, &quot;d+&quot;: s.getDate(), &quot;H+&quot;: s.getHours(), &quot;m+&quot;: s.getMinutes(), &quot;s+&quot;: s.getSeconds(), &quot;q+&quot;: Math.floor((s.getMonth() + 3) / 3), S: s.getMilliseconds() }; /(y+)/.test(t) &amp;&amp; (t = t.replace(RegExp.$1, (s.getFullYear() + &quot;&quot;).substr(4 - RegExp.$1.length))); for (let e in i) new RegExp(&quot;(&quot; + e + &quot;)&quot;).test(t) &amp;&amp; (t = t.replace(RegExp.$1, 1 == RegExp.$1.length ? i[e] : (&quot;00&quot; + i[e]).substr((&quot;&quot; + i[e]).length))); return t }
+        msg(e = t, s = &quot;&quot;, i = &quot;&quot;, r) {
+            const o = t =&gt; {
+                if (!t) return t;
+                if (&quot;string&quot; == typeof t) return this.isLoon() ? t : this.isQuanX() ? { &quot;open-url&quot;: t } : this.isSurge() ? { url: t } : void 0;
+                if (&quot;object&quot; == typeof t) {
+                    if (this.isLoon()) {
+                        let e = t.openUrl || t.url || t[&quot;open-url&quot;],
+                            s = t.mediaUrl || t[&quot;media-url&quot;];
+                        return { openUrl: e, mediaUrl: s }
+                    }
+                    if (this.isQuanX()) {
+                        let e = t[&quot;open-url&quot;] || t.url || t.openUrl,
+                            s = t[&quot;media-url&quot;] || t.mediaUrl;
+                        return { &quot;open-url&quot;: e, &quot;media-url&quot;: s }
+                    }
+                    if (this.isSurge()) { let e = t.url || t.openUrl || t[&quot;open-url&quot;]; return { url: e } }
+                }
+            };
+            if (this.isMute || (this.isSurge() || this.isLoon() ? $notification.post(e, s, i, o(r)) : this.isQuanX() &amp;&amp; $notify(e, s, i, o(r))), !this.isMuteLog) {
+                let t = [&quot;&quot;, &quot;==============📣系统通知📣==============&quot;];
+                t.push(e), s &amp;&amp; t.push(s), i &amp;&amp; t.push(i), console.log(t.join(&quot;\n&quot;)), this.logs = this.logs.concat(t)
+            }
+        }
+        log(...t) { t.length &gt; 0 &amp;&amp; (this.logs = [...this.logs, ...t]), console.log(t.join(this.logSeparator)) }
+        logErr(t, e) {
+            const s = !this.isSurge() &amp;&amp; !this.isQuanX() &amp;&amp; !this.isLoon();
+            s ? this.log(&quot;&quot;, `❗️${this.name}, 错误!`, t.stack) : this.log(&quot;&quot;, `❗️${this.name}, 错误!`, t)
+        }
+        wait(t) { return new Promise(e =&gt; setTimeout(e, t)) }
+        done(t = {}) {
+            const e = (new Date).getTime(),
+                s = (e - this.startTime) / 1e3;
+            this.log(&quot;&quot;, `🔔${this.name}, 结束! 🕛 ${s} 秒`), this.log(), (this.isSurge() || this.isQuanX() || this.isLoon()) &amp;&amp; $done(t)
+        }
+    }(t, e)
+}
+</code></pre>
+<hr>
+<p>仅供学习、交流使用,不具有任何商业用途,版权归原作者所有,如有问题请及时联系我以作处理</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[一开抓包工具APP就断网？简单几步去除SSL验证]]></title>
+        <id>https://RoromoriYuzu.github.io/post/vhqL1J5dh/</id>
+        <link href="https://RoromoriYuzu.github.io/post/vhqL1J5dh/">
+        </link>
+        <updated>2022-07-22T05:39:50.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E7%94%A8%E5%88%B0%E7%9A%84%E5%B7%A5%E5%85%B7">用到的工具</a></li>
+<li><a href="#%E7%BB%99%E5%AE%89%E5%8D%93%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%AE%89%E8%A3%85xposed%E6%A1%86%E6%9E%B6">给安卓模拟器安装Xposed框架</a></li>
+<li><a href="#%E6%8A%93%E5%8C%85">抓包</a></li>
+<li><a href="#%E7%94%A8vmos-%E6%8A%93%E5%8C%85">用VMOS 抓包</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85%E6%A8%A1%E5%9D%97">安装模块</a></li>
+<li><a href="#%E5%AF%BC%E5%85%A5%E8%AF%81%E4%B9%A6">导入证书</a></li>
+<li><a href="#%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85">微信小程序抓包</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="用到的工具">用到的工具</h2>
+<ul>
+<li>Fiddler</li>
+<li>逍遥模拟器 或 其他模拟器 又或者 是你的手机</li>
+<li>Xposed</li>
+<li>JustTrustMe<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup> 或 TrustMeAlerady<sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup></li>
+<li>工具包</li>
+<li>Openssl</li>
+</ul>
+<hr>
+<ul>
+<li>VMOS</li>
+<li>HttpCanary</li>
+</ul>
+<h2 id="给安卓模拟器安装xposed框架">给安卓模拟器安装Xposed框架</h2>
+<p>（已经有 Xposed 权限的可以忽略）<br>
+确保模拟器已开启Root权限并且是 Android 7.1 64 位，下载工具包，里面有所用到的文件</p>
+<p>[下载链接] (https://pan.baidu.com/s/1wBllwjoXlnZ3OuVFNXr3bg?pwd=hfr7 )</p>
+<ol>
+<li>
+<p>解压后安装里面的三个APP。</p>
+</li>
+<li>
+<p>将 Xposed 文件夹放在模拟器的共享文件夹下。</p>
+<ol>
+<li>在模拟器中打开安装好文件管理器。</li>
+<li>打开 <code>/sdcard/pictures</code> 目录里 <code>Xposed</code> 鼠标左键按住出现复制选项。</li>
+<li>返回找到 <code>system</code> 文件夹 粘贴。</li>
+<li>将 <code>Xposed</code> 文件夹复制到 <code>system</code> 目录。</li>
+</ol>
+</li>
+<li>
+<p>打开安装好的终端模拟器。</p>
+<ol>
+<li>输入 <code>su</code> 执行。</li>
+<li>输入 <code>cd /system/xposed </code>执行。</li>
+<li>输入 <code>sh memu-script.sh</code> 执行。</li>
+</ol>
+</li>
+<li>
+<p>命令执行完毕 直接重启模拟器 即可。</p>
+</li>
+<li>
+<p>安装 TrustMeAlerady 然后在 Xposed 里勾选上。</p>
+</li>
+<li>
+<p>重启。</p>
+</li>
+</ol>
+<h2 id="抓包">抓包</h2>
+<ol>
+<li>查看你的 Fiddler 的代理端口。</li>
+<li>在 CMD 里执行<code> ipconfig</code> 查看本机的 IP 地址。</li>
+<li>在模拟器内 查看 wifi -&gt; 修改网络 -&gt; 代理 -&gt; 手动 -&gt; 填写前面的IP和端口。</li>
+<li>在主机打开浏览器 输入IP和端口 点击 FiddlerRoot certificate 下载证书。</li>
+<li>准备导入证书到模拟器的根目录</li>
+<li>安装openssl（可选）  <a href="http://slproweb.com/products/Win32OpenSSL.html">下载地址</a>
+<ol>
+<li>使用openssl命令解析证书的hash值</li>
+<li><code>openssl x509 -subject_hash_old -in .\FiddlerRoot.cer -inform der</code><br>
+<img src="/post-images/1658477518577.png" width=50%><br>
+拿到hash值：269953fb，好像证书的hash都是这个，所以可以省略这一步</li>
+</ol>
+</li>
+<li>将刚刚导出到桌面的证书改成269953fb.0，0是后缀名</li>
+<li>导入 269953fb.0 证书到手机设备<br>
+和这里的步骤差不多<br>
+<a href="#%E5%AF%BC%E5%85%A5%E8%AF%81%E4%B9%A6">导入证书</a></li>
+</ol>
+<p>接下来没有什么错误的话，应该可以正常抓包了。</p>
+<hr>
+<h2 id="用vmos-抓包">用VMOS 抓包</h2>
+<p>工具包<br>
+<a href="https://pan.baidu.com/s/1AMUdQAGao94VzFZ-fNUHZw?pwd=9bax">下载链接</a></p>
+<h3 id="安装模块">安装模块</h3>
+<p>VMOS 内有很多自带 Xposed 的ROM  就不说怎么安装了。</p>
+<ol>
+<li>同样在 Xposed 里面安装上 TrustMeAlerady 模块。</li>
+</ol>
+<h3 id="导入证书">导入证书</h3>
+<ol>
+<li>打开 HttpCanay SSL证书设置选择导出根证书，类型System Trusted (.0)<br>
+<code>导出的证书储存路径为：内部储存/HttpCanary/cert/</code></li>
+<li>打开虚拟机 VMOS ，选择文件中转站—我要导入：RE管理器+目标APP+证书。</li>
+<li>打开并赋予RE管理器root权限，刚刚导入的证书在VMOSfiletransferstatio目录下，将其复制到VMOS系统内：/system/etc/security/cacerts/目录下即可。</li>
+<li>返回本机启动小黄鸟，目标应用-设置VMOS-开启抓包。</li>
+</ol>
+<h3 id="微信小程序抓包">微信小程序抓包</h3>
+<p>因为微信有检测，不太能放在模拟器里，但 PC 端的微信没有 SSL 验证，可以直接抓包。<br>
+如果 Fiddler 抓不到的话 <code>C:\Users\你的用户名\AppData\Roaming\Tencent\WeChat\XPlugin\Plugins\WMPFRuntime</code> 文件夹内的文件全部删除，重新打开微信就能解决。</p>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p>https://github.com/Fuzion24/JustTrustMe <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p>https://github.com/ViRb3/TrustMeAlready <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Docker 学习记录]]></title>
+        <id>https://RoromoriYuzu.github.io/post/ghsIrrZcd/</id>
+        <link href="https://RoromoriYuzu.github.io/post/ghsIrrZcd/">
+        </link>
+        <updated>2022-07-14T14:13:52.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#docker-run-%E5%92%8C-start-%E7%9A%84%E5%8C%BA%E5%88%AB">docker run 和 start 的区别</a></li>
+<li><a href="#docker-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">Docker 常用命令</a></li>
+<li><a href="#adguardhome-%E5%AE%89%E8%A3%85%E5%8F%8A%E9%83%A8%E7%BD%B2">AdGuardHome 安装及部署</a>
+<ul>
+<li><a href="#1bridge-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F">(1)Bridge 网络模式</a></li>
+<li><a href="#2host-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F">(2)Host 网络模式</a></li>
+<li><a href="#%E5%87%BA%E7%8E%B0%E8%BF%87%E7%9A%84%E9%97%AE%E9%A2%98">出现过的问题</a>
+<ul>
+<li><a href="#%E7%AB%AF%E5%8F%A3%E5%86%B2%E7%AA%81">端口冲突</a></li>
+<li><a href="#docker%E5%AE%B9%E5%99%A8%E4%BF%AE%E6%94%B9dns">Docker容器修改dns</a></li>
+<li><a href="#%E6%8A%A5%E9%94%99">报错</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AA%E6%8C%82%E8%BD%BD%E6%95%B0%E6%8D%AE%E5%8D%B7%E7%9A%84%E5%AE%B9%E5%99%A8">启动一个挂载数据卷的容器</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="docker-run-和-start-的区别">docker run 和 start 的区别</h2>
+<p><code>docker run</code><br>
+docker run 只在第一次运行时使用，将镜像放到容器中，以后再次启动这个容器时，只需要使用命令docker start 即可。<br>
+docker run相当于执行了两步操作：将镜像放入容器中（docker create）,然后将容器启动，使之变成运行时容器（docker start）。</p>
+<p><code>docker start</code><br>
+docker start的作用是，重新启动已存在的镜像。也就是说，如果使用这个命令，我们必须事先知道这个容器的ID，或者这个容器的名字，我们可以使用docker ps找到这个容器的信息。</p>
+<h2 id="docker-常用命令"><a href="https://www.runoob.com/docker/docker-command-manual.html">Docker 常用命令</a></h2>
+<pre><code class="language-shell">docker start [容器 ID]:启动一个或多个已经被停止的容器
+
+docker stop [容器 ID]:停止一个运行中的容器
+
+docker restart [容器 ID]:重启容器
+
+docker rm -f [容器 ID] 删除容器
+
+service docker restart 重启docker
+
+docker ps -a 查看所有容器
+
+</code></pre>
+<pre><code class="language-shell">docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+OPTIONS说明：
+
+ -a stdin: 指定标准输入输出内容类型，可选 STDIN/STDOUT/STDERR 三项；
+ -d: 后台运行容器，并返回容器ID；
+ -i: 以交互模式运行容器，通常与 -t 同时使用；
+ -P: 随机端口映射，容器内部端口随机映射到主机的端口
+ -p: 指定端口映射，格式为：主机(宿主)端口:容器端口
+ -t: 为容器重新分配一个伪输入终端，通常与 -i 同时使用；
+ --name=&quot;nginx-lb&quot;: 为容器指定一个名称；
+ --dns 8.8.8.8: 指定容器使用的DNS服务器，默认和宿主一致；
+ --dns-search example.com: 指定容器DNS搜索域名，默认和宿主一致；
+ -h &quot;mars&quot;: 指定容器的hostname；
+ -e username=&quot;ritchie&quot;: 设置环境变量；
+ --env-file=[]: 从指定文件读入环境变量；
+ --cpuset=&quot;0-2&quot; or --cpuset=&quot;0,1,2&quot;: 绑定容器到指定CPU运行；
+ -m :设置容器使用内存最大值；
+ --net=&quot;bridge&quot;: 指定容器的网络连接类型，支持 bridge/host/none/container: 四种类型；
+ --link=[]: 添加链接到另一个容器；
+ --expose=[]: 开放一个端口或一组端口；
+ --volume , -v: 绑定一个卷
+</code></pre>
+<h2 id="adguardhome-安装及部署"><a href="https://isedu.top/index.php/archives/23/">AdGuardHome 安装及部署</a></h2>
+<h3 id="1bridge-网络模式">(1)Bridge 网络模式</h3>
+<pre><code class="language-shell">docker run -d \
+    --name adguardhome \
+    -v $PWD/adguardhome/work:/opt/adguardhome/work \
+    -v $PWD/adguardhome/conf:/opt/adguardhome/conf \
+    -p 53:53/tcp \
+    -p 53:53/udp \
+    -p 3000:3000/tcp \
+    adguard/adguardhome
+</code></pre>
+<h3 id="2host-网络模式">(2)Host 网络模式</h3>
+<blockquote>
+<p>Host 网络模式直接使用宿主机的网络，没有网络隔离，不需要考虑容器端口的映射，在容器启动后可以自由调整被占用的端口。适合在本机使用 (lo­cal­host)，或者直通外网的设备对外开放服务，就比如 VPS 、主路由。</p>
+</blockquote>
+<pre><code class="language-shell">docker run -d \
+    --name adguardhome \
+    --restart unless-stopped \
+    --log-opt max-size=1m \
+    --network host \
+    -v $PWD/adguardhome/work:/opt/adguardhome/work \
+    -v $PWD/adguardhome/conf:/opt/adguardhome/conf \
+    adguard/adguardhome
+</code></pre>
+<h3 id="出现过的问题">出现过的问题</h3>
+<h4 id="端口冲突">端口冲突</h4>
+<p>在 Linux 设备上运行 AdGuard Home，通常会出现 53（本地 DNS 服务器）、68（DHCP 客户端）、80（Http）、443（Https） 端口冲突的问题，可以通过<code>netstat -tunlp | grep</code>端口号 查询占用进程。有两种解决方案：使用不同端口、停用冲突进程。<br>
+如果是通过 Docker 方式运行 AdGuard Home，</p>
+<p>出现 ​listen udp 0.0.0.0：53 bind: address already in use​ 的提示，需要手动处理，方法如下：</p>
+<pre><code class="language-shell">#停止 DNSStubListener
+systemctl stop systemd-resolved
+
+#创建文件夹（如果不存在）
+mkdir /etc/systemd/resolved.conf.d/
+
+#使用 Nano 创建配置文件2021-04-29 16:16:00 星期四
+nano /etc/systemd/resolved.conf.d/adguardhome.conf
+</code></pre>
+<p>在编辑器中粘贴以下内容：</p>
+<pre><code class="language-shell">[Resolve]
+DNS=127.0.0.1
+DNSStubListener=no
+</code></pre>
+<p>保存后执行以下命令。</p>
+<pre><code class="language-shell">#创建备份
+sudo mv /etc/resolv.conf /etc/resolv.conf.backup
+
+#将 /etc/resolv.conf 链接至 /run/systemd/resolve/resolv.conf
+ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
+
+#重启 DNSStubListener
+systemctl restart systemd-resolved
+</code></pre>
+<p>完成后使用 <code>netstat -tunlp | grep 53</code> 命令检查是否依旧有进程占用 53 端口，如无冲突，重启 AdGuard Home 容器即可。</p>
+<h4 id="docker容器修改dns"><a href="https://www.cnblogs.com/mrnx2004/p/11755240.html">Docker容器修改dns</a></h4>
+<p>设置docker的dns  编辑 /etc/docker/daemmon.json</p>
+<h4 id="报错">报错</h4>
+<pre><code>Job for docker.service failed because the control process exited with error code.
+See &quot;systemctl status docker.service&quot; and &quot;journalctl -xe&quot; for details.
+是因为/etc/docker/daemon.json 填写出错
+</code></pre>
+<h2 id="启动一个挂载数据卷的容器"><a href="https://yeasy.gitbook.io/docker_practice/data_management/volume">启动一个挂载数据卷的容器</a></h2>
+<p>在用 <code>docker run</code> 命令的时候，使用 <code>--mount</code> 标记来将 <code>数据卷</code> 挂载到容器里。在一次 <code>docker run</code> 中可以挂载多个 <code>数据卷</code>。</p>
+<p>下面创建一个名为 <code>web</code> 的容器，并加载一个 <code>数据卷</code> 到容器的 <code>/usr/share/nginx/html</code> 目录。</p>
+<pre><code>
+$ docker run -d -P \
+		--name web \
+		# -v my-vol:/usr/share/nginx/html \
+		--mount source=my-vol,target=/usr/share/nginx/html \
+		nginx:alpine
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Vue 学习记录]]></title>
+        <id>https://RoromoriYuzu.github.io/post/GgQU4IRQo/</id>
+        <link href="https://RoromoriYuzu.github.io/post/GgQU4IRQo/">
+        </link>
+        <updated>2022-07-13T14:24:43.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83">安装环境</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85npm">安装npm</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85vue">安装Vue</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7-cli">安装命令行工具 (CLI)</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE">创建项目</a>
+<ul>
+<li><a href="#%E5%90%AF%E5%8A%A8%E9%A1%B9%E7%9B%AE">启动项目</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BD%BF%E7%94%A8element-ui">使用Element UI</a>
+<ul>
+<li><a href="#%E5%9F%BA%E4%BA%8E-vue-2x-%E7%9A%84-element-ui">基于 Vue 2.x 的 Element UI</a></li>
+<li><a href="#vue-3x-%E7%9A%84%E5%8D%87%E7%BA%A7%E7%89%88%E6%9C%AC">Vue 3.x 的升级版本</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="安装环境">安装环境</h2>
+<blockquote>
+<p>对于中国大陆用户，建议将 NPM 源设置为<a href="https://npmmirror.com/">国内的镜像</a>，可以大幅提升安装速度。</p>
+<pre><code class="language-bash">$ npm install -g cnpm --registry=https://registry.npmmirror.com
+</code></pre>
+<pre><code class="language-bash">$ cnpm install [name]
+</code></pre>
+</blockquote>
+<h3 id="安装npm">安装npm</h3>
+<p>去<a href="https://nodejs.org/en/download/">Node.js</a>的官网下载安装程序<br>
+<img src="/post-images/1657722987952.png" width=50%><br>
+不必勾选，一路Next</p>
+<h3 id="安装vue">安装Vue</h3>
+<pre><code class="language-bash"># 最新稳定版
+$ npm install vue@next
+</code></pre>
+<h3 id="安装命令行工具-cli">安装命令行工具 (CLI)</h3>
+<blockquote>
+<p>CLI 工具假定用户对 Node.js 和相关构建工具有一定程度的了解。如果你是新手，我们强烈建议先在不用构建工具的情况下通读<a href="https://v3.cn.vuejs.org/guide/introduction.html">指南</a>，在熟悉 Vue 本身之后再使用 CLI。</p>
+</blockquote>
+<pre><code class="language-bash">$ npm install -g @vue/cli
+</code></pre>
+<p>之后执行命令查看是否安装成功</p>
+<pre><code class="language-bash">$ vue -V
+
+@vue/cli 5.0.8
+</code></pre>
+<h2 id="创建项目">创建项目</h2>
+<ol>
+<li>新建一个存放项目文件的目录，在其中执行</li>
+</ol>
+<pre><code class="language-bash">$ vue create &lt;project-name&gt;
+
+Vue CLI v5.0.8
+? Please pick a preset:
+  Default ([Vue 3] babel, eslint)
+&gt; Default ([Vue 2] babel, eslint)
+  Manually select features    
+</code></pre>
+<ol start="2">
+<li>或者你可以执行以下命令，启动一个GUI窗口进行项目管理</li>
+</ol>
+<pre><code>$ vue ui
+</code></pre>
+<h3 id="启动项目">启动项目</h3>
+<pre><code> $ cd &lt;project-name&gt;
+ $ npm run serve
+</code></pre>
+<p>之后就可以看到Vue大大的Logo了</p>
+<h2 id="使用element-ui">使用Element UI</h2>
+<h3 id="基于-vue-2x-的-element-ui">基于 <a href="https://element.eleme.cn/#/zh-CN/component/layout">Vue 2.x 的 Element UI</a></h3>
+<ol>
+<li>npm <a href="https://element.eleme.cn/#/zh-CN/component/installation#npm-an-zhuang">安装</a></li>
+</ol>
+<pre><code class="language-bash">$ npm i element-ui -S
+</code></pre>
+<ol start="2">
+<li>
+<p>引入 Element</p>
+<p>完整引入，在 main.js 中写入以下内容：</p>
+<pre><code class="language-javascript">import Vue from 'vue';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import App from './App.vue';
+
+Vue.use(ElementUI);
+
+new Vue({
+  el: '#app',
+  render: h =&gt; h(App)
+});
+</code></pre>
+<p>以上代码便完成了 Element 的引入。需要注意的是，样式文件需要单独引入。</p>
+</li>
+</ol>
+<h3 id="vue-3x-的升级版本">Vue 3.x 的升级版本</h3>
+<ol>
+<li>npm 安装</li>
+</ol>
+<pre><code class="language-bash">   $ npm install element-plus --save
+</code></pre>
+<ol start="2">
+<li>
+<p>引入 Element</p>
+<p>如果你对打包后的文件大小不是很在乎，那么使用完整导入会更方便。</p>
+<pre><code class="language-js">// main.ts
+import { createApp } from 'vue'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+import App from './App.vue'
+
+const app = createApp(App)
+
+app.use(ElementPlus)
+app.mount('#app')
+</code></pre>
+</li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[给网站添加些小细节]]></title>
+        <id>https://RoromoriYuzu.github.io/post/4vo_mmdta/</id>
+        <link href="https://RoromoriYuzu.github.io/post/4vo_mmdta/">
+        </link>
+        <updated>2022-07-13T05:54:45.000Z</updated>
+        <summary type="html"><![CDATA[<p><s>净整些花儿胡绍的东西</s>  细节拉满</p>
+]]></summary>
+        <content type="html"><![CDATA[<p><s>净整些花儿胡绍的东西</s>  细节拉满</p>
+<!-- more -->
+<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%BB%9A%E5%8A%A8%E6%9D%A1%E7%9A%84%E6%A0%B7%E5%BC%8F">滚动条的样式</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8-instantpage%E9%A2%84%E5%8A%A0%E9%80%9F">使用 instant.page预加速</a><br>
+*
+<ul>
+<li><a href="#%E5%8E%9F%E7%90%86">原理</a></li>
+<li><a href="#%E6%B3%A8%E6%84%8F">注意</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8">使用</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BD%91%E7%AB%99%E5%B7%B2%E8%BF%90%E8%A1%8C%E5%A4%9A%E5%B0%91%E5%A4%A9">网站已运行多少天</a></li>
+<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%BC%A0%E6%A0%87%E6%A0%B7%E5%BC%8F">自定义鼠标样式</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E4%BC%9A%E5%8A%A8%E7%9A%84%E5%B0%8F%E8%84%B8">添加会动的小脸</a></li>
+<li><a href="#%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB%E7%9A%84%E7%83%9F%E8%8A%B1%E7%89%B9%E6%95%88">鼠标点击的烟花特效</a></li>
+<li><a href="#%E8%BF%94%E5%9B%9E%E9%A1%B6%E9%83%A8%E6%8C%89%E9%92%AE">返回顶部按钮</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="滚动条的样式">滚动条的样式</h2>
+<pre><code class="language-css">    /* 设置滚动条的样式 */
+    
+     ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    /* 滚动槽 */
+    
+     ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+    /* 滚动条滑块 */
+    
+     ::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        background: #bbb;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.25);
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    }
+    /* 非激活窗口 */
+    
+     ::-webkit-scrollbar-thumb:window-inactive {
+        background: rgba(0, 255, 0, 0.4);
+    }
+</code></pre>
+<img src="/post-images/1657692471931.png" width=10%>
+<pre><code class="language-css">::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width : 10px;  /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+  }
+::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius   : 10px;
+  background-color: skyblue;
+  background-image: -webkit-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.2) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0.2) 75%,
+      transparent 75%,
+      transparent
+  );
+  }
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background   : #ededed;
+  border-radius: 10px;
+  }
+</code></pre>
+<img src="/post-images/1657692487418.png" width=5%>
+<h2 id="使用-instantpage预加速">使用 instant.page预加速</h2>
+<h4 id="原理">原理</h4>
+<p><strong>PC端</strong>：当用户的鼠标在链接上悬停了65毫秒时，这个脚本开始预加载页面；还有一种就是在用户开始按下鼠标时 ，开始预加载页面。</p>
+<p><strong>移动端</strong>：用户在滑动屏幕时，链接可见时，就开始预加载。</p>
+<h4 id="注意">注意</h4>
+<p>仅当用户很有可能会访问页面时才预加载页面，并且仅HTML被预加载。</p>
+<h4 id="使用">使用</h4>
+<p>将此HTML代码段放在&lt; <strong>/</strong> body&gt; 之前：</p>
+<pre><code class="language-html">&lt;script src=&quot;//instant.page/3.0.0&quot; type=&quot;module&quot; defer integrity=&quot;sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h2 id="网站已运行多少天">网站已运行多少天</h2>
+<pre><code class="language-php">&lt;span id=&quot;span&quot;&gt;&lt;/span&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    function runtime() {
+        // 初始时间，月/日/年 时:分:秒
+        X = new Date(&quot;7/12/2022 19:12:02&quot;);
+        Y = new Date();
+        T = (Y.getTime() - X.getTime());
+        M = 24 * 60 * 60 * 1000;
+        a = T / M;
+        A = Math.floor(a);
+        b = (a - A) * 24;
+        B = Math.floor(b);
+        c = (b - B) * 60;
+        C = Math.floor((b - B) * 60);
+        D = Math.floor((c - C) * 60);
+        //信息写入到DIV中
+        since.innerHTML = A + &quot;天&quot; + B + &quot;小时&quot; + C + &quot;分&quot; + D + &quot;秒&quot;
+    }
+    setInterval(runtime, 1000);
+&lt;/script&gt;
+</code></pre>
+<p>运行结果：<br>
+0天19小时27分27秒<br>
+注：<br>
+1、此代码输出的时间，其秒数是动态变化的<br>
+2、将 7/12/2022 19:12:02 修改成网站的上线时间</p>
+<h2 id="自定义鼠标样式">自定义鼠标样式</h2>
+<pre><code class="language-css">body{
+cursor: url(鼠标指针文件),auto;
+}
+</code></pre>
+<h2 id="添加会动的小脸">添加会动的小脸</h2>
+<p>效果和本站左下脚的一样，我从<a href="https://diygod.me/electronics/">DIY god</a> 那里抄来的，然后稍微改了改。</p>
+<p>HTML</p>
+<pre><code class="language-html">&lt;span class=&quot;my-face&quot;&gt;(●'◡'●)ﾉ&lt;span id=&quot;like&quot;&gt;♥&lt;/span&gt;&lt;/span&gt;
+</code></pre>
+<p>CSS</p>
+<pre><code class="language-css">.my-face {
+  animation: my-face 5s infinite ease-in-out;
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.my-face:hover #like{
+    color: #d43f57
+
+}
+@-webkit-keyframes my-face{2%{transform:translateY(1.5px) rotate(1.5deg)}4%{transform:translateY(-1.5px) rotate(-.5deg)}6%{transform:translateY(1.5px) rotate(-1.5deg)}8%{transform:translateY(-1.5px) rotate(-1.5deg)}10%{transform:translateY(2.5px) rotate(1.5deg)}12%{transform:translateY(-.5px) rotate(1.5deg)}14%{transform:translateY(-1.5px) rotate(1.5deg)}16%{transform:translateY(-.5px) rotate(-1.5deg)}18%{transform:translateY(.5px) rotate(-1.5deg)}20%{transform:translateY(-1.5px) rotate(2.5deg)}22%{transform:translateY(.5px) rotate(-1.5deg)}24%{transform:translateY(1.5px) rotate(1.5deg)}26%{transform:translateY(.5px) rotate(.5deg)}28%{transform:translateY(.5px) rotate(1.5deg)}30%{transform:translateY(-.5px) rotate(2.5deg)}32%{transform:translateY(1.5px) rotate(-.5deg)}34%{transform:translateY(1.5px) rotate(-.5deg)}36%{transform:translateY(-1.5px) rotate(2.5deg)}38%{transform:translateY(1.5px) rotate(-1.5deg)}40%{transform:translateY(-.5px) rotate(2.5deg)}42%{transform:translateY(2.5px) rotate(-1.5deg)}44%{transform:translateY(1.5px) rotate(.5deg)}46%{transform:translateY(-1.5px) rotate(2.5deg)}48%{transform:translateY(-.5px) rotate(.5deg)}50%{transform:translateY(.5px) rotate(.5deg)}52%{transform:translateY(2.5px) rotate(2.5deg)}54%{transform:translateY(-1.5px) rotate(1.5deg)}56%{transform:translateY(2.5px) rotate(2.5deg)}58%{transform:translateY(.5px) rotate(2.5deg)}60%{transform:translateY(2.5px) rotate(2.5deg)}62%{transform:translateY(-.5px) rotate(2.5deg)}64%{transform:translateY(-.5px) rotate(1.5deg)}66%{transform:translateY(1.5px) rotate(-.5deg)}68%{transform:translateY(-1.5px) rotate(-.5deg)}70%{transform:translateY(1.5px) rotate(.5deg)}72%{transform:translateY(2.5px) rotate(1.5deg)}74%{transform:translateY(-.5px) rotate(.5deg)}76%{transform:translateY(-.5px) rotate(2.5deg)}78%{transform:translateY(-.5px) rotate(1.5deg)}80%{transform:translateY(1.5px) rotate(1.5deg)}82%{transform:translateY(-.5px) rotate(.5deg)}84%{transform:translateY(1.5px) rotate(2.5deg)}86%{transform:translateY(-1.5px) rotate(-1.5deg)}88%{transform:translateY(-.5px) rotate(2.5deg)}90%{transform:translateY(2.5px) rotate(-.5deg)}92%{transform:translateY(.5px) rotate(-.5deg)}94%{transform:translateY(2.5px) rotate(.5deg)}96%{transform:translateY(-.5px) rotate(1.5deg)}98%{transform:translateY(-1.5px) rotate(-.5deg)}0%,to{transform:translate(0) rotate(0deg)}}
+@keyframes my-face{2%{transform:translateY(1.5px) rotate(1.5deg)}4%{transform:translateY(-1.5px) rotate(-.5deg)}6%{transform:translateY(1.5px) rotate(-1.5deg)}8%{transform:translateY(-1.5px) rotate(-1.5deg)}10%{transform:translateY(2.5px) rotate(1.5deg)}12%{transform:translateY(-.5px) rotate(1.5deg)}14%{transform:translateY(-1.5px) rotate(1.5deg)}16%{transform:translateY(-.5px) rotate(-1.5deg)}18%{transform:translateY(.5px) rotate(-1.5deg)}20%{transform:translateY(-1.5px) rotate(2.5deg)}22%{transform:translateY(.5px) rotate(-1.5deg)}24%{transform:translateY(1.5px) rotate(1.5deg)}26%{transform:translateY(.5px) rotate(.5deg)}28%{transform:translateY(.5px) rotate(1.5deg)}30%{transform:translateY(-.5px) rotate(2.5deg)}32%{transform:translateY(1.5px) rotate(-.5deg)}34%{transform:translateY(1.5px) rotate(-.5deg)}36%{transform:translateY(-1.5px) rotate(2.5deg)}38%{transform:translateY(1.5px) rotate(-1.5deg)}40%{transform:translateY(-.5px) rotate(2.5deg)}42%{transform:translateY(2.5px) rotate(-1.5deg)}44%{transform:translateY(1.5px) rotate(.5deg)}46%{transform:translateY(-1.5px) rotate(2.5deg)}48%{transform:translateY(-.5px) rotate(.5deg)}50%{transform:translateY(.5px) rotate(.5deg)}52%{transform:translateY(2.5px) rotate(2.5deg)}54%{transform:translateY(-1.5px) rotate(1.5deg)}56%{transform:translateY(2.5px) rotate(2.5deg)}58%{transform:translateY(.5px) rotate(2.5deg)}60%{transform:translateY(2.5px) rotate(2.5deg)}62%{transform:translateY(-.5px) rotate(2.5deg)}64%{transform:translateY(-.5px) rotate(1.5deg)}66%{transform:translateY(1.5px) rotate(-.5deg)}68%{transform:translateY(-1.5px) rotate(-.5deg)}70%{transform:translateY(1.5px) rotate(.5deg)}72%{transform:translateY(2.5px) rotate(1.5deg)}74%{transform:translateY(-.5px) rotate(.5deg)}76%{transform:translateY(-.5px) rotate(2.5deg)}78%{transform:translateY(-.5px) rotate(1.5deg)}80%{transform:translateY(1.5px) rotate(1.5deg)}82%{transform:translateY(-.5px) rotate(.5deg)}84%{transform:translateY(1.5px) rotate(2.5deg)}86%{transform:translateY(-1.5px) rotate(-1.5deg)}88%{transform:translateY(-.5px) rotate(2.5deg)}90%{transform:translateY(2.5px) rotate(-.5deg)}92%{transform:translateY(.5px) rotate(-.5deg)}94%{transform:translateY(2.5px) rotate(.5deg)}96%{transform:translateY(-.5px) rotate(1.5deg)}98%{transform:translateY(-1.5px) rotate(-.5deg)}0%,to{transform:translate(0) rotate(0deg)}}
+
+
+</code></pre>
+<p>为了兼容，所以有两份代码，详细的去看关于 <a href="https://www.w3school.com.cn/cssref/pr_animation.asp">CSS animation 属性</a> 。</p>
+<h2 id="鼠标点击的烟花特效">鼠标点击的烟花特效</h2>
+<pre><code class="language-js">class Circle {
+        constructor({origin, speed, color, angle, context}) {
+            this.origin = origin
+            this.position = {...this.origin}
+            this.color = color
+            this.speed = speed
+            this.angle = angle
+            this.context = context
+            this.renderCount = 0
+        }
+
+        draw() {
+            this.context.fillStyle = this.color
+            this.context.beginPath()
+            this.context.arc(this.position.x, this.position.y, 2, 0, Math.PI * 2)
+            this.context.fill()
+        }
+
+        move() {
+            this.position.x = (Math.sin(this.angle) * this.speed) + this.position.x
+            this.position.y = (Math.cos(this.angle) * this.speed) + this.position.y + (this.renderCount * 0.3)
+            this.renderCount++
+        }
+    }
+
+    class Boom {
+        constructor({origin, context, circleCount = 10, area}) {
+            this.origin = origin
+            this.context = context
+            this.circleCount = circleCount
+            this.area = area
+            this.stop = false
+            this.circles = []
+        }
+
+        randomArray(range) {
+            const length = range.length
+            const randomIndex = Math.floor(length * Math.random())
+            return range[randomIndex]
+        }
+
+        randomColor() {
+            const range = ['8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+            return '#' + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range)
+        }
+
+        randomRange(start, end) {
+            return (end - start) * Math.random() + start
+        }
+
+        init() {
+            for (let i = 0; i &lt; this.circleCount; i++) {
+                const circle = new Circle({
+                    context: this.context,
+                    origin: this.origin,
+                    color: this.randomColor(),
+                    angle: this.randomRange(Math.PI - 1, Math.PI + 1),
+                    speed: this.randomRange(1, 6)
+                })
+                this.circles.push(circle)
+            }
+        }
+
+        move() {
+            this.circles.forEach((circle, index) =&gt; {
+                if (circle.position.x &gt; this.area.width || circle.position.y &gt; this.area.height) {
+                    return this.circles.splice(index, 1)
+                }
+                circle.move()
+            })
+            if (this.circles.length == 0) {
+                this.stop = true
+            }
+        }
+
+        draw() {
+            this.circles.forEach(circle =&gt; circle.draw())
+        }
+    }
+
+    class CursorSpecialEffects {
+        constructor() {
+            this.computerCanvas = document.createElement('canvas')
+            this.renderCanvas = document.createElement('canvas')
+
+            this.computerContext = this.computerCanvas.getContext('2d')
+            this.renderContext = this.renderCanvas.getContext('2d')
+
+            this.globalWidth = window.innerWidth
+            this.globalHeight = window.innerHeight
+
+            this.booms = []
+            this.running = false
+        }
+
+        handleMouseDown(e) {
+            const boom = new Boom({
+                origin: {x: e.clientX, y: e.clientY},
+                context: this.computerContext,
+                area: {
+                    width: this.globalWidth,
+                    height: this.globalHeight
+                }
+            })
+            boom.init()
+            this.booms.push(boom)
+            this.running || this.run()
+        }
+
+        handlePageHide() {
+            this.booms = []
+            this.running = false
+        }
+
+        init() {
+            const style = this.renderCanvas.style
+            style.position = 'fixed'
+            style.top = style.left = 0
+            style.zIndex = '999999999999999999999999999999999999999999'
+            style.pointerEvents = 'none'
+
+            style.width = this.renderCanvas.width = this.computerCanvas.width = this.globalWidth
+            style.height = this.renderCanvas.height = this.computerCanvas.height = this.globalHeight
+
+            document.body.append(this.renderCanvas)
+
+            window.addEventListener('mousedown', this.handleMouseDown.bind(this))
+            window.addEventListener('pagehide', this.handlePageHide.bind(this))
+        }
+
+        run() {
+            this.running = true
+            if (this.booms.length == 0) {
+                return this.running = false
+            }
+
+            requestAnimationFrame(this.run.bind(this))
+
+            this.computerContext.clearRect(0, 0, this.globalWidth, this.globalHeight)
+            this.renderContext.clearRect(0, 0, this.globalWidth, this.globalHeight)
+
+            this.booms.forEach((boom, index) =&gt; {
+                if (boom.stop) {
+                    return this.booms.splice(index, 1)
+                }
+                boom.move()
+                boom.draw()
+            })
+            this.renderContext.drawImage(this.computerCanvas, 0, 0, this.globalWidth, this.globalHeight)
+        }
+    }
+
+    try {
+        module.exports.default = module.exports = CursorSpecialEffects
+    } catch (err) {
+        console.log(&quot;错误&quot;, err);
+    }
+    var yh = new CursorSpecialEffects();
+    yh.init();//烟花特效
+</code></pre>
+<p>转自 <a href="https://blog.51cto.com/u_15127526/3949289">烟花特效</a></p>
+<h2 id="返回顶部按钮">返回顶部按钮</h2>
+<p>Javascript</p>
+<pre><code class="language-html">&lt;script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js'&gt;&lt;/script&gt;
+&lt;script type='text/javascript'&gt;
+    jQuery(document).ready(function(e){var t=e(&quot;#BackToTop&quot;);e(window).scroll(function(){e(this).scrollTop()&gt;=200?t.show(10).animate({bottom:&quot;25px&quot;},10):t.animate({bottom:&quot;-60px&quot;},10)});t.click(function(t){t.preventDefault();e(&quot;html,body&quot;).animate({scrollTop:0},400)})})
+&lt;/script&gt;
+    &lt;!-- Compiled and minified JavaScript --&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p>CSS</p>
+<pre><code class="language-css">#BackToTop{
+  position: fixed;
+      z-index: 10;
+      right: 30px;
+    opacity: 0.8;
+    background-color: #4285F4;}
+  
+  #BackToTop:hover{background-color:#3F729B;color:#fff}
+      &lt;!-- 引用的CSS --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css&quot;&gt;
+</code></pre>
+<p>我在引用这个CSS文件的时候和原来的样式发生了冲突，所以又精简了一份出来</p>
+<pre><code class="language-css">.btn-floating {
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 3px 1px -2px rgba(0,0,0,0.12),0 1px 5px 0 rgba(0,0,0,0.2)
+}
+.btn-floating {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+}
+.btn-floating i {
+  width: inherit;
+  display: inline-block;
+  text-align: center;
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 40px
+}
+.waves-effect {
+  cursor: pointer;
+  display: inline-block;
+  overflow: hidden;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  vertical-align: middle;
+  transition: .3s ease-out
+}
+</code></pre>
+<p>效果差不多，就是稍微有点点不一样，然后可以删掉html里面的btn和waves-light<br>
+Html</p>
+<pre><code class="language-html">    &lt;a class='btn-floating btn waves-effect waves-light' href='#' id='BackToTop' style=&quot;bottom:-60px&quot;&gt;&lt;i class='fa fa-angle-up'&gt;&lt;/i&gt;&lt;/a&gt; 
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Gridea+Github 搭建个人博客]]></title>
+        <id>https://RoromoriYuzu.github.io/post/NpDdnAb26/</id>
+        <link href="https://RoromoriYuzu.github.io/post/NpDdnAb26/">
+        </link>
+        <updated>2022-07-13T04:33:50.000Z</updated>
+        <summary type="html"><![CDATA[<p>只需要数分钟，你也可以拥有一个像我一样的博客😘</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>只需要数分钟，你也可以拥有一个像我一样的博客😘</p>
+<!-- more -->
+<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85">安装</a></li>
+<li><a href="#%E5%8F%91%E5%B8%83">发布</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E8%AF%84%E8%AE%BA%E5%8C%BA">配置评论区</a>
+<ul>
+<li><a href="#%E7%94%B3%E8%AF%B7%E4%B8%80%E4%B8%AAoauth-application">申请一个<code>OAuth application</code></a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEgridea">配置Gridea</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br>
+首先你需要一个<a href="https://github.com/">Github</a>账号</p>
+<h2 id="安装">安装</h2>
+<p>安装 <a href="https://gridea.dev/">Gridea</a></p>
+<h2 id="发布">发布</h2>
+<p><a href="https://gridea.dev/gridea-start/">官方文档</a></p>
+<h2 id="配置评论区">配置评论区</h2>
+<p>这里我选择的是Gitalk。</p>
+<p><strong>使用Gitalk需要你做一些提前准备：</strong></p>
+<p>1、在github上创建一个仓库，也可以继续使用放置博客文件的仓库，Gitalk会把评论放在这个仓库的issues里面。</p>
+<p>2、在github上申请一个<code>GitHub OAuth application</code>，来让Gitalk有权限操作github上的仓库。</p>
+<h3 id="申请一个oauth-application">申请一个<code>OAuth application</code></h3>
+<p><code>GitHub OAuth application</code>允许程序来操作你的github账户，可以对github中仓库读写。<br>
+详情介绍：<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fdeveloper.github.com%2Fapps%2Fabout-apps%2F%23about-oauth-apps">https://developer.github.com/...</a></p>
+<p>申请<code>GitHub OAuth application</code>流程：</p>
+<blockquote>
+<p>1、打开github网站登陆后，点击右上角的用户图标，选择<code>Settings</code></p>
+<p>2、 在<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2Fsettings%2Fprofile">Settings</a>页面选择<code>Developer settings</code>选项。</p>
+<p>3、在<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2Fsettings%2Fdevelopers">Developer settings</a>选择<code>OAuth Apps</code>,然后会在页面右边有一个<code>New OAuth App</code>按钮，点击这个按钮就进入到新建<code>OAuth application</code>页面</p>
+<p>4、也可以直接代开这个链接：<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2Fsettings%2Fapplications%2Fnew">https://github.com/settings/a...</a> 进入新建页面</p>
+</blockquote>
+<p>在注册<code>OAuth</code>应用页面有如下几个参数需要填写：</p>
+<blockquote>
+<p>Application name：必填，OAuth的名字</p>
+<p>Homepage URL：必填，你应用的网址，哪个网站用了Gitalk组件，就填写这个网址</p>
+<p>Application description：选填，该OAuth的说明</p>
+<p>Authorization callback URL：必填，授权成功后回调网址，跟<code>Homepage URL</code>参数保持一致就好</p>
+<p>这些参数在注册成功后是可以修改。</p>
+</blockquote>
+<p>参数填好后，点<code>Register application</code>按钮即可完成注册。</p>
+<p>注册成功后会自动跳转到这个<code>OAuth</code>应用的页面，或者在<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2Fsettings%2Fdevelopers">Developer settings</a>选择<code>OAuth Apps</code>后就能看见你创建的<code>OAuth</code>应用名字，点击它进入这个<code>OAuth</code>应用的页面。在新创建的<code>OAuth</code>应用里面的<code>Client ID</code>和新建的<code>Client Secret</code>就是我们需要的参数。</p>
+<h3 id="配置gridea">配置Gridea</h3>
+<p>在评论设置里选择Gitalk，然后填入<code>Client ID</code>和<code>Client Secret</code>仓库名称和基础配置中的一样，Owner就是仓库用户名，然后点击保存。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Hello Gridea]]></title>
+        <id>https://RoromoriYuzu.github.io/post/hello-gridea/</id>
+        <link href="https://RoromoriYuzu.github.io/post/hello-gridea/">
+        </link>
+        <updated>2018-12-11T16:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
+✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
+✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
+<!-- more -->
+<p><a href="https://github.com/getgridea/gridea">Github</a><br>
+<a href="https://gridea.dev/">Gridea 主页</a><br>
+<a href="https://fehey.com/">示例网站</a></p>
+<h2 id="特性">特性👇</h2>
+<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
+<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
+<p>🏷️  你可以对文章进行标签分组</p>
+<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
+<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
+<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
+<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
+<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
+<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
+<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
+<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
+<p>未来，它一定会成为你离不开的伙伴</p>
+<p>尽情发挥你的才华吧！</p>
+<p>😘 Enjoy~</p>
+]]></content>
+    </entry>
+</feed>
