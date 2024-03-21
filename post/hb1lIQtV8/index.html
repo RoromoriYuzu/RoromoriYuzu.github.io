@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>我的小笔记本</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://RoromoriYuzu.github.io/favicon.ico?v=1710994808024">
+<link rel="stylesheet" href="https://RoromoriYuzu.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1Q42RW1FZW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1Q42RW1FZW');
+</script>
+
+
+    <meta name="description" content="
+
+
+逆向小程序
+分析代码
+
+生成逻辑
+
+
+结语
+
+
+
+
+
+上一章说到通过直接调用 wasm 来实现生成 Sign，但发现只针对那一个域名接口的请求有效，换个接口就不行了，看来还是要彻底分析他的生成逻辑。
+
+逆向小程序
+在小程序打开前就对它..." />
+    <meta name="keywords" content="逆向,学习,Javascript" />
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+    <div class="top-container" data-aos="fade-right">
+        <div class="top-header-container">
+            <a class="site-title-container" href="https://RoromoriYuzu.github.io">
+        <img src="https://RoromoriYuzu.github.io/images/avatar.png?v=1710994808024" class="site-logo">
+        <h1 class="site-title">路路森</h1>
+      </a>
+            <div class="menu-btn" @click="menuVisible = !menuVisible">
+                <div class="line"></div>
+            </div>
+        </div>
+        <div>
+            
+                
+                        <a href="/" class="site-nav">
+                            首页
+                        </a>
+                        
+                            
+                
+                        <a href="/archives" class="site-nav">
+                            归档
+                        </a>
+                        
+                            
+                
+                        <a href="/tags" class="site-nav">
+                            标签
+                        </a>
+                        
+                            
+                
+                        <a href="https://RoromoriYuzu.github.io/post/note" class="site-nav">
+                            记录
+                        </a>
+                        
+                            
+                
+                        <a href="/post/about" class="site-nav">
+                            关于
+                        </a>
+                        
+                            
+        </div>
+    </div>
+    <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+        <div class="social-container">
+            
+                
+                    <a class="social-link" href="https://github.com/RoromoriYuzu" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+                    
+                        
+                
+                    <a class="social-link" href="https://twitter.com/prpr2333" target="_blank">
+            <i class="fab fa-twitter"></i>
+          </a>
+                    
+                        
+                
+                        
+                
+                        
+                
+                        
+                
+                    <a class="social-link" href="https://t.me/bilibili_ceo" target="_blank">
+            <i class="fab fa-telegram"></i>
+          </a>
+                    
+                        
+                
+                    <a class="social-link" href="https://www.youtube.com/channel/UCw8e2m6Xm0peLZFuaJDgriA" target="_blank">
+            <i class="fab fa-youtube"></i>
+          </a>
+                    
+                        
+                
+                        
+        </div>
+        <div class="site-description">
+            生命不息，折腾不止
+        </div>
+        <p class="footer-inner">
+            博客已运行<span id="since"></span>
+            <span class="my-face">(●'◡'●)ﾉ<span id="like">♥</span></span>
+        </p>
+        <div class="site-footer">
+            Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://RoromoriYuzu.github.io/atom.xml" target="_blank">RSS</a>
+        </div>
+    </div>
+</div>
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">书接上回 小程序解包逆向分析 Sign 生成逻辑</h2>
+            <div class="post-date">2023-08-14</div>
+            
+            <div class="post-content" v-pre>
+              <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%80%86%E5%90%91%E5%B0%8F%E7%A8%8B%E5%BA%8F">逆向小程序</a></li>
+<li><a href="#%E5%88%86%E6%9E%90%E4%BB%A3%E7%A0%81">分析代码</a>
+<ul>
+<li><a href="#%E7%94%9F%E6%88%90%E9%80%BB%E8%BE%91">生成逻辑</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BB%93%E8%AF%AD">结语</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<blockquote>
+<p>上一章说到通过直接调用 wasm 来实现生成 Sign，但发现只针对那一个域名接口的请求有效，换个接口就不行了，看来还是要彻底分析他的生成逻辑。</p>
+</blockquote>
+<h2 id="逆向小程序">逆向小程序</h2>
+<p>在小程序打开前就对它抓包，直到页面加载完毕也没发现相关js的请求，而且api的 referer:  都是指向了 https://servicewechat.com，所以可以基本确定相关的js文件都早打包进小程序下载到了本地。</p>
+<p>打开目录 <code>Documents\WeChat Files\Applet</code>  根据修改日期可以确定哪个文件夹对应着小程序包。</p>
+<figure data-type="image" tabindex="1"><img src="https://RoromoriYuzu.github.io/post-images/1692004689876.jpg" alt="" loading="lazy"></figure>
+<p>接下来需要对 wxapkg 文件进行解密然后解包，由于微信的更新，在5月之前的解包工具都不能正常的解带有分包的小程序，我用的是 unveilr.exe 转收费前的版本，能正常的解大部分的文件，但还是有点小毛病，相关的解包教程可以去网上找。</p>
+<figure data-type="image" tabindex="2"><img src="https://RoromoriYuzu.github.io/post-images/1692004955216.jpg" alt="" loading="lazy"></figure>
+<p>解包完成后可以通过文件的大小，或者是否存在 <code>app.json</code> 文件来确定是否成功解包，将解包后的相应文件夹导入微信开发者工具，开始动态调试。</p>
+<p>因为解包工具比较旧，导入后会出现不少报错，只要根据 <a href="https://developers.weixin.qq.com/miniprogram/dev/reference/configuration/app.html">微信官方文档</a> 稍微改改就可以正常编译，不需要的页面可以去掉，只保留需要分析的地方。</p>
+<p><code>app.json</code> 文件中的 <code>plugins</code>对象内容可以删除，否则会报错未授权使用插件。其他请求登录接口报错的可以抓包拦截下来，修改为原本小程序的返回包。</p>
+<p>如果想要第一屏设置为分包页面，那就将 <code>pages</code> 对象添加对应分包页面，并删除 <code>preloadRule</code> 对象中的分包页面相关信息，否则会报错 <code>pages *** 不应该在分包 subPackages[*] 中</code>，之后重新编译即可进入设置的页面。</p>
+<h2 id="分析代码">分析代码</h2>
+<p>全局搜索关键字 Sign 可以找到相关代码段，而且代码没有做混淆处理，分析起来非常容易。</p>
+<p>比如这一段，一眼就可以看出是 sha1 处理函数，传入字符串，返回sha1字符串</p>
+<pre><code class="language-js">function (e, t) {
+        var n = global.bc(&quot;platform&quot;, &quot;cloud-fe-yunsdk-platform&quot;);
+        e.exports = function (e) {
+            var t, n, r = new Uint8Array(function (e) {
+                var t, n, r, o = [];
+                for (t = 0; t &lt; e.length; t++)(n = e.charCodeAt(t)) &lt; 128 ? o.push(n) : n &lt; 2048 ?
+                    o.push(192 + (n &gt;&gt; 6 &amp; 31), 128 + (63 &amp; n)) : ((r = 55296 ^ n) &gt;&gt; 10 == 0 ? (n =
+                        (r &lt;&lt; 10) + (56320 ^ e.charCodeAt(++t)) + 65536, o.push(240 + (n &gt;&gt; 18 &amp;
+                            7), 128 + (n &gt;&gt; 12 &amp; 63))) : o.push(224 + (n &gt;&gt; 12 &amp; 15)), o.push(
+                                128 + (n &gt;&gt; 6 &amp; 63), 128 + (63 &amp; n)));
+                return o
+            }(e)),
+                o = 16 + (r.length + 8 &gt;&gt;&gt; 6 &lt;&lt; 4);
+            for ((e = new Uint8Array(o &lt;&lt; 2)).set(new Uint8Array(r.buffer)), e = new Uint32Array(e.buffer),
+                n = new DataView(e.buffer), d = 0; d &lt; o; d++) e[d] = n.getUint32(d &lt;&lt; 2);
+            e[r.length &gt;&gt; 2] |= 128 &lt;&lt; 24 - 8 * (3 &amp; r.length), e[o - 1] = r.length &lt;&lt; 3;
+            var a = [],
+                s = [function () {
+                    return u[1] &amp; u[2] | ~u[1] &amp; u[3]
+                }, function () {
+                    return u[1] ^ u[2] ^ u[3]
+                }, function () {
+                    return u[1] &amp; u[2] | u[1] &amp; u[3] | u[2] &amp; u[3]
+                }, function () {
+                    return u[1] ^ u[2] ^ u[3]
+                }],
+                c = function (e, t) {
+                    return e &lt;&lt; t | e &gt;&gt;&gt; 32 - t
+                },
+                i = [1518500249, 1859775393, -1894007588, -899497514],
+                u = [1732584193, -271733879, null, null, -1009589776];
+            for (u[2] = ~u[0], u[3] = ~u[1], d = 0; d &lt; e.length; d += 16) {
+                var l = u.slice(0);
+                for (t = 0; t &lt; 80; t++) a[t] = t &lt; 16 ? e[d + t] : c(a[t - 3] ^ a[t - 8] ^ a[t - 14] ^ a[t -
+                    16], 1), n = c(u[0], 5) + s[t / 20 | 0]() + u[4] + a[t] + i[t / 20 | 0] | 0, u[1] =
+                    c(u[1], 30), u.pop(), u.unshift(n);
+                for (t = 0; t &lt; 5; t++) u[t] = u[t] + l[t] | 0
+            }
+            n = new DataView(new Uint32Array(u).buffer);
+            for (var d = 0; d &lt; 5; d++) u[d] = n.getUint32(d &lt;&lt; 2);
+            return Array.prototype.map.call(new Uint8Array(new Uint32Array(u).buffer), (function (e) {
+                return (e &lt; 16 ? &quot;0&quot; : &quot;&quot;) + e.toString(16)
+            })).join(&quot;&quot;)
+        }
+    }
+</code></pre>
+<p>调用 sha1 传入字符串的函数是</p>
+<pre><code class="language-js">        function l(t, n) {
+            var r = arguments.length &gt; 2 &amp;&amp; void 0 !== arguments[2] &amp;&amp; arguments[2];
+            return function (n) {
+                if (t.nonce = t.nonce || a()(), t.ts = t.ts || s.default.get(!1, !0), &quot;object&quot; == e(t.body))
+                    try {
+                        t.body = JSON.stringify(t.body)
+                    } catch (n) {
+                        t.body = &quot;&quot;
+                    }
+                n = n.map((function (e) {
+                    return t[e]
+                })).join(&quot;;&quot;);
+                var o = i()(n);
+                return r &amp;&amp; console.log(&quot;[SAFE]:&quot;, o, n), {
+                    nonce: t.nonce,
+                    ts: t.ts,
+                    sign: o
+                }
+            }(n)
+        }
+
+</code></pre>
+<p>有了上面的这些，也就不难分析出生成 sign的逻辑了。</p>
+<h3 id="生成逻辑">生成逻辑</h3>
+<p>传入的参数t包含有nonce，ts和body属性，n通过观察前面的代码可以知道是 <code>[&quot;signKey&quot;, &quot;skey&quot;, &quot;body&quot;, &quot;nonce&quot;, &quot;ts&quot;]</code>这样一个数组。</p>
+<p>首先，第一个 if 会检查传入的t.nonce，t.ts 是否存在，如不存在则调用相应函数生成，接着判断body的类型，如果是 object 则将其转换为json，转换失败则置空。然后按照n数组的顺序，将数组内容对应值通过 <code>;</code> 符号连接起来形成这样的字符串 <code>signKey;skey;body;nonce;ts</code> signKey 的值在前面的代码也有(换个域名就不对的原因)，skey 为auto-token。再把生成的字符串传给 i 即 sha1 函数，得出 sign 值。</p>
+<h2 id="结语">结语</h2>
+<p>对于这种没有混淆的代码，甚至不用动态调试都可以看出生成的逻辑，便能省掉让其在微信开发者工具中运行的时间。</p>
+<p>但是动态调试的话可以看到中间变量，减少分析过程的错误。就比如我，想当然的认为最后的L函数必定会传入body，因为post请求的body就在那里摆着，但sha1函数的输出结果总是和实际值对不起来。直到我在开发者工具里下断点调试了好几遍之后才发现，有的请求虽然有body，但并不会将body传入L函数，sha1的输出也自然没有body的事情，不知到是他代码逻辑就是这样，还是说是开发者写的bug 😓</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://RoromoriYuzu.github.io/tag/OE_gcQIAN/" class="tag">
+                    逆向
+                  </a>
+                
+                  <a href="https://RoromoriYuzu.github.io/tag/A9NeaOFri5/" class="tag">
+                    学习
+                  </a>
+                
+                  <a href="https://RoromoriYuzu.github.io/tag/uTKWNErwT/" class="tag">
+                    Javascript
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://RoromoriYuzu.github.io/post/bZdODaSxn/">
+                  <h3 class="post-title">
+                    逆向 WebPack 打包网站使用 wasm 加密 Sign 参数的逻辑
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <a class='btn-floating waves-effect' href='#' id='BackToTop' style="bottom:-60px"><i class='fa fa-angle-up'></i></a> 
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script><!-- 预加载加速 -->
+<script type='text/javascript'>
+    jQuery(document).ready(function(e){var t=e("#BackToTop");e(window).scroll(function(){e(this).scrollTop()>=200?t.show(10).animate({bottom:"25px"},10):t.animate({bottom:"-60px"},10)});t.click(function(t){t.preventDefault();e("html,body").animate({scrollTop:0},400)})})
+</script>
+<script type="text/javascript">
+    class Circle {
+        constructor({
+            origin,
+            speed,
+            color,
+            angle,
+            context
+        }) {
+            this.origin = origin
+            this.position = {...this.origin
+            }
+            this.color = color
+            this.speed = speed
+            this.angle = angle
+            this.context = context
+            this.renderCount = 0
+        }
+
+        draw() {
+            this.context.fillStyle = this.color
+            this.context.beginPath()
+            this.context.arc(this.position.x, this.position.y, 2, 0, Math.PI * 2)
+            this.context.fill()
+        }
+
+        move() {
+            this.position.x = (Math.sin(this.angle) * this.speed) + this.position.x
+            this.position.y = (Math.cos(this.angle) * this.speed) + this.position.y + (this.renderCount * 0.3)
+            this.renderCount++
+        }
+    }
+
+    class Boom {
+        constructor({
+            origin,
+            context,
+            circleCount = 10,
+            area
+        }) {
+            this.origin = origin
+            this.context = context
+            this.circleCount = circleCount
+            this.area = area
+            this.stop = false
+            this.circles = []
+        }
+
+        randomArray(range) {
+            const length = range.length
+            const randomIndex = Math.floor(length * Math.random())
+            return range[randomIndex]
+        }
+
+        randomColor() {
+            const range = ['8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+            return '#' + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range)
+        }
+
+        randomRange(start, end) {
+            return (end - start) * Math.random() + start
+        }
+
+        init() {
+            for (let i = 0; i < this.circleCount; i++) {
+                const circle = new Circle({
+                    context: this.context,
+                    origin: this.origin,
+                    color: this.randomColor(),
+                    angle: this.randomRange(Math.PI - 1, Math.PI + 1),
+                    speed: this.randomRange(1, 6)
+                })
+                this.circles.push(circle)
+            }
+        }
+
+        move() {
+            this.circles.forEach((circle, index) => {
+                if (circle.position.x > this.area.width || circle.position.y > this.area.height) {
+                    return this.circles.splice(index, 1)
+                }
+                circle.move()
+            })
+            if (this.circles.length == 0) {
+                this.stop = true
+            }
+        }
+
+        draw() {
+            this.circles.forEach(circle => circle.draw())
+        }
+    }
+
+    class CursorSpecialEffects {
+        constructor() {
+            this.computerCanvas = document.createElement('canvas')
+            this.renderCanvas = document.createElement('canvas')
+
+            this.computerContext = this.computerCanvas.getContext('2d')
+            this.renderContext = this.renderCanvas.getContext('2d')
+
+            this.globalWidth = window.innerWidth
+            this.globalHeight = window.innerHeight
+
+            this.booms = []
+            this.running = false
+        }
+
+        handleMouseDown(e) {
+            const boom = new Boom({
+                origin: {
+                    x: e.clientX,
+                    y: e.clientY
+                },
+                context: this.computerContext,
+                area: {
+                    width: this.globalWidth,
+                    height: this.globalHeight
+                }
+            })
+            boom.init()
+            this.booms.push(boom)
+            this.running || this.run()
+        }
+
+        handlePageHide() {
+            this.booms = []
+            this.running = false
+        }
+
+        init() {
+            const style = this.renderCanvas.style
+            style.position = 'fixed'
+            style.top = style.left = 0
+            style.zIndex = '999999999999999999999999999999999999999999'
+            style.pointerEvents = 'none'
+
+            style.width = this.renderCanvas.width = this.computerCanvas.width = this.globalWidth
+            style.height = this.renderCanvas.height = this.computerCanvas.height = this.globalHeight
+
+            document.body.append(this.renderCanvas)
+
+            window.addEventListener('mousedown', this.handleMouseDown.bind(this))
+            window.addEventListener('pagehide', this.handlePageHide.bind(this))
+        }
+
+        run() {
+            this.running = true
+            if (this.booms.length == 0) {
+                return this.running = false
+            }
+
+            requestAnimationFrame(this.run.bind(this))
+
+            this.computerContext.clearRect(0, 0, this.globalWidth, this.globalHeight)
+            this.renderContext.clearRect(0, 0, this.globalWidth, this.globalHeight)
+
+            this.booms.forEach((boom, index) => {
+                if (boom.stop) {
+                    return this.booms.splice(index, 1)
+                }
+                boom.move()
+                boom.draw()
+            })
+            this.renderContext.drawImage(this.computerCanvas, 0, 0, this.globalWidth, this.globalHeight)
+        }
+    }
+    var yh = new CursorSpecialEffects();
+    yh.init(); //烟花特效
+</script>
+<script type="text/javascript">
+    function runtime() {
+        // 初始时间，月/日/年 时:分:秒
+        X = new Date("7/12/2022 19:12:02");
+        Y = new Date();
+        T = (Y.getTime() - X.getTime());
+        M = 24 * 60 * 60 * 1000;
+        a = T / M;
+        A = Math.floor(a);
+        b = (a - A) * 24;
+        B = Math.floor(b);
+        c = (b - B) * 60;
+        C = Math.floor((b - B) * 60);
+        D = Math.floor((c - C) * 60);
+        //信息写入到DIV中
+        since.innerHTML = A + "天" + B + "小时" + C + "分" + D + "秒"
+    }
+    setInterval(runtime, 1000);
+</script>
+
+<script type="application/javascript">
+    AOS.init();
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            menuVisible: false,
+        },
+    })
+</script>
+
+
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad()
+    </script>
+    
+
+        
+
+            
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                <script>
+                    var gitalk = new Gitalk({
+                        clientID: 'df0154d6a9f45f1e95f3',
+                        clientSecret: '72bdef4a1fb6001d84fb3f09c9e7c840c4887d68',
+                        repo: 'RoromoriYuzu.github.io',
+                        owner: 'RoromoriYuzu',
+                        admin: ['RoromoriYuzu'],
+                        id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+                        distractionFreeMode: false // Facebook-like distraction free mode
+                    })
+
+                    gitalk.render('gitalk-container')
+                </script>
+                
+
+                    
+
+                            
+  </body>
+</html>
