@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>我的小笔记本</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://RoromoriYuzu.github.io/favicon.ico?v=1714155557502">
+<link rel="stylesheet" href="https://RoromoriYuzu.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1Q42RW1FZW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1Q42RW1FZW');
+</script>
+
+
+    <meta name="description" content="生命不息，折腾不止">
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+    <div class="top-container" data-aos="fade-right">
+        <div class="top-header-container">
+            <a class="site-title-container" href="https://RoromoriYuzu.github.io">
+        <img src="https://RoromoriYuzu.github.io/images/avatar.png?v=1714155557502" class="site-logo">
+        <h1 class="site-title">路路森</h1>
+      </a>
+            <div class="menu-btn" @click="menuVisible = !menuVisible">
+                <div class="line"></div>
+            </div>
+        </div>
+        <div>
+            
+                
+                        <a href="/" class="site-nav">
+                            首页
+                        </a>
+                        
+                            
+                
+                        <a href="/archives" class="site-nav">
+                            归档
+                        </a>
+                        
+                            
+                
+                        <a href="/tags" class="site-nav">
+                            标签
+                        </a>
+                        
+                            
+                
+                        <a href="https://RoromoriYuzu.github.io/post/note" class="site-nav">
+                            记录
+                        </a>
+                        
+                            
+                
+                        <a href="/post/about" class="site-nav">
+                            关于
+                        </a>
+                        
+                            
+        </div>
+    </div>
+    <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+        <div class="social-container">
+            
+                
+                    <a class="social-link" href="https://github.com/RoromoriYuzu" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+                    
+                        
+                
+                    <a class="social-link" href="https://twitter.com/prpr2333" target="_blank">
+            <i class="fab fa-twitter"></i>
+          </a>
+                    
+                        
+                
+                        
+                
+                        
+                
+                        
+                
+                    <a class="social-link" href="https://t.me/bilibili_ceo" target="_blank">
+            <i class="fab fa-telegram"></i>
+          </a>
+                    
+                        
+                
+                    <a class="social-link" href="https://www.youtube.com/channel/UCw8e2m6Xm0peLZFuaJDgriA" target="_blank">
+            <i class="fab fa-youtube"></i>
+          </a>
+                    
+                        
+                
+                        
+        </div>
+        <div class="site-description">
+            生命不息，折腾不止
+        </div>
+        <p class="footer-inner">
+            博客已运行<span id="since"></span>
+            <span class="my-face">(●'◡'●)ﾉ<span id="like">♥</span></span>
+        </p>
+        <div class="site-footer">
+            Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://RoromoriYuzu.github.io/atom.xml" target="_blank">RSS</a>
+        </div>
+    </div>
+</div>
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <h2 class="current-tag">标签: Javascript</h2>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://RoromoriYuzu.github.io/post/hb1lIQtV8/">
+                  <h2 class="post-title">书接上回 小程序解包逆向分析 Sign 生成逻辑</h2>
+                </a>
+                <div class="post-date">
+                  2023-08-14
+                </div>
+                <div class="post-abstract">
+                  
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://RoromoriYuzu.github.io/post/bZdODaSxn/">
+                  <h2 class="post-title">逆向 WebPack 打包网站使用 wasm 加密 Sign 参数的逻辑</h2>
+                </a>
+                <div class="post-date">
+                  2023-08-10
+                </div>
+                <div class="post-abstract">
+                  
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://RoromoriYuzu.github.io/post/5pIS9eTDb/">
+                  <h2 class="post-title">记一次简单的 JS 逆向分析</h2>
+                </a>
+                <div class="post-date">
+                  2022-08-11
+                </div>
+                <div class="post-abstract">
+                  
+                </div>
+              </div>
+              
+            </article>
+          
+            <article class="post-item">
+              <div class="left">
+                <a href="https://RoromoriYuzu.github.io/post/M6GTudq1e/">
+                  <h2 class="post-title">我的第一个 JS 脚本</h2>
+                </a>
+                <div class="post-date">
+                  2022-07-23
+                </div>
+                <div class="post-abstract">
+                  
+                </div>
+              </div>
+              
+            </article>
+          
+
+          <div class="pagination-container">
+  
+  
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script><!-- 预加载加速 -->
+<script type='text/javascript'>
+    jQuery(document).ready(function(e){var t=e("#BackToTop");e(window).scroll(function(){e(this).scrollTop()>=200?t.show(10).animate({bottom:"25px"},10):t.animate({bottom:"-60px"},10)});t.click(function(t){t.preventDefault();e("html,body").animate({scrollTop:0},400)})})
+</script>
+<script type="text/javascript">
+    class Circle {
+        constructor({
+            origin,
+            speed,
+            color,
+            angle,
+            context
+        }) {
+            this.origin = origin
+            this.position = {...this.origin
+            }
+            this.color = color
+            this.speed = speed
+            this.angle = angle
+            this.context = context
+            this.renderCount = 0
+        }
+
+        draw() {
+            this.context.fillStyle = this.color
+            this.context.beginPath()
+            this.context.arc(this.position.x, this.position.y, 2, 0, Math.PI * 2)
+            this.context.fill()
+        }
+
+        move() {
+            this.position.x = (Math.sin(this.angle) * this.speed) + this.position.x
+            this.position.y = (Math.cos(this.angle) * this.speed) + this.position.y + (this.renderCount * 0.3)
+            this.renderCount++
+        }
+    }
+
+    class Boom {
+        constructor({
+            origin,
+            context,
+            circleCount = 10,
+            area
+        }) {
+            this.origin = origin
+            this.context = context
+            this.circleCount = circleCount
+            this.area = area
+            this.stop = false
+            this.circles = []
+        }
+
+        randomArray(range) {
+            const length = range.length
+            const randomIndex = Math.floor(length * Math.random())
+            return range[randomIndex]
+        }
+
+        randomColor() {
+            const range = ['8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+            return '#' + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range)
+        }
+
+        randomRange(start, end) {
+            return (end - start) * Math.random() + start
+        }
+
+        init() {
+            for (let i = 0; i < this.circleCount; i++) {
+                const circle = new Circle({
+                    context: this.context,
+                    origin: this.origin,
+                    color: this.randomColor(),
+                    angle: this.randomRange(Math.PI - 1, Math.PI + 1),
+                    speed: this.randomRange(1, 6)
+                })
+                this.circles.push(circle)
+            }
+        }
+
+        move() {
+            this.circles.forEach((circle, index) => {
+                if (circle.position.x > this.area.width || circle.position.y > this.area.height) {
+                    return this.circles.splice(index, 1)
+                }
+                circle.move()
+            })
+            if (this.circles.length == 0) {
+                this.stop = true
+            }
+        }
+
+        draw() {
+            this.circles.forEach(circle => circle.draw())
+        }
+    }
+
+    class CursorSpecialEffects {
+        constructor() {
+            this.computerCanvas = document.createElement('canvas')
+            this.renderCanvas = document.createElement('canvas')
+
+            this.computerContext = this.computerCanvas.getContext('2d')
+            this.renderContext = this.renderCanvas.getContext('2d')
+
+            this.globalWidth = window.innerWidth
+            this.globalHeight = window.innerHeight
+
+            this.booms = []
+            this.running = false
+        }
+
+        handleMouseDown(e) {
+            const boom = new Boom({
+                origin: {
+                    x: e.clientX,
+                    y: e.clientY
+                },
+                context: this.computerContext,
+                area: {
+                    width: this.globalWidth,
+                    height: this.globalHeight
+                }
+            })
+            boom.init()
+            this.booms.push(boom)
+            this.running || this.run()
+        }
+
+        handlePageHide() {
+            this.booms = []
+            this.running = false
+        }
+
+        init() {
+            const style = this.renderCanvas.style
+            style.position = 'fixed'
+            style.top = style.left = 0
+            style.zIndex = '999999999999999999999999999999999999999999'
+            style.pointerEvents = 'none'
+
+            style.width = this.renderCanvas.width = this.computerCanvas.width = this.globalWidth
+            style.height = this.renderCanvas.height = this.computerCanvas.height = this.globalHeight
+
+            document.body.append(this.renderCanvas)
+
+            window.addEventListener('mousedown', this.handleMouseDown.bind(this))
+            window.addEventListener('pagehide', this.handlePageHide.bind(this))
+        }
+
+        run() {
+            this.running = true
+            if (this.booms.length == 0) {
+                return this.running = false
+            }
+
+            requestAnimationFrame(this.run.bind(this))
+
+            this.computerContext.clearRect(0, 0, this.globalWidth, this.globalHeight)
+            this.renderContext.clearRect(0, 0, this.globalWidth, this.globalHeight)
+
+            this.booms.forEach((boom, index) => {
+                if (boom.stop) {
+                    return this.booms.splice(index, 1)
+                }
+                boom.move()
+                boom.draw()
+            })
+            this.renderContext.drawImage(this.computerCanvas, 0, 0, this.globalWidth, this.globalHeight)
+        }
+    }
+    var yh = new CursorSpecialEffects();
+    yh.init(); //烟花特效
+</script>
+<script type="text/javascript">
+    function runtime() {
+        // 初始时间，月/日/年 时:分:秒
+        X = new Date("7/12/2022 19:12:02");
+        Y = new Date();
+        T = (Y.getTime() - X.getTime());
+        M = 24 * 60 * 60 * 1000;
+        a = T / M;
+        A = Math.floor(a);
+        b = (a - A) * 24;
+        B = Math.floor(b);
+        c = (b - B) * 60;
+        C = Math.floor((b - B) * 60);
+        D = Math.floor((c - C) * 60);
+        //信息写入到DIV中
+        since.innerHTML = A + "天" + B + "小时" + C + "分" + D + "秒"
+    }
+    setInterval(runtime, 1000);
+</script>
+
+<script type="application/javascript">
+    AOS.init();
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            menuVisible: false,
+        },
+    })
+</script>
+
+
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad()
+    </script>
+    
+
+        
+  </body>
+</html>

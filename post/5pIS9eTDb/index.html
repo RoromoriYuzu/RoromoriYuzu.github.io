@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>我的小笔记本</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://RoromoriYuzu.github.io/favicon.ico?v=1714155557502">
+<link rel="stylesheet" href="https://RoromoriYuzu.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1Q42RW1FZW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1Q42RW1FZW');
+</script>
+
+
+    <meta name="description" content="
+
+
+起因
+经过
+
+开始分析参数的生成
+
+分析
+
+
+
+
+
+
+
+
+起因
+像往常一样没啥事查看青龙日志的时候发现脚本报错了。
+
+一开始还以为是网络问题没管他，等练车回来的时候看了一眼发现还是报错，仔细看了看发现是加了验证的参数
+经过
+打开Fid..." />
+    <meta name="keywords" content="逆向,Javascript" />
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+    <div class="top-container" data-aos="fade-right">
+        <div class="top-header-container">
+            <a class="site-title-container" href="https://RoromoriYuzu.github.io">
+        <img src="https://RoromoriYuzu.github.io/images/avatar.png?v=1714155557502" class="site-logo">
+        <h1 class="site-title">路路森</h1>
+      </a>
+            <div class="menu-btn" @click="menuVisible = !menuVisible">
+                <div class="line"></div>
+            </div>
+        </div>
+        <div>
+            
+                
+                        <a href="/" class="site-nav">
+                            首页
+                        </a>
+                        
+                            
+                
+                        <a href="/archives" class="site-nav">
+                            归档
+                        </a>
+                        
+                            
+                
+                        <a href="/tags" class="site-nav">
+                            标签
+                        </a>
+                        
+                            
+                
+                        <a href="https://RoromoriYuzu.github.io/post/note" class="site-nav">
+                            记录
+                        </a>
+                        
+                            
+                
+                        <a href="/post/about" class="site-nav">
+                            关于
+                        </a>
+                        
+                            
+        </div>
+    </div>
+    <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+        <div class="social-container">
+            
+                
+                    <a class="social-link" href="https://github.com/RoromoriYuzu" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+                    
+                        
+                
+                    <a class="social-link" href="https://twitter.com/prpr2333" target="_blank">
+            <i class="fab fa-twitter"></i>
+          </a>
+                    
+                        
+                
+                        
+                
+                        
+                
+                        
+                
+                    <a class="social-link" href="https://t.me/bilibili_ceo" target="_blank">
+            <i class="fab fa-telegram"></i>
+          </a>
+                    
+                        
+                
+                    <a class="social-link" href="https://www.youtube.com/channel/UCw8e2m6Xm0peLZFuaJDgriA" target="_blank">
+            <i class="fab fa-youtube"></i>
+          </a>
+                    
+                        
+                
+                        
+        </div>
+        <div class="site-description">
+            生命不息，折腾不止
+        </div>
+        <p class="footer-inner">
+            博客已运行<span id="since"></span>
+            <span class="my-face">(●'◡'●)ﾉ<span id="like">♥</span></span>
+        </p>
+        <div class="site-footer">
+            Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://RoromoriYuzu.github.io/atom.xml" target="_blank">RSS</a>
+        </div>
+    </div>
+</div>
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">记一次简单的 JS 逆向分析</h2>
+            <div class="post-date">2022-08-11</div>
+            
+            <div class="post-content" v-pre>
+              <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E8%B5%B7%E5%9B%A0">起因</a></li>
+<li><a href="#%E7%BB%8F%E8%BF%87">经过</a>
+<ul>
+<li><a href="#%E5%BC%80%E5%A7%8B%E5%88%86%E6%9E%90%E5%8F%82%E6%95%B0%E7%9A%84%E7%94%9F%E6%88%90">开始分析参数的生成</a>
+<ul>
+<li><a href="#%E5%88%86%E6%9E%90">分析</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="起因">起因</h2>
+<p>像往常一样没啥事查看青龙日志的时候发现脚本报错了。</p>
+<figure data-type="image" tabindex="1"><img src="https://RoromoriYuzu.github.io/post-images/1660209610150.png" alt="" loading="lazy"></figure>
+<p>一开始还以为是网络问题没管他，等练车回来的时候看了一眼发现还是报错，仔细看了看发现是加了验证的参数</p>
+<h2 id="经过">经过</h2>
+<p>打开Fiddler，开始抓包。</p>
+<p>随便点点，看看请求参数有没有什么变化。</p>
+<figure data-type="image" tabindex="2"><img src="https://RoromoriYuzu.github.io/post-images/1660209630329.png" alt="" loading="lazy"></figure>
+<p>这里可以明显看出比之前多了3个参数 <code>timestamp</code> <code>nonce</code> <code>signature</code></p>
+<p>而且在每次的请求时都会通过<code>/public/api/getServerTimestamp</code>获取一下服务器的时间戳 。</p>
+<p>先重放一次试试....</p>
+<figure data-type="image" tabindex="3"><img src="https://RoromoriYuzu.github.io/post-images/1660209636371.png" alt="" loading="lazy"></figure>
+<p>居然获取成功，那这不简单了，把原来脚本的请求再加上这三个参数不就行了。</p>
+<p>不能这么简单吧，再重放一次试试...</p>
+<figure data-type="image" tabindex="4"><img src="https://RoromoriYuzu.github.io/post-images/1660209641628.png" alt="" loading="lazy"></figure>
+<p>果然...是我想的太简单了，看样子经过一定的时间那几个参数会过期，貌似是20秒左右。</p>
+<p>那我手快点，生成一个现在的时间戳然后Get一下看看会怎么样。</p>
+<p>不出所料依旧是 <code>{&quot;code&quot;:802,&quot;message&quot;:&quot;sign error3&quot;}</code></p>
+<p>看来不得不琢磨琢磨另外两个参数了。</p>
+<h3 id="开始分析参数的生成">开始分析参数的生成</h3>
+<p>因为服务器就传过来一个时间戳，那两个参数应该就是本地的JS生成的，不出意外只要知道生成的规则，应该就能解决了。</p>
+<p>把这个网页全部的 JS 文件下载下来，然后搜索 <code>timestamp</code> <code>nonce</code> <code>signature</code> 这几个参数，发现在 <code>index.d774f.js</code> 这个文件的 549-590 行出现了很多次。那应该就是这里了。</p>
+<h4 id="分析">分析</h4>
+<figure data-type="image" tabindex="5"><img src="https://RoromoriYuzu.github.io/post-images/1660209651087.png" alt="" loading="lazy"></figure>
+<p>可以看出这里有对变量赋值的操作。</p>
+<p>先来看看 <code>signature</code> 它通过 <code>xysz.encrypt.Md5.encode(o).toUpperCase()</code> 赋值。</p>
+<p><code>.toUpperCase()</code> 是转换成大写，<code>xysz.encrypt.Md5.encode(o)</code> 看样子是他自己写的函数应该和 Md5 有关，传递的参数是 o 。</p>
+<p>那再往上看看 o 是怎么来的</p>
+<figure data-type="image" tabindex="6"><img src="https://RoromoriYuzu.github.io/post-images/1660212484885.png" alt="" loading="lazy"></figure>
+<p>o 的值又是通过 <code>xysz.tool.getSortedQuery(a)</code> 赋值 ，参数是 a ，那再往上看 a 是怎么来的。</p>
+<pre><code class="language-js">a = {
+	clientKey: e[t].clientKey,
+	clientSecret: e[t].clientSecret,
+	timestamp: i.default.ServerTimestamp,
+    nonce: n
+},
+</code></pre>
+<p><code>clientKey</code> <code>clientSecret</code> 和 e 有关，<code>timestamp</code> 应该就是前面服务器传的时间戳，<code>nonce</code> 等于 n 的值。</p>
+<p>还要再往上看......</p>
+<pre><code class="language-js">n = this.randomString()
+</code></pre>
+<p>n 的值和<code>randomString</code>函数有关，通过搜索在当前的文件找到了这个函数。</p>
+<pre><code class="language-js">e.prototype.randomString = function (e) {
+ 	void 0 === e &amp;&amp; (e = 16);
+ 	for (var t = &quot;ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678&quot;, n = t.length,a = &quot;&quot;, r = 0; r &lt; e; r++) a += t.charAt(Math.floor(Math.random() *n));
+ 	return a
+	},
+</code></pre>
+<p>可以看出是随机生成一个长度为16的字符串，那看来<code>nonce</code>的值就是一个随机字符串了。</p>
+<p>还剩下一个 <code>signature</code> ，前面说到 <code>clientKey</code> <code>clientSecret</code>和 e 的值有关，而关于e 的值是个对象又和 t 有关，没办法再去找 t 的值。</p>
+<pre><code class="language-js">t = xysz.saas.getEnvByHostname()
+</code></pre>
+<p>t 又是一个函数赋的值。</p>
+<p>在 <code>xysz.min.8ac30.js</code> 文件发现了这个函数</p>
+<pre><code class="language-js">t.prototype.getEnvByHostname = function() {
+    return [&quot;devapi.xiaoyisz.com&quot;, &quot;qiehuangdev.ioutu.cn&quot;, &quot;localhost&quot;].includes(location.hostname) ?
+        &quot;dev&quot; : &quot;prod&quot;
+}
+</code></pre>
+<p>发现是一个三元运算符，拿到正确的值后回到对象 a，<code>e[t].clientKey</code> <code>e[t].clientSecret</code> 的值就显而易见了。</p>
+<p><em>吐槽一句...这不管三元运算符的结果是啥 <code>e[t].clientKey</code> <code>e[t].clientSecret</code> 这两个值的结果一样啊。</em></p>
+<p>a的值有了，扔到<code> xysz.tool.getSortedQuery(a)</code> 函数里取到值。</p>
+<p>如法炮制得到 <code> getSortedQuery</code></p>
+<pre><code class="language-js">t.getSortedQuery = function(t) {
+        var e = Object.keys(t).sort(),
+            n = &quot;&quot;;
+        return e.forEach(function(e) {
+            if (t[e] || 0 === t[e]) {
+                var o;
+                o = t[e] instanceof Object ? e + &quot;=&quot; + JSON.stringify(t[e]) : e + &quot;=&quot; + t[e], n &amp;&amp;
+                    o &amp;&amp; (n += &quot;&amp;&quot;), n += o
+            }
+        }), n
+    },
+</code></pre>
+<p>作用就是把 a 格式化输出，赋值给 o</p>
+<pre><code class="language-js">'clientKey=xxx&amp;clientSecret=xxx&amp;nonce=xxx&amp;timestamp=xxx'
+</code></pre>
+<p>有了 o 后，回到最初的起点</p>
+<pre><code class="language-js">signature: xysz.encrypt.Md5.encode(o).toUpperCase(),
+</code></pre>
+<p>经过测试，是把o的值转换成32位 Md5 后再变成大写。</p>
+<p>那这样，<code>signature</code> 的值就很明确了。</p>
+<p>到此，对JS加密的分析结束了。改改之前的脚本，把那几个参数加上去，脚本又能正常运行啦！</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://RoromoriYuzu.github.io/tag/OE_gcQIAN/" class="tag">
+                    逆向
+                  </a>
+                
+                  <a href="https://RoromoriYuzu.github.io/tag/uTKWNErwT/" class="tag">
+                    Javascript
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://RoromoriYuzu.github.io/post/egmmcpejT/">
+                  <h3 class="post-title">
+                    教育优惠 记录
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <a class='btn-floating waves-effect' href='#' id='BackToTop' style="bottom:-60px"><i class='fa fa-angle-up'></i></a> 
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script><!-- 预加载加速 -->
+<script type='text/javascript'>
+    jQuery(document).ready(function(e){var t=e("#BackToTop");e(window).scroll(function(){e(this).scrollTop()>=200?t.show(10).animate({bottom:"25px"},10):t.animate({bottom:"-60px"},10)});t.click(function(t){t.preventDefault();e("html,body").animate({scrollTop:0},400)})})
+</script>
+<script type="text/javascript">
+    class Circle {
+        constructor({
+            origin,
+            speed,
+            color,
+            angle,
+            context
+        }) {
+            this.origin = origin
+            this.position = {...this.origin
+            }
+            this.color = color
+            this.speed = speed
+            this.angle = angle
+            this.context = context
+            this.renderCount = 0
+        }
+
+        draw() {
+            this.context.fillStyle = this.color
+            this.context.beginPath()
+            this.context.arc(this.position.x, this.position.y, 2, 0, Math.PI * 2)
+            this.context.fill()
+        }
+
+        move() {
+            this.position.x = (Math.sin(this.angle) * this.speed) + this.position.x
+            this.position.y = (Math.cos(this.angle) * this.speed) + this.position.y + (this.renderCount * 0.3)
+            this.renderCount++
+        }
+    }
+
+    class Boom {
+        constructor({
+            origin,
+            context,
+            circleCount = 10,
+            area
+        }) {
+            this.origin = origin
+            this.context = context
+            this.circleCount = circleCount
+            this.area = area
+            this.stop = false
+            this.circles = []
+        }
+
+        randomArray(range) {
+            const length = range.length
+            const randomIndex = Math.floor(length * Math.random())
+            return range[randomIndex]
+        }
+
+        randomColor() {
+            const range = ['8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+            return '#' + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range)
+        }
+
+        randomRange(start, end) {
+            return (end - start) * Math.random() + start
+        }
+
+        init() {
+            for (let i = 0; i < this.circleCount; i++) {
+                const circle = new Circle({
+                    context: this.context,
+                    origin: this.origin,
+                    color: this.randomColor(),
+                    angle: this.randomRange(Math.PI - 1, Math.PI + 1),
+                    speed: this.randomRange(1, 6)
+                })
+                this.circles.push(circle)
+            }
+        }
+
+        move() {
+            this.circles.forEach((circle, index) => {
+                if (circle.position.x > this.area.width || circle.position.y > this.area.height) {
+                    return this.circles.splice(index, 1)
+                }
+                circle.move()
+            })
+            if (this.circles.length == 0) {
+                this.stop = true
+            }
+        }
+
+        draw() {
+            this.circles.forEach(circle => circle.draw())
+        }
+    }
+
+    class CursorSpecialEffects {
+        constructor() {
+            this.computerCanvas = document.createElement('canvas')
+            this.renderCanvas = document.createElement('canvas')
+
+            this.computerContext = this.computerCanvas.getContext('2d')
+            this.renderContext = this.renderCanvas.getContext('2d')
+
+            this.globalWidth = window.innerWidth
+            this.globalHeight = window.innerHeight
+
+            this.booms = []
+            this.running = false
+        }
+
+        handleMouseDown(e) {
+            const boom = new Boom({
+                origin: {
+                    x: e.clientX,
+                    y: e.clientY
+                },
+                context: this.computerContext,
+                area: {
+                    width: this.globalWidth,
+                    height: this.globalHeight
+                }
+            })
+            boom.init()
+            this.booms.push(boom)
+            this.running || this.run()
+        }
+
+        handlePageHide() {
+            this.booms = []
+            this.running = false
+        }
+
+        init() {
+            const style = this.renderCanvas.style
+            style.position = 'fixed'
+            style.top = style.left = 0
+            style.zIndex = '999999999999999999999999999999999999999999'
+            style.pointerEvents = 'none'
+
+            style.width = this.renderCanvas.width = this.computerCanvas.width = this.globalWidth
+            style.height = this.renderCanvas.height = this.computerCanvas.height = this.globalHeight
+
+            document.body.append(this.renderCanvas)
+
+            window.addEventListener('mousedown', this.handleMouseDown.bind(this))
+            window.addEventListener('pagehide', this.handlePageHide.bind(this))
+        }
+
+        run() {
+            this.running = true
+            if (this.booms.length == 0) {
+                return this.running = false
+            }
+
+            requestAnimationFrame(this.run.bind(this))
+
+            this.computerContext.clearRect(0, 0, this.globalWidth, this.globalHeight)
+            this.renderContext.clearRect(0, 0, this.globalWidth, this.globalHeight)
+
+            this.booms.forEach((boom, index) => {
+                if (boom.stop) {
+                    return this.booms.splice(index, 1)
+                }
+                boom.move()
+                boom.draw()
+            })
+            this.renderContext.drawImage(this.computerCanvas, 0, 0, this.globalWidth, this.globalHeight)
+        }
+    }
+    var yh = new CursorSpecialEffects();
+    yh.init(); //烟花特效
+</script>
+<script type="text/javascript">
+    function runtime() {
+        // 初始时间，月/日/年 时:分:秒
+        X = new Date("7/12/2022 19:12:02");
+        Y = new Date();
+        T = (Y.getTime() - X.getTime());
+        M = 24 * 60 * 60 * 1000;
+        a = T / M;
+        A = Math.floor(a);
+        b = (a - A) * 24;
+        B = Math.floor(b);
+        c = (b - B) * 60;
+        C = Math.floor((b - B) * 60);
+        D = Math.floor((c - C) * 60);
+        //信息写入到DIV中
+        since.innerHTML = A + "天" + B + "小时" + C + "分" + D + "秒"
+    }
+    setInterval(runtime, 1000);
+</script>
+
+<script type="application/javascript">
+    AOS.init();
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            menuVisible: false,
+        },
+    })
+</script>
+
+
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad()
+    </script>
+    
+
+        
+
+            
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                <script>
+                    var gitalk = new Gitalk({
+                        clientID: 'df0154d6a9f45f1e95f3',
+                        clientSecret: '72bdef4a1fb6001d84fb3f09c9e7c840c4887d68',
+                        repo: 'RoromoriYuzu.github.io',
+                        owner: 'RoromoriYuzu',
+                        admin: ['RoromoriYuzu'],
+                        id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+                        distractionFreeMode: false // Facebook-like distraction free mode
+                    })
+
+                    gitalk.render('gitalk-container')
+                </script>
+                
+
+                    
+
+                            
+  </body>
+</html>
