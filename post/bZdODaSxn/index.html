@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>我的小笔记本</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://blog.diyworld.me/favicon.ico?v=1729152254294">
+<link rel="stylesheet" href="https://blog.diyworld.me/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1Q42RW1FZW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1Q42RW1FZW');
+</script>
+
+
+    <meta name="description" content="
+
+
+JS 层动态分析
+
+x-nonce
+x-sign
+
+
+WebAssembly 分析
+
+导入函数
+导出函数
+
+
+
+
+
+
+
+发现一个小程序有个签到，抓包对应网址发现其中有个Sign加密参数，本想着随便试一下，没想到牵扯到那么多东西，就花了..." />
+    <meta name="keywords" content="逆向,学习,Javascript" />
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+    <div class="top-container" data-aos="fade-right">
+        <div class="top-header-container">
+            <a class="site-title-container" href="https://blog.diyworld.me">
+        <img src="https://blog.diyworld.me/images/avatar.png?v=1729152254294" class="site-logo">
+        <h1 class="site-title">路路森</h1>
+      </a>
+            <div class="menu-btn" @click="menuVisible = !menuVisible">
+                <div class="line"></div>
+            </div>
+        </div>
+        <div>
+            
+                
+                        <a href="/" class="site-nav">
+                            首页
+                        </a>
+                        
+                            
+                
+                        <a href="/archives" class="site-nav">
+                            归档
+                        </a>
+                        
+                            
+                
+                        <a href="/tags" class="site-nav">
+                            标签
+                        </a>
+                        
+                            
+                
+                        <a href="https://RoromoriYuzu.github.io/post/note" class="site-nav">
+                            记录
+                        </a>
+                        
+                            
+                
+                        <a href="/post/about" class="site-nav">
+                            关于
+                        </a>
+                        
+                            
+        </div>
+    </div>
+    <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+        <div class="social-container">
+            
+                
+                    <a class="social-link" href="https://github.com/RoromoriYuzu" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+                    
+                        
+                
+                        
+                
+                        
+                
+                        
+                
+                        
+                
+                    <a class="social-link" href="https://t.me/bilibili_ceo" target="_blank">
+            <i class="fab fa-telegram"></i>
+          </a>
+                    
+                        
+                
+                    <a class="social-link" href="https://www.youtube.com/channel/UCw8e2m6Xm0peLZFuaJDgriA" target="_blank">
+            <i class="fab fa-youtube"></i>
+          </a>
+                    
+                        
+                
+                        
+        </div>
+        <div class="site-description">
+            生命不息，折腾不止
+        </div>
+        <p class="footer-inner">
+            博客已运行<span id="since"></span>
+            <span class="my-face">(●'◡'●)ﾉ<span id="like">♥</span></span>
+        </p>
+        <div class="site-footer">
+            Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://blog.diyworld.me/atom.xml" target="_blank">RSS</a>
+        </div>
+    </div>
+</div>
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">逆向 WebPack 打包网站使用 wasm 加密 Sign 参数的逻辑</h2>
+            <div class="post-date">2023-08-10</div>
+            
+            <div class="post-content" v-pre>
+              <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#js-%E5%B1%82%E5%8A%A8%E6%80%81%E5%88%86%E6%9E%90">JS 层动态分析</a>
+<ul>
+<li><a href="#x-nonce"><code>x-nonce</code></a></li>
+<li><a href="#x-sign"><code>x-sign</code></a></li>
+</ul>
+</li>
+<li><a href="#webassembly-%E5%88%86%E6%9E%90">WebAssembly 分析</a>
+<ul>
+<li><a href="#%E5%AF%BC%E5%85%A5%E5%87%BD%E6%95%B0">导入函数</a></li>
+<li><a href="#%E5%AF%BC%E5%87%BA%E5%87%BD%E6%95%B0">导出函数</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<blockquote>
+<p>发现一个小程序有个签到，抓包对应网址发现其中有个Sign加密参数，本想着随便试一下，没想到牵扯到那么多东西，就花了整整一个星期的时间来研究。过程可能不太详细，毕竟我也是现学现卖😂甚至js语法都没学通，都是头一次见到的技术 。</p>
+</blockquote>
+<h2 id="js-层动态分析">JS 层动态分析</h2>
+<p>网站地址： aHR0cHM6Ly91bS5pb3V0dS5jbi90eS9hc3NhbS9sdWNreS1kZXRhaWw=</p>
+<p>首先网站，然后进行抓包</p>
+<figure data-type="image" tabindex="1"><img src="https://blog.diyworld.me/post-images/1691684298555.png" alt="" loading="lazy"></figure>
+<p>通过刷新多次请求，发现 <code>x-ts</code> <code>x-sign</code> <code>x-nonce</code> 这三个值是一直在变化的，<code>x-ts</code> 明显是时间戳，接下来需要分析 <code>x-sign</code> <code>x-nonce</code> 这两个值的来源。</p>
+<p><img src="https://blog.diyworld.me/post-images/1691685825981.jpg" alt="" loading="lazy"><br>
+一般直接 Ctrl+Shift+F 搜索字符串可以找到相关函数，但该网站的 js 文件是由 <a href="https://zh.wikipedia.org/zh-cn/Webpack">WebPack</a> 打包过的，代码结构都和上图差不多，字符串全在同一个地方，不好寻找函数。而且打XHR断点也无效，所以找函数位置就花了不少时间。</p>
+<p>打开 F12 查看请求的调用堆栈<br>
+<img src="https://blog.diyworld.me/post-images/1691685352561.jpg" alt="" loading="lazy"></p>
+<p>进入第一个匿名函数，下断点<br>
+<img src="https://blog.diyworld.me/post-images/1691685464495.jpg" alt="" loading="lazy"></p>
+<p>然后一直 F11 步入，直到发出请求也没发现那两个参数的生成，看来重点不在这个函数，那么再往上个函数试试，下断点，慢慢F10或F9。</p>
+<figure data-type="image" tabindex="2"><img src="https://blog.diyworld.me/post-images/1691685965446.jpg" alt="" loading="lazy"></figure>
+<p>步入过程发现目标url，应该离参数的生成不远，继续，调试 WebPack 生成的代码太费时间了，而且还没 Map文件，就找函数的过程花了我两三天，最终找到了生成这两个值的函数。</p>
+<h3 id="x-nonce"><code>x-nonce</code></h3>
+<pre><code class="language-js">    3682: (t,e,r)=&gt;{
+        t = r.nmd(t);
+        var n = o;
+        function o(t, e) {
+            var r = i();
+            return (o = function(t, e) {
+                return r[t -= 447]
+            }
+            )(t, e)
+        }
+        function i() {
+            var t = [&quot;169360Tjwntv&quot;, &quot;502651XRPFzm&quot;, &quot;toString&quot;, &quot;xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx&quot;, &quot;25326684vkpEiT&quot;, &quot;20PuHlQf&quot;, &quot;243FimiQP&quot;, &quot;11SFCgQb&quot;, &quot;48OdOxac&quot;, &quot;69604GYVZvv&quot;, &quot;1598324QxtHuy&quot;, &quot;70pKqhLY&quot;, &quot;3552831YclxpX&quot;, &quot;636306pSQgnQ&quot;, &quot;replace&quot;, &quot;random&quot;, &quot;exports&quot;];
+            return (i = function() {
+                return t
+            }
+            )()
+        }
+        (function(t, e) {
+            for (var r = o, n = t(); ; )
+                try {
+                    if (790495 === parseInt(r(457)) / 1 + parseInt(r(456)) / 2 + -parseInt(r(462)) / 3 * (-parseInt(r(448)) / 4) + parseInt(r(450)) / 5 * (parseInt(r(452)) / 6) + parseInt(r(449)) / 7 * (-parseInt(r(447)) / 8) + parseInt(r(451)) / 9 * (parseInt(r(461)) / 10) + parseInt(r(463)) / 11 * (-parseInt(r(460)) / 12))
+                        break;
+                    n.push(n.shift())
+                } catch (t) {
+                    n.push(n.shift())
+                }
+        }
+        )(i),
+        t[n(455)] = function() {
+            var t = n;
+            return t(459)[t(453)](/[xy]/g, (function(e) {
+                var r = t
+                  , n = 16 * Math[r(454)]() | 0;
+                return (&quot;x&quot; == e ? n : 3 &amp; n | 8)[r(458)](16)
+            }
+            ))
+        }
+    }
+</code></pre>
+<p>其中类似 r(xxx)，t(xxx) 的函数其实都是o函数，是将 t 数组的值取出，这段代码首先经过中间的那段代码调整 t 数组中各个值的位置，然后通过调用o函数，输出指定位置的值。t 数组也穿插了一堆无用值，自己复原t(xxx)非常不方便，可以在相应位置打上断点，然后直接在控制台输入，看返回值是什么。</p>
+<pre><code class="language-js">o(459)
+&gt; 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+</code></pre>
+<p>把函数还原后，问了下 Chatgpt 这是什么算法，因为 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx' 格式看起来好像和 UUID 有关系。</p>
+<figure data-type="image" tabindex="3"><img src="https://blog.diyworld.me/post-images/1691691240524.jpg" alt="" loading="lazy"></figure>
+<p>果然，这段代码的作用是生成一个随机的 UUID 值，既然是随机的那就好说了。</p>
+<h3 id="x-sign"><code>x-sign</code></h3>
+<p>sign 的值是40位字符串，盲猜是将时间戳，UUID 什么的进行SHA-1算出来的结果。</p>
+<figure data-type="image" tabindex="4"><img src="https://blog.diyworld.me/post-images/1691691604023.jpg" alt="" loading="lazy"></figure>
+<p>定位到相关代码，并还原参数。</p>
+<pre><code class="language-js">for (m = function (t) {
+        var e = A;
+        return l.allocate(l.intArrayFromString(t), l.ALLOC_NORMAL)
+    },
+    E = l._getSign(I, m(t.skey), m(t.body), m(n), m(f.toString()), y, e.length),
+    b = new Uint8Array(l.asm.memory.buffer), B = [], w = E; 0 !== b[w];) B.push(b[w]), w += 1;
+return Q = (new TextDecoder).decode(new Uint8Array(B))
+</code></pre>
+<p>m 函数是将传入的 t 字符串转换为ASCII编码的数组，并为其分配内存，然后返回其所在的内存地址，l.ALLOC_NORMAL始终为0，这个函数容易自己实现。去查找 allocate 函数的实现，发现函数内部又牵扯到很多其他值，干脆就自己实现这个函数吧。</p>
+<p>_getSign 函数依次接收以下值的内存地址，并返回固定值赋值给 E。</p>
+<ul>
+<li>I: 不知道是哪里来的值，生成过程很复杂，不过好在一直是个固定值。</li>
+<li>t.skey: 是一个空字符串。</li>
+<li>t.body: 请求正文。</li>
+<li>nonce: 也就是前面生成的随机UUID。</li>
+<li>f.toString(): 其实就是时间戳转字符串。</li>
+<li>y: 不知道是哪里来的值，也是固定值。</li>
+</ul>
+<p>b 是将内存值转为Uint8Array的数组，然后从E位置向后遍历，如果不等于0就存入B数组，正好能存够40个值，再将B数组的ASCII码转回字符串，最后 return 的 Q 就是 sign 的值。</p>
+<p>关键就在 _getSign 函数了，猜测是这个函数通过传入的几个内存地址值，读取相应内存的数据，进行某些计算后，将值写到了相应的 E 位置，然后给B数组遍历的。</p>
+<h2 id="webassembly-分析">WebAssembly 分析</h2>
+<pre><code class="language-js">function et(t) {
+    return function () {
+        var e = A.asm;
+        return L(J, &quot;native function `&quot; + t + &quot;` called before runtime initialization&quot;),
+            e[t] || L(e[t], &quot;exported native function `&quot; + t + &quot;` not found&quot;),
+            e[t].apply(null, arguments)
+    }
+}
+</code></pre>
+<p>转到函数的定义，发现是这样的，没见过，问了问 Chatgpt 又搜了搜，才知道这是一个叫 WebAssembly 的东西。</p>
+<blockquote>
+<p>WebAssembly或称wasm是一个低级编程语言。WebAssembly是便携式的抽象语法树，被设计来提供比JavaScript更快速的编译及执行。WebAssembly将让开发者能运用自己熟悉的编程语言编译，再藉虚拟机引擎在浏览器内执行。</p>
+</blockquote>
+<p>上边这个et函数的作用是导出 wasm 文件中的 getSign 函数，所以获取sign值的逻辑就全在 wasm 里了。</p>
+<figure data-type="image" tabindex="5"><img src="https://blog.diyworld.me/post-images/1691693905964.jpg" alt="" loading="lazy"></figure>
+<p>wasm 文件可以在左侧栏里面找到，没有在网络请求里面发现，但是 js 代码里面有一大串 Base64，估计就是从这里读取转换来的。</p>
+<figure data-type="image" tabindex="6"><img src="https://blog.diyworld.me/post-images/1691694094831.jpg" alt="" loading="lazy"></figure>
+<p>定位到 getSign 函数，参数是6个值，那就是这个函数没错了，wasm 文件内容类似于汇编语言，基本上就是对内存地址里面的值进行 sub，add，and，or 和 入栈出栈 等操作。</p>
+<p>比如：</p>
+<pre><code>global.get $global0 //取全局变量 $global0 的值
+    local.set $var7 // 赋值为 $var7
+    i32.const 256 // 定义值 256
+    local.set $var8 // 把256赋值给 $var8 
+    local.get $var7 //取变量 $var7
+    local.get $var8 //取变量 $var8
+    i32.sub //$var7 - $var8
+    local.set $var9 //把结果设赋值为 $var9 
+    --------------------------------------------------
+    local.get $var9 //取变量 $var9
+    local.get $var6 //取变量 $var6
+    i32.store offset=228 //将变量 $var6 写入到 $var9+228 的地址
+    local.get $var9  //取变量 $var9
+    i32.load offset=252 //加载 $var9 + 252 地址的值
+    local.set $var10    //赋值给 $var10
+
+</code></pre>
+<p>所以只要一步一步的在函数入口跟下去就能知道函数的逻辑，也就知道这个函数做了什么操作，毕竟是汇编语言，读起来没那么难，就是有点繁琐。</p>
+<p>但是......我跟了将近3天，连40位 sign 的第一个值的逻辑都没捋清楚，在这个函数里面各种A套B，B套C，C又套D的操作，一点一点下断点调试及其耗时间。</p>
+<p>像是第一个参数，顺藤摸瓜顺了那么长的藤也没摸到瓜。没办法，太浪费时间，只能放弃这个办法。</p>
+<figure data-type="image" tabindex="7"><img src="https://blog.diyworld.me/post-images/1691727712747.jpg" alt="" loading="lazy"></figure>
+<p>好在还有第二种方法，在 wasm 的算法分析不出来时可以用 nodejs 调用 wasm 导出需要的函数，直接拿来用。</p>
+<h3 id="导入函数">导入函数</h3>
+<p>首先将浏览器内包含getSign函数的文件下载到本地，用 <a href="https://github.com/WebAssembly/wabt">wabt </a> 将 wat 转为 wasm。</p>
+<pre><code class="language-bash">$ wat2wasm test.wat -o test.wasm
+</code></pre>
+<p>接着把wasm文件读入。</p>
+<pre><code class="language-js">const fs = require('fs');
+const wasmFile = 'test.wasm';
+var importObject = {
+    env: {
+       /* 导入函数*/
+    }
+};
+var wasmObject = new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array(fs.readFileSync(wasmFile))), importObject);
+var wasmMemory = wasmObject.exports.memory;
+</code></pre>
+<p>直接运行的话会报错，提示缺少 <code>__assert_fail</code> 导入函数。</p>
+<figure data-type="image" tabindex="8"><img src="https://blog.diyworld.me/post-images/1691736559168.jpg" alt="" loading="lazy"></figure>
+<blockquote>
+<p>importObject 对象是在使用 JavaScript 将 WebAssembly 模块与外部环境集成时的一种机制。它用于定义将从外部环境导入到 WebAssembly 模块中的函数、全局变量等实体。通过使用 importObject，可以在 WebAssembly 模块中使用来自外部环境的功能，实现模块与宿主环境之间的交互。</p>
+</blockquote>
+<p>导入函数就要去原 js 文件中寻找，搜索字符串 <code>__assert_fail</code>，发现只有一个匹配项</p>
+<figure data-type="image" tabindex="9"><img src="https://blog.diyworld.me/post-images/1691736748828.jpg" alt="" loading="lazy"></figure>
+<p>把整个 dt 复制到 env 去试试，直接运行发现没有报错，可以正常读到内存。</p>
+<pre><code class="language-js">console.log(wasmMemory)
+&gt; Memory [WebAssembly.Memory] {}
+</code></pre>
+<h3 id="导出函数">导出函数</h3>
+<p>之后可以试着调用 getSign 函数了，随便输入点内存地址，可以正常输出40位字符串。</p>
+<pre><code class="language-js">console.log(wasmObject.exports.getSign(66264, 66264, 66264, 66264, 66264, 66368, 5));
+&gt; 05685ab5d3b988de577bdee6689fbbc43fa9be62
+</code></pre>
+<p>接下来就是要想办法实现前面的 m 函数，即传入字符串生成对应ASCII数组并返回数组所在位置。</p>
+<pre><code class="language-js">memoryArray = new Uint8Array(wasmMemory.buffer) //将内存数据转换为数组
+writeMark = 70000; // 写入起始位置
+
+//将字符串写入内存
+function writeStringToMemory(string) {
+    function lengthBytesUTF8(str) {
+        var len = 0;
+        for (var i = 0; i &lt; str.length; ++i) {
+            var u = str.charCodeAt(i); 
+            if (u &gt;= 0xD800 &amp;&amp; u &lt;= 0xDFFF) u = 0x10000 + ((u &amp; 0x3FF) &lt;&lt; 10) | (str.charCodeAt(++i) &amp; 0x3FF);
+            if (u &lt;= 0x7F) {
+                ++len;
+            } else if (u &lt;= 0x7FF) {
+                len += 2;
+            } else if (u &lt;= 0xFFFF) {
+                len += 3;
+            } else if (u &lt;= 0x1FFFFF) {
+                len += 4;
+            } else if (u &lt;= 0x3FFFFFF) {
+                len += 5;
+            } else {
+                len += 6;
+            }
+        }
+        return len;
+    }
+
+    function stringToUTF8Array(str, outU8Array, outIdx, maxBytesToWrite) {
+        if (!(maxBytesToWrite &gt; 0))
+            return 0;
+
+        var startIdx = outIdx;
+        var endIdx = outIdx + maxBytesToWrite - 1;
+        for (var i = 0; i &lt; str.length; ++i) {
+            var u = str.charCodeAt(i);
+            if (u &gt;= 0xD800 &amp;&amp; u &lt;= 0xDFFF) u = 0x10000 + ((u &amp; 0x3FF) &lt;&lt; 10) | (str.charCodeAt(++i) &amp; 0x3FF);
+            if (u &lt;= 0x7F) {
+                if (outIdx &gt;= endIdx) break;
+                outU8Array[outIdx++] = u;
+            } else if (u &lt;= 0x7FF) {
+                if (outIdx + 1 &gt;= endIdx) break;
+                outU8Array[outIdx++] = 0xC0 | (u &gt;&gt; 6);
+                outU8Array[outIdx++] = 0x80 | (u &amp; 63);
+            } else if (u &lt;= 0xFFFF) {
+                if (outIdx + 2 &gt;= endIdx) break;
+                outU8Array[outIdx++] = 0xE0 | (u &gt;&gt; 12);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 6) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | (u &amp; 63);
+            } else if (u &lt;= 0x1FFFFF) {
+                if (outIdx + 3 &gt;= endIdx) break;
+                outU8Array[outIdx++] = 0xF0 | (u &gt;&gt; 18);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 12) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 6) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | (u &amp; 63);
+            } else if (u &lt;= 0x3FFFFFF) {
+                if (outIdx + 4 &gt;= endIdx) break;
+                outU8Array[outIdx++] = 0xF8 | (u &gt;&gt; 24);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 18) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 12) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 6) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | (u &amp; 63);
+            } else {
+                if (outIdx + 5 &gt;= endIdx) break;
+                outU8Array[outIdx++] = 0xFC | (u &gt;&gt; 30);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 24) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 18) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 12) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 6) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | (u &amp; 63);
+            }
+        }
+        outU8Array[outIdx] = 0;
+        return outIdx - startIdx;
+    }
+
+    function intArrayFromString(stringy, dontAddNull, length) {
+        var len = length &gt; 0 ? length : lengthBytesUTF8(stringy) + 1;
+        var u8array = new Array(len);
+        var numBytesWritten = stringToUTF8Array(stringy, u8array, 0, u8array.length);
+        if (dontAddNull) u8array.length = numBytesWritten;
+        return u8array;
+    }
+
+    var intArray = intArrayFromString(string, 0);
+    for (var i = 0; i &lt; intArray.length; i++) {
+        memoryArray[writeMark + i] = intArray[i];
+    }
+    var address = writeMark;
+    writeMark += intArray.length;
+    return address;
+}
+</code></pre>
+<p>通过多次尝试，发现在内存地址 70000 之后写数据是不会与其他值冲突影响sign的输出的，所以writeMark是从70000开始的。</p>
+<p>m函数实现了，getSign函数的第2到5个参数的来源也就搞定了。接下来就是研究 getSign 的1，6，7 这三个参数的意义了，1，6明显是和m函数返回值一样标注着数据的所在位置，第7个参数，通过分析 js 代码，貌似是一个数组的长度，是一个固定数值。</p>
+<p>因为 js 代码可读性太差了，我也懒的再去找哪一段的js代码在哪里往内存写入了数据，并得到了地址以传给getSign函数。所以，我反复观察在哪一段地址的内存写入脏数据会影响sign值的输出，最终将范围缩小到了 65500 - 66500 ，看来这一段内存里面有影响到sign生成的参数，也包括了我不知道的参数1和参数6。</p>
+<p>那么，在网页调用getSign函数之前，把 65500 - 66500 这一段内存的值全部取出来，在调用我自己实现的getSign函数前再将其写入到内存里面不就行了？最后实现的 getSign 函数如下</p>
+<pre><code class="language-js">function getSign(skey, body, nonce, timestamp) {
+    Init();
+    var begin = wasmObject.exports.getSign(66264, writeStringToMemory(skey), writeStringToMemory(body), writeStringToMemory(nonce), writeStringToMemory(timestamp), 66368, 5);
+    for (signArray = []; 0 !== memoryArray[begin];)
+        signArray.push(memoryArray[begin]), begin += 1;
+    sign = (new TextDecoder).decode(new Uint8Array(signArray));
+    return sign;
+}
+</code></pre>
+<p>经过测试，与网页上生成的结果一致。<br>
+<img src="https://blog.diyworld.me/post-images/1691740786716.jpg" alt="" loading="lazy"></p>
+<p>像这种分析算法过程太复杂的还不如直接拿来用，直接拿来用才花了我一下午时间。而且这个 wasm 对 bom 和 dom 都没有检测，方便的很。</p>
+<hr>
+<p>wasm相关教程：<br>
+<a href="https://www.bilibili.com/video/BV1tM411K7Xx">Nodejs调用扣取wasm</a><br>
+<a href="https://www.52pojie.cn/thread-1487959-1-1.html">某网站心跳包参数加密的wasm分析</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://blog.diyworld.me/tag/OE_gcQIAN/" class="tag">
+                    逆向
+                  </a>
+                
+                  <a href="https://blog.diyworld.me/tag/A9NeaOFri5/" class="tag">
+                    学习
+                  </a>
+                
+                  <a href="https://blog.diyworld.me/tag/uTKWNErwT/" class="tag">
+                    Javascript
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://blog.diyworld.me/post/VQwzboRI2/">
+                  <h3 class="post-title">
+                    Docker 笔记
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <a class='btn-floating waves-effect' href='#' id='BackToTop' style="bottom:-60px"><i class='fa fa-angle-up'></i></a> 
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script><!-- 预加载加速 -->
+<script type='text/javascript'>
+    jQuery(document).ready(function(e){var t=e("#BackToTop");e(window).scroll(function(){e(this).scrollTop()>=200?t.show(10).animate({bottom:"25px"},10):t.animate({bottom:"-60px"},10)});t.click(function(t){t.preventDefault();e("html,body").animate({scrollTop:0},400)})})
+</script>
+<script type="text/javascript">
+    class Circle {
+        constructor({
+            origin,
+            speed,
+            color,
+            angle,
+            context
+        }) {
+            this.origin = origin
+            this.position = {...this.origin
+            }
+            this.color = color
+            this.speed = speed
+            this.angle = angle
+            this.context = context
+            this.renderCount = 0
+        }
+
+        draw() {
+            this.context.fillStyle = this.color
+            this.context.beginPath()
+            this.context.arc(this.position.x, this.position.y, 2, 0, Math.PI * 2)
+            this.context.fill()
+        }
+
+        move() {
+            this.position.x = (Math.sin(this.angle) * this.speed) + this.position.x
+            this.position.y = (Math.cos(this.angle) * this.speed) + this.position.y + (this.renderCount * 0.3)
+            this.renderCount++
+        }
+    }
+
+    class Boom {
+        constructor({
+            origin,
+            context,
+            circleCount = 10,
+            area
+        }) {
+            this.origin = origin
+            this.context = context
+            this.circleCount = circleCount
+            this.area = area
+            this.stop = false
+            this.circles = []
+        }
+
+        randomArray(range) {
+            const length = range.length
+            const randomIndex = Math.floor(length * Math.random())
+            return range[randomIndex]
+        }
+
+        randomColor() {
+            const range = ['8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+            return '#' + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range) + this.randomArray(range)
+        }
+
+        randomRange(start, end) {
+            return (end - start) * Math.random() + start
+        }
+
+        init() {
+            for (let i = 0; i < this.circleCount; i++) {
+                const circle = new Circle({
+                    context: this.context,
+                    origin: this.origin,
+                    color: this.randomColor(),
+                    angle: this.randomRange(Math.PI - 1, Math.PI + 1),
+                    speed: this.randomRange(1, 6)
+                })
+                this.circles.push(circle)
+            }
+        }
+
+        move() {
+            this.circles.forEach((circle, index) => {
+                if (circle.position.x > this.area.width || circle.position.y > this.area.height) {
+                    return this.circles.splice(index, 1)
+                }
+                circle.move()
+            })
+            if (this.circles.length == 0) {
+                this.stop = true
+            }
+        }
+
+        draw() {
+            this.circles.forEach(circle => circle.draw())
+        }
+    }
+
+    class CursorSpecialEffects {
+        constructor() {
+            this.computerCanvas = document.createElement('canvas')
+            this.renderCanvas = document.createElement('canvas')
+
+            this.computerContext = this.computerCanvas.getContext('2d')
+            this.renderContext = this.renderCanvas.getContext('2d')
+
+            this.globalWidth = window.innerWidth
+            this.globalHeight = window.innerHeight
+
+            this.booms = []
+            this.running = false
+        }
+
+        handleMouseDown(e) {
+            const boom = new Boom({
+                origin: {
+                    x: e.clientX,
+                    y: e.clientY
+                },
+                context: this.computerContext,
+                area: {
+                    width: this.globalWidth,
+                    height: this.globalHeight
+                }
+            })
+            boom.init()
+            this.booms.push(boom)
+            this.running || this.run()
+        }
+
+        handlePageHide() {
+            this.booms = []
+            this.running = false
+        }
+
+        init() {
+            const style = this.renderCanvas.style
+            style.position = 'fixed'
+            style.top = style.left = 0
+            style.zIndex = '999999999999999999999999999999999999999999'
+            style.pointerEvents = 'none'
+
+            style.width = this.renderCanvas.width = this.computerCanvas.width = this.globalWidth
+            style.height = this.renderCanvas.height = this.computerCanvas.height = this.globalHeight
+
+            document.body.append(this.renderCanvas)
+
+            window.addEventListener('mousedown', this.handleMouseDown.bind(this))
+            window.addEventListener('pagehide', this.handlePageHide.bind(this))
+        }
+
+        run() {
+            this.running = true
+            if (this.booms.length == 0) {
+                return this.running = false
+            }
+
+            requestAnimationFrame(this.run.bind(this))
+
+            this.computerContext.clearRect(0, 0, this.globalWidth, this.globalHeight)
+            this.renderContext.clearRect(0, 0, this.globalWidth, this.globalHeight)
+
+            this.booms.forEach((boom, index) => {
+                if (boom.stop) {
+                    return this.booms.splice(index, 1)
+                }
+                boom.move()
+                boom.draw()
+            })
+            this.renderContext.drawImage(this.computerCanvas, 0, 0, this.globalWidth, this.globalHeight)
+        }
+    }
+    var yh = new CursorSpecialEffects();
+    yh.init(); //烟花特效
+</script>
+<script type="text/javascript">
+    function runtime() {
+        X = new Date("7/12/2022 19:12:02");
+        Y = new Date();
+        T = (Y.getTime() - X.getTime());
+        M = 24 * 60 * 60 * 1000;
+        a = T / M;
+        A = Math.floor(a);
+        b = (a - A) * 24;
+        B = Math.floor(b);
+        c = (b - B) * 60;
+        C = Math.floor((b - B) * 60);
+        D = Math.floor((c - C) * 60);
+        since.innerHTML = A + "天" + B + "小时" + C + "分" + D + "秒"
+    }
+    setInterval(runtime, 1000);
+</script>
+
+<script type="application/javascript">
+    AOS.init();
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            menuVisible: false,
+        },
+    })
+</script>
+
+
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad()
+    </script>
+    
+
+        
+
+            
+                <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+                <script>
+                    var gitalk = new Gitalk({
+                        clientID: 'df0154d6a9f45f1e95f3',
+                        clientSecret: '72bdef4a1fb6001d84fb3f09c9e7c840c4887d68',
+                        repo: 'RoromoriYuzu.github.io',
+                        owner: 'RoromoriYuzu',
+                        admin: ['RoromoriYuzu'],
+                        id: (location.pathname).substring(0, 49), // Ensure uniqueness and length less than 50
+                        distractionFreeMode: false // Facebook-like distraction free mode
+                    })
+
+                    gitalk.render('gitalk-container')
+                </script>
+                
+
+                    
+
+                            
+  </body>
+</html>
