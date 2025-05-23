@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>书接上回 小程序解包逆向分析 Sign 生成逻辑 | 路路森</title>
+<meta name="description" content="生命不息，折腾不止">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://blog.diyworld.me/favicon.ico?v=1747968425405">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://blog.diyworld.me/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://blog.diyworld.me">
+        <img class="avatar" src="https://blog.diyworld.me/images/avatar.png?v=1747968425405" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://blog.diyworld.me">
+        <h1 class="site-title">路路森</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://RoromoriYuzu.github.io/post/note" class="menu purple-link">
+            记录
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">书接上回 小程序解包逆向分析 Sign 生成逻辑</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2023-08-14</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://blog.diyworld.me/tag/OE_gcQIAN/">
+                    逆向
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://blog.diyworld.me/tag/A9NeaOFri5/">
+                    学习
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://blog.diyworld.me/tag/uTKWNErwT/">
+                    Javascript
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%80%86%E5%90%91%E5%B0%8F%E7%A8%8B%E5%BA%8F">逆向小程序</a></li>
+<li><a href="#%E5%88%86%E6%9E%90%E4%BB%A3%E7%A0%81">分析代码</a>
+<ul>
+<li><a href="#%E7%94%9F%E6%88%90%E9%80%BB%E8%BE%91">生成逻辑</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BB%93%E8%AF%AD">结语</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<blockquote>
+<p>上一章说到通过直接调用 wasm 来实现生成 Sign，但发现只针对那一个域名接口的请求有效，换个接口就不行了，看来还是要彻底分析他的生成逻辑。</p>
+</blockquote>
+<h2 id="逆向小程序">逆向小程序</h2>
+<p>在小程序打开前就对它抓包，直到页面加载完毕也没发现相关js的请求，而且api的 referer:  都是指向了 https://servicewechat.com，所以可以基本确定相关的js文件都早打包进小程序下载到了本地。</p>
+<p>打开目录 <code>Documents\WeChat Files\Applet</code>  根据修改日期可以确定哪个文件夹对应着小程序包。</p>
+<figure data-type="image" tabindex="1"><img src="https://blog.diyworld.me/post-images/1692004689876.jpg" alt="" loading="lazy"></figure>
+<p>接下来需要对 wxapkg 文件进行解密然后解包，由于微信的更新，在5月之前的解包工具都不能正常的解带有分包的小程序，我用的是 unveilr.exe 转收费前的版本，能正常的解大部分的文件，但还是有点小毛病，相关的解包教程可以去网上找。</p>
+<figure data-type="image" tabindex="2"><img src="https://blog.diyworld.me/post-images/1692004955216.jpg" alt="" loading="lazy"></figure>
+<p>解包完成后可以通过文件的大小，或者是否存在 <code>app.json</code> 文件来确定是否成功解包，将解包后的相应文件夹导入微信开发者工具，开始动态调试。</p>
+<p>因为解包工具比较旧，导入后会出现不少报错，只要根据 <a href="https://developers.weixin.qq.com/miniprogram/dev/reference/configuration/app.html">微信官方文档</a> 稍微改改就可以正常编译，不需要的页面可以去掉，只保留需要分析的地方。</p>
+<p><code>app.json</code> 文件中的 <code>plugins</code>对象内容可以删除，否则会报错未授权使用插件。其他请求登录接口报错的可以抓包拦截下来，修改为原本小程序的返回包。</p>
+<p>如果想要第一屏设置为分包页面，那就将 <code>pages</code> 对象添加对应分包页面，并删除 <code>preloadRule</code> 对象中的分包页面相关信息，否则会报错 <code>pages *** 不应该在分包 subPackages[*] 中</code>，之后重新编译即可进入设置的页面。</p>
+<h2 id="分析代码">分析代码</h2>
+<p>全局搜索关键字 Sign 可以找到相关代码段，而且代码没有做混淆处理，分析起来非常容易。</p>
+<p>比如这一段，一眼就可以看出是 sha1 处理函数，传入字符串，返回sha1字符串</p>
+<pre><code class="language-js">function (e, t) {
+        var n = global.bc(&quot;platform&quot;, &quot;cloud-fe-yunsdk-platform&quot;);
+        e.exports = function (e) {
+            var t, n, r = new Uint8Array(function (e) {
+                var t, n, r, o = [];
+                for (t = 0; t &lt; e.length; t++)(n = e.charCodeAt(t)) &lt; 128 ? o.push(n) : n &lt; 2048 ?
+                    o.push(192 + (n &gt;&gt; 6 &amp; 31), 128 + (63 &amp; n)) : ((r = 55296 ^ n) &gt;&gt; 10 == 0 ? (n =
+                        (r &lt;&lt; 10) + (56320 ^ e.charCodeAt(++t)) + 65536, o.push(240 + (n &gt;&gt; 18 &amp;
+                            7), 128 + (n &gt;&gt; 12 &amp; 63))) : o.push(224 + (n &gt;&gt; 12 &amp; 15)), o.push(
+                                128 + (n &gt;&gt; 6 &amp; 63), 128 + (63 &amp; n)));
+                return o
+            }(e)),
+                o = 16 + (r.length + 8 &gt;&gt;&gt; 6 &lt;&lt; 4);
+            for ((e = new Uint8Array(o &lt;&lt; 2)).set(new Uint8Array(r.buffer)), e = new Uint32Array(e.buffer),
+                n = new DataView(e.buffer), d = 0; d &lt; o; d++) e[d] = n.getUint32(d &lt;&lt; 2);
+            e[r.length &gt;&gt; 2] |= 128 &lt;&lt; 24 - 8 * (3 &amp; r.length), e[o - 1] = r.length &lt;&lt; 3;
+            var a = [],
+                s = [function () {
+                    return u[1] &amp; u[2] | ~u[1] &amp; u[3]
+                }, function () {
+                    return u[1] ^ u[2] ^ u[3]
+                }, function () {
+                    return u[1] &amp; u[2] | u[1] &amp; u[3] | u[2] &amp; u[3]
+                }, function () {
+                    return u[1] ^ u[2] ^ u[3]
+                }],
+                c = function (e, t) {
+                    return e &lt;&lt; t | e &gt;&gt;&gt; 32 - t
+                },
+                i = [1518500249, 1859775393, -1894007588, -899497514],
+                u = [1732584193, -271733879, null, null, -1009589776];
+            for (u[2] = ~u[0], u[3] = ~u[1], d = 0; d &lt; e.length; d += 16) {
+                var l = u.slice(0);
+                for (t = 0; t &lt; 80; t++) a[t] = t &lt; 16 ? e[d + t] : c(a[t - 3] ^ a[t - 8] ^ a[t - 14] ^ a[t -
+                    16], 1), n = c(u[0], 5) + s[t / 20 | 0]() + u[4] + a[t] + i[t / 20 | 0] | 0, u[1] =
+                    c(u[1], 30), u.pop(), u.unshift(n);
+                for (t = 0; t &lt; 5; t++) u[t] = u[t] + l[t] | 0
+            }
+            n = new DataView(new Uint32Array(u).buffer);
+            for (var d = 0; d &lt; 5; d++) u[d] = n.getUint32(d &lt;&lt; 2);
+            return Array.prototype.map.call(new Uint8Array(new Uint32Array(u).buffer), (function (e) {
+                return (e &lt; 16 ? &quot;0&quot; : &quot;&quot;) + e.toString(16)
+            })).join(&quot;&quot;)
+        }
+    }
+</code></pre>
+<p>调用 sha1 传入字符串的函数是</p>
+<pre><code class="language-js">        function l(t, n) {
+            var r = arguments.length &gt; 2 &amp;&amp; void 0 !== arguments[2] &amp;&amp; arguments[2];
+            return function (n) {
+                if (t.nonce = t.nonce || a()(), t.ts = t.ts || s.default.get(!1, !0), &quot;object&quot; == e(t.body))
+                    try {
+                        t.body = JSON.stringify(t.body)
+                    } catch (n) {
+                        t.body = &quot;&quot;
+                    }
+                n = n.map((function (e) {
+                    return t[e]
+                })).join(&quot;;&quot;);
+                var o = i()(n);
+                return r &amp;&amp; console.log(&quot;[SAFE]:&quot;, o, n), {
+                    nonce: t.nonce,
+                    ts: t.ts,
+                    sign: o
+                }
+            }(n)
+        }
+
+</code></pre>
+<p>有了上面的这些，也就不难分析出生成 sign的逻辑了。</p>
+<h3 id="生成逻辑">生成逻辑</h3>
+<p>传入的参数t包含有nonce，ts和body属性，n通过观察前面的代码可以知道是 <code>[&quot;signKey&quot;, &quot;skey&quot;, &quot;body&quot;, &quot;nonce&quot;, &quot;ts&quot;]</code>这样一个数组。</p>
+<p>首先，第一个 if 会检查传入的t.nonce，t.ts 是否存在，如不存在则调用相应函数生成，接着判断body的类型，如果是 object 则将其转换为json，转换失败则置空。然后按照n数组的顺序，将数组内容对应值通过 <code>;</code> 符号连接起来形成这样的字符串 <code>signKey;skey;body;nonce;ts</code> signKey 的值在前面的代码也有(换个域名就不对的原因)，skey 为auto-token。再把生成的字符串传给 i 即 sha1 函数，得出 sign 值。</p>
+<h2 id="结语">结语</h2>
+<p>对于这种没有混淆的代码，甚至不用动态调试都可以看出生成的逻辑，便能省掉让其在微信开发者工具中运行的时间。</p>
+<p>但是动态调试的话可以看到中间变量，减少分析过程的错误。就比如我，想当然的认为最后的L函数必定会传入body，因为post请求的body就在那里摆着，但sha1函数的输出结果总是和实际值对不起来。直到我在开发者工具里下断点调试了好几遍之后才发现，有的请求虽然有body，但并不会将body传入L函数，sha1的输出也自然没有body的事情，不知到是他代码逻辑就是这样，还是说是开发者写的bug 😓</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://blog.diyworld.me/post/bZdODaSxn/">
+              <h3 class="post-title">
+                下一篇：逆向 WebPack 打包网站使用 wasm 加密 Sign 参数的逻辑
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+        
+          <div id="gitalk-container"></div>
+        
+
+        
+      
+
+      <div class="site-footer">
+  <div class="slogan">生命不息，折腾不止</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://blog.diyworld.me/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: 'df0154d6a9f45f1e95f3',
+        clientSecret: '72bdef4a1fb6001d84fb3f09c9e7c840c4887d68',
+        repo: 'RoromoriYuzu.github.io',
+        owner: 'RoromoriYuzu',
+        admin: ['RoromoriYuzu'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

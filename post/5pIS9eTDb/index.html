@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>记一次简单的 JS 逆向分析 | 路路森</title>
+<meta name="description" content="生命不息，折腾不止">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://blog.diyworld.me/favicon.ico?v=1747968425405">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://blog.diyworld.me/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://blog.diyworld.me">
+        <img class="avatar" src="https://blog.diyworld.me/images/avatar.png?v=1747968425405" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://blog.diyworld.me">
+        <h1 class="site-title">路路森</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://RoromoriYuzu.github.io/post/note" class="menu purple-link">
+            记录
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">记一次简单的 JS 逆向分析</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-08-11</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://blog.diyworld.me/tag/OE_gcQIAN/">
+                    逆向
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://blog.diyworld.me/tag/uTKWNErwT/">
+                    Javascript
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E8%B5%B7%E5%9B%A0">起因</a></li>
+<li><a href="#%E7%BB%8F%E8%BF%87">经过</a>
+<ul>
+<li><a href="#%E5%BC%80%E5%A7%8B%E5%88%86%E6%9E%90%E5%8F%82%E6%95%B0%E7%9A%84%E7%94%9F%E6%88%90">开始分析参数的生成</a>
+<ul>
+<li><a href="#%E5%88%86%E6%9E%90">分析</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="起因">起因</h2>
+<p>像往常一样没啥事查看青龙日志的时候发现脚本报错了。</p>
+<figure data-type="image" tabindex="1"><img src="https://blog.diyworld.me/post-images/1660209610150.png" alt="" loading="lazy"></figure>
+<p>一开始还以为是网络问题没管他，等练车回来的时候看了一眼发现还是报错，仔细看了看发现是加了验证的参数</p>
+<h2 id="经过">经过</h2>
+<p>打开Fiddler，开始抓包。</p>
+<p>随便点点，看看请求参数有没有什么变化。</p>
+<figure data-type="image" tabindex="2"><img src="https://blog.diyworld.me/post-images/1660209630329.png" alt="" loading="lazy"></figure>
+<p>这里可以明显看出比之前多了3个参数 <code>timestamp</code> <code>nonce</code> <code>signature</code></p>
+<p>而且在每次的请求时都会通过<code>/public/api/getServerTimestamp</code>获取一下服务器的时间戳 。</p>
+<p>先重放一次试试....</p>
+<figure data-type="image" tabindex="3"><img src="https://blog.diyworld.me/post-images/1660209636371.png" alt="" loading="lazy"></figure>
+<p>居然获取成功，那这不简单了，把原来脚本的请求再加上这三个参数不就行了。</p>
+<p>不能这么简单吧，再重放一次试试...</p>
+<figure data-type="image" tabindex="4"><img src="https://blog.diyworld.me/post-images/1660209641628.png" alt="" loading="lazy"></figure>
+<p>果然...是我想的太简单了，看样子经过一定的时间那几个参数会过期，貌似是20秒左右。</p>
+<p>那我手快点，生成一个现在的时间戳然后Get一下看看会怎么样。</p>
+<p>不出所料依旧是 <code>{&quot;code&quot;:802,&quot;message&quot;:&quot;sign error3&quot;}</code></p>
+<p>看来不得不琢磨琢磨另外两个参数了。</p>
+<h3 id="开始分析参数的生成">开始分析参数的生成</h3>
+<p>因为服务器就传过来一个时间戳，那两个参数应该就是本地的JS生成的，不出意外只要知道生成的规则，应该就能解决了。</p>
+<p>把这个网页全部的 JS 文件下载下来，然后搜索 <code>timestamp</code> <code>nonce</code> <code>signature</code> 这几个参数，发现在 <code>index.d774f.js</code> 这个文件的 549-590 行出现了很多次。那应该就是这里了。</p>
+<h4 id="分析">分析</h4>
+<figure data-type="image" tabindex="5"><img src="https://blog.diyworld.me/post-images/1660209651087.png" alt="" loading="lazy"></figure>
+<p>可以看出这里有对变量赋值的操作。</p>
+<p>先来看看 <code>signature</code> 它通过 <code>xysz.encrypt.Md5.encode(o).toUpperCase()</code> 赋值。</p>
+<p><code>.toUpperCase()</code> 是转换成大写，<code>xysz.encrypt.Md5.encode(o)</code> 看样子是他自己写的函数应该和 Md5 有关，传递的参数是 o 。</p>
+<p>那再往上看看 o 是怎么来的</p>
+<figure data-type="image" tabindex="6"><img src="https://blog.diyworld.me/post-images/1660212484885.png" alt="" loading="lazy"></figure>
+<p>o 的值又是通过 <code>xysz.tool.getSortedQuery(a)</code> 赋值 ，参数是 a ，那再往上看 a 是怎么来的。</p>
+<pre><code class="language-js">a = {
+	clientKey: e[t].clientKey,
+	clientSecret: e[t].clientSecret,
+	timestamp: i.default.ServerTimestamp,
+    nonce: n
+},
+</code></pre>
+<p><code>clientKey</code> <code>clientSecret</code> 和 e 有关，<code>timestamp</code> 应该就是前面服务器传的时间戳，<code>nonce</code> 等于 n 的值。</p>
+<p>还要再往上看......</p>
+<pre><code class="language-js">n = this.randomString()
+</code></pre>
+<p>n 的值和<code>randomString</code>函数有关，通过搜索在当前的文件找到了这个函数。</p>
+<pre><code class="language-js">e.prototype.randomString = function (e) {
+ 	void 0 === e &amp;&amp; (e = 16);
+ 	for (var t = &quot;ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678&quot;, n = t.length,a = &quot;&quot;, r = 0; r &lt; e; r++) a += t.charAt(Math.floor(Math.random() *n));
+ 	return a
+	},
+</code></pre>
+<p>可以看出是随机生成一个长度为16的字符串，那看来<code>nonce</code>的值就是一个随机字符串了。</p>
+<p>还剩下一个 <code>signature</code> ，前面说到 <code>clientKey</code> <code>clientSecret</code>和 e 的值有关，而关于e 的值是个对象又和 t 有关，没办法再去找 t 的值。</p>
+<pre><code class="language-js">t = xysz.saas.getEnvByHostname()
+</code></pre>
+<p>t 又是一个函数赋的值。</p>
+<p>在 <code>xysz.min.8ac30.js</code> 文件发现了这个函数</p>
+<pre><code class="language-js">t.prototype.getEnvByHostname = function() {
+    return [&quot;devapi.xiaoyisz.com&quot;, &quot;qiehuangdev.ioutu.cn&quot;, &quot;localhost&quot;].includes(location.hostname) ?
+        &quot;dev&quot; : &quot;prod&quot;
+}
+</code></pre>
+<p>发现是一个三元运算符，拿到正确的值后回到对象 a，<code>e[t].clientKey</code> <code>e[t].clientSecret</code> 的值就显而易见了。</p>
+<p><em>吐槽一句...这不管三元运算符的结果是啥 <code>e[t].clientKey</code> <code>e[t].clientSecret</code> 这两个值的结果一样啊。</em></p>
+<p>a的值有了，扔到<code> xysz.tool.getSortedQuery(a)</code> 函数里取到值。</p>
+<p>如法炮制得到 <code> getSortedQuery</code></p>
+<pre><code class="language-js">t.getSortedQuery = function(t) {
+        var e = Object.keys(t).sort(),
+            n = &quot;&quot;;
+        return e.forEach(function(e) {
+            if (t[e] || 0 === t[e]) {
+                var o;
+                o = t[e] instanceof Object ? e + &quot;=&quot; + JSON.stringify(t[e]) : e + &quot;=&quot; + t[e], n &amp;&amp;
+                    o &amp;&amp; (n += &quot;&amp;&quot;), n += o
+            }
+        }), n
+    },
+</code></pre>
+<p>作用就是把 a 格式化输出，赋值给 o</p>
+<pre><code class="language-js">'clientKey=xxx&amp;clientSecret=xxx&amp;nonce=xxx&amp;timestamp=xxx'
+</code></pre>
+<p>有了 o 后，回到最初的起点</p>
+<pre><code class="language-js">signature: xysz.encrypt.Md5.encode(o).toUpperCase(),
+</code></pre>
+<p>经过测试，是把o的值转换成32位 Md5 后再变成大写。</p>
+<p>那这样，<code>signature</code> 的值就很明确了。</p>
+<p>到此，对JS加密的分析结束了。改改之前的脚本，把那几个参数加上去，脚本又能正常运行啦！</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://blog.diyworld.me/post/egmmcpejT/">
+              <h3 class="post-title">
+                下一篇：教育优惠 记录
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+        
+          <div id="gitalk-container"></div>
+        
+
+        
+      
+
+      <div class="site-footer">
+  <div class="slogan">生命不息，折腾不止</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://blog.diyworld.me/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: 'df0154d6a9f45f1e95f3',
+        clientSecret: '72bdef4a1fb6001d84fb3f09c9e7c840c4887d68',
+        repo: 'RoromoriYuzu.github.io',
+        owner: 'RoromoriYuzu',
+        admin: ['RoromoriYuzu'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

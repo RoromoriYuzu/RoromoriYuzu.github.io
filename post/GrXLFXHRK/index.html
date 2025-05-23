@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>常用加密和编码结果的特征小总结 | 路路森</title>
+<meta name="description" content="生命不息，折腾不止">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://blog.diyworld.me/favicon.ico?v=1747968425405">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://blog.diyworld.me/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://blog.diyworld.me">
+        <img class="avatar" src="https://blog.diyworld.me/images/avatar.png?v=1747968425405" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://blog.diyworld.me">
+        <h1 class="site-title">路路森</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://RoromoriYuzu.github.io/post/note" class="menu purple-link">
+            记录
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">常用加密和编码结果的特征小总结</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-09-06</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://blog.diyworld.me/tag/A9NeaOFri5/">
+                    学习
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#md5">MD5</a></li>
+<li><a href="#16%E4%BD%8Dmd5">16位MD5</a></li>
+<li><a href="#sha1">SHA1</a></li>
+<li><a href="#sha256">SHA256</a></li>
+<li><a href="#sha384">SHA384</a></li>
+<li><a href="#sha512">SHA512</a></li>
+<li><a href="#url%E7%BC%96%E7%A0%81">URL编码</a></li>
+<li><a href="#base64%E7%BC%96%E7%A0%81">BASE64编码</a></li>
+<li><a href="#unescape%E7%BC%96%E7%A0%81">Unescape编码</a></li>
+<li><a href="#aes%E5%8A%A0%E5%AF%86">AES加密</a></li>
+<li><a href="#%E5%B8%B8%E8%A7%81%E5%8A%A0%E5%AF%86%E5%BD%A2%E5%BC%8F">常见加密形式</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="md5">MD5</h2>
+<p>加密结果是32位的数字加小写字母组合</p>
+<h2 id="16位md5">16位MD5</h2>
+<p>加密结果16位数字加小写字母组合</p>
+<h2 id="sha1">SHA1</h2>
+<p>加密结果是40位数字加小写字母组合</p>
+<h2 id="sha256">SHA256</h2>
+<p>加密结果是64位数字加小写字母组合</p>
+<h2 id="sha384">SHA384</h2>
+<p>加密结果是96位数字加小写字母组合</p>
+<h2 id="sha512">SHA512</h2>
+<p>加密结果是128位数字加小写字母组合</p>
+<h2 id="url编码">URL编码</h2>
+<ul>
+<li>空格-%20</li>
+<li>0 ~ 9 - %30 ~ %39</li>
+<li>abcdefghijklmnopqrstuvwxyz-%61%62%63%64%65%66%67%68%69%6A%6B%6C%6D%6E%6F%70%71%72%73%74%75%76%77%78%79%7A</li>
+</ul>
+<h2 id="base64编码">BASE64编码</h2>
+<p>密文长度随明文长度变化，密文由数字，大小写字母，和字符组成，常会出现==，+，=</p>
+<h2 id="unescape编码">Unescape编码</h2>
+<ul>
+<li>abcd -&gt; %u6261%u6463%u0a0d%u0000
+<ul>
+<li>%u0000表示明文长度为偶数</li>
+<li>%u+4位数字表示两个明文字符</li>
+</ul>
+</li>
+<li>abcde -&gt; %u6261%u6463%u0d65%u000a
+<ul>
+<li>%u000a 即最后密文端表示明文长度为奇数</li>
+<li>2x2+1=5</li>
+</ul>
+</li>
+</ul>
+<h2 id="aes加密">AES加密</h2>
+<p>AES加密由加密模式，填充，数据块，密码，偏移量，输出，字符集组成：</p>
+<p>解密是需要，密码，偏移量，填充方式，数据块这四个值，后两者可能性有限可以手工测试，但前两者是加密者设置的。</p>
+<p>判断：由于输出结果是基于base64或hex,所以可以通过base64和hex解密结果判断是否是AES加密：</p>
+<h2 id="常见加密形式">常见加密形式</h2>
+<p>直接加密，带salt，带密码，带偏移量，带位数的，带模式，带干扰，自定义组合的。</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://blog.diyworld.me/post/JzPKfY7vF/">
+              <h3 class="post-title">
+                下一篇：Git 笔记
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+        
+          <div id="gitalk-container"></div>
+        
+
+        
+      
+
+      <div class="site-footer">
+  <div class="slogan">生命不息，折腾不止</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://blog.diyworld.me/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: 'df0154d6a9f45f1e95f3',
+        clientSecret: '72bdef4a1fb6001d84fb3f09c9e7c840c4887d68',
+        repo: 'RoromoriYuzu.github.io',
+        owner: 'RoromoriYuzu',
+        admin: ['RoromoriYuzu'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

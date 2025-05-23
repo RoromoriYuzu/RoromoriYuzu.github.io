@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>学X通 PC客户端 JSCX 文件解密 | 路路森</title>
+<meta name="description" content="生命不息，折腾不止">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://blog.diyworld.me/favicon.ico?v=1747968425405">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://blog.diyworld.me/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://blog.diyworld.me">
+        <img class="avatar" src="https://blog.diyworld.me/images/avatar.png?v=1747968425405" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://blog.diyworld.me">
+        <h1 class="site-title">路路森</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://RoromoriYuzu.github.io/post/note" class="menu purple-link">
+            记录
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">学X通 PC客户端 JSCX 文件解密</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2024-04-23</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://blog.diyworld.me/tag/OE_gcQIAN/">
+                    逆向
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#electron-%E5%91%B3%E5%93%AA%E9%87%8C%E6%9D%A5">Electron 味哪里来？</a>
+<ul>
+<li><a href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84">目录结构</a></li>
+<li><a href="#%E9%A1%B5%E9%9D%A2%E9%A3%8E%E6%A0%BC">页面风格</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%86%E6%9E%90%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9E%84">分析程序结构</a></li>
+<li><a href="#chatgpt-%E5%A6%82%E6%98%AF%E8%AF%B4%E9%81%93">ChatGPT 如是说道：</a></li>
+<li><a href="#ida-%E5%90%AF%E5%8A%A8">IDA 启动！</a></li>
+<li><a href="#xdbg-%E5%90%AF%E5%8A%A8">xdbg 启动！</a></li>
+<li><a href="#%E5%90%8E%E8%AE%B0">后记</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<blockquote>
+<p>最近需要逆向学X通一些参数的加密过程，但相应功能只在客户端上才有，所以分析网页 JS 行不通。APP用了梆梆企业版加固，在网上找了一圈没找到什么脱壳教程遂放弃。PC端浓浓的 Electron 味，有戏！</p>
+</blockquote>
+<h2 id="electron-味哪里来">Electron 味哪里来？</h2>
+<p>学X通PC客户端是使用 electron + nodejs 框架，用 javascript 开发的跨平台的桌面程序。</p>
+<h3 id="目录结构">目录结构</h3>
+<p>通常使用Electron构建的程序目录都类似以下这样</p>
+<figure data-type="image" tabindex="1"><img src="https://blog.diyworld.me/post-images/1713877029273.jpg" alt="" loading="lazy"></figure>
+<p>最显眼的就是 locales 和 resources，两个文件夹，其中 locales 里面是放的应用程序的本地化（或国际化）资源。resources 里面是程序的相应的主体代码。</p>
+<h3 id="页面风格">页面风格</h3>
+<p>常见的软件比如：Visual Studio Code，Postman，新版网易云音乐，QQNT，你可以在 <a href="https://www.electronjs.org/">Electron</a> 官网底部看到更多。</p>
+<figure data-type="image" tabindex="2"><img src="https://blog.diyworld.me/post-images/1713877835645.webp" alt="" loading="lazy"></figure>
+<p>就连我现在使用的这个 Gridea 都是😂</p>
+<h2 id="分析程序结构">分析程序结构</h2>
+<p>通常程序的主代码都在 resources 文件夹下，打包为 app.asar 。需要打包/解压工具 (npm i -g asar)</p>
+<p>但是学X通并没有打包，也就省去了解包的步骤。</p>
+<figure data-type="image" tabindex="3"><img src="https://blog.diyworld.me/post-images/1713878207402.jpg" alt="" loading="lazy"></figure>
+<p>需要解密的文件是位于 <code>cxstudyinhouse\1.1.8.6\resources\app\electron\renderer</code> 目录下的 MainWindowHelper.jscx，打开是一大串无规则的字符串。</p>
+<figure data-type="image" tabindex="4"><img src="https://blog.diyworld.me/post-images/1713878657852.jpg" alt="" loading="lazy"></figure>
+<p>经过查找解密步骤的实现在 <code>cxstudyinhouse\1.1.8.6\resources\app\module\compile</code> 文件夹下。其中 lib 文件夹内 CompileUtil.js 作用是用于导出模块中的 getDbKey 函数，与解密 jscx 文件关系不大。</p>
+<p>主要解密步骤在 Jscx.js 文件中</p>
+<figure data-type="image" tabindex="5"><img src="https://blog.diyworld.me/post-images/1713879053410.jpg" alt="" loading="lazy"></figure>
+<h2 id="chatgpt-如是说道">ChatGPT 如是说道：</h2>
+<p>这段代码的主要功能是为 Electron 应用程序添加对一个新的文件扩展名 <code>.jscx</code> 的支持。这个新的文件扩展名看起来像是一种预编译的 JavaScript 文件，可能包含一些特殊的优化或安全措施。</p>
+<p>下面是这段代码的详细解析：</p>
+<ol>
+<li>
+<p>首先，它导入了一些 Node.js 的内置模块，比如 <code>fs</code>（文件系统）、<code>v8</code>（V8 JavaScript 引擎）、<code>path</code>（路径处理）和 <code>Module</code>（模块系统）。</p>
+</li>
+<li>
+<p>然后，根据当前的平台（<code>process.platform</code>），它导入了不同的 <code>CompileExt</code> 模块。如果当前平台是 macOS（<code>&quot;darwin&quot;</code>），则导入 <code>../mac/CompileExt</code>；否则，导入 <code>../win/CompileExt</code>。这个 <code>CompileExt</code> 模块可能包含了一些平台特定的编译或解析 <code>.jscx</code> 文件的代码。</p>
+</li>
+<li>
+<p>接下来，它设置了 V8 JavaScript 引擎的一些标志，这里是 <code>--no-lazy</code>，这可能是为了优化 JavaScript 的编译。</p>
+</li>
+<li>
+<p>最后，它为 Node.js 的模块系统添加了一个新的文件扩展名处理器。这个处理器定义了当 Node.js 遇到一个 <code>.jscx</code> 文件时应该如何处理。在这个处理器中，它创建了一个新的 <code>require</code> 函数，设置了一些属性，然后调用了 <code>compileExt.RunFile</code> 函数来处理 <code>.jscx</code> 文件。</p>
+</li>
+</ol>
+<p>总的来说，这段代码的主要目的是为 Electron 应用程序添加对 <code>.jscx</code> 文件的支持，这可能是为了实现一些特殊的优化或安全措施。</p>
+<hr>
+<p>总的逻辑就是将 jscx 文件丢给 <code>../win/CompileExt</code> 解析运行。</p>
+<p>CompileExt.node 是node.js Addon：通过 C++ 编写的扩展模块，用于扩展 Node.js 的功能。<br>
+还需要知道有：N-API（Node-API）是一组稳定的 C 语言 API，用于编写跨平台的 Node.js Addon。N-API 提供了一套抽象层，使得开发者可以更轻松地编写可移植的扩展模块，而无需担心不同版本的 Node.js 或不同平台之间的兼容性问题。</p>
+<p>通过对几个 jscx 文件的观察，内容很像是 Base64 编码过的，但是使用Base64解码又不成功，那么大概率是 AES 或 DES 加密。</p>
+<p>既然 CompileExt.node 可以解析 jscx 文件，那么应该是将加密过的 jscx 文件在内部用 key 解密转回 js 文件后再执行。</p>
+<h2 id="ida-启动">IDA 启动！</h2>
+<p>CompileExt.node 既然是C++编译来的那就反编译查看他的解密逻辑。</p>
+<p>通过搜索字符串 <code>crypto</code> 定位到相关代码段，F5 反编译为C代码</p>
+<figure data-type="image" tabindex="6"><img src="https://blog.diyworld.me/post-images/1713880674248.jpg" alt="" loading="lazy"></figure>
+<p>大胆假设这段就是解密方法！</p>
+<p>可以看到相关的解密代码，是调用了 <code>crypto.createDecipheriv</code> 函数，加密方法也和前面的猜想一样是使用了 <code>aes-128-ecb</code>，第二个参数是key也就是解密所需的密钥，第三个参数iv是空，可以忽略掉。</p>
+<p>重点转移到 key 的值是如何来的</p>
+<figure data-type="image" tabindex="7"><img src="https://blog.diyworld.me/post-images/1713881107481.png" alt="" loading="lazy"></figure>
+<p>查看Node.js的文档</p>
+<figure data-type="image" tabindex="8"><img src="https://blog.diyworld.me/post-images/1713881315978.jpg" alt="" loading="lazy"></figure>
+<p>大胆假设一下，既然需要将 key 传递到 js 代码中那就需要创建一个相应的 js 的 key 字符串，那么v20 很可能就是 key ，又 <code>v20 = &amp;a10; </code> 而 a10 又是作为参数传递进来的</p>
+<figure data-type="image" tabindex="9"><img src="https://blog.diyworld.me/post-images/1713881479013.jpg" alt="" loading="lazy"></figure>
+<p>那么就要看是谁调用了这个函数，给这个函数改个名，点击IDA菜单 <code>View-&gt;Open subviews-&gt;Function calls</code></p>
+<figure data-type="image" tabindex="10"><img src="https://blog.diyworld.me/post-images/1713881639316.jpg" alt="" loading="lazy"></figure>
+<p>可以看到这个函数被调用了三次，先点进第一个看看，可以看到在61行调用了解密函数，a10对应的参数也就是我另起名的key</p>
+<figure data-type="image" tabindex="11"><img src="https://blog.diyworld.me/post-images/1713881824210.jpg" alt="" loading="lazy"></figure>
+<p>在第59行可以看到将key的地址传递给了getKey函数（这是我后修改的名），继续跟进</p>
+<figure data-type="image" tabindex="12"><img src="https://blog.diyworld.me/post-images/1713882013568.jpg" alt="" loading="lazy"></figure>
+<p>Assignment 函数的逻辑是将第二个参数以第三个参数的长度赋值给第一个参数</p>
+<p>举个例子：在第62行的逻辑就是从v4+2，即v33+ 2，开始往后v3即3个字符，赋值给Block。</p>
+<p>以下的几行差不多都是类似的逻辑</p>
+<figure data-type="image" tabindex="13"><img src="https://blog.diyworld.me/post-images/1713882606837.jpg" alt="" loading="lazy"></figure>
+<p>但是他最后是将 *v23 什么的值赋值给 this ，但是我并不知道 *v23的值是怎么来的，他前面也没有过赋值😓</p>
+<p>不过知道了key是在什么地方生成的，那么只需要相应地方打下断点，动态调试一下就知道具体的值了！</p>
+<p>经过之后的测试发现，第一个调用是将前面那一大长串用 getKey 生成的 key 进行解密。</p>
+<p>第二次和第三次调用都是在同一个函数内，区别为第二次才是真的将 jscx 文件解密 ，而第三次同样是将前面的一串字符解密运行。</p>
+<figure data-type="image" tabindex="14"><img src="https://blog.diyworld.me/post-images/1713939845162.jpg" alt="" loading="lazy"></figure>
+<p>解密 jscx 文件要在以下地址下断点</p>
+<p>52AD37A9 | E8 E2F7FFFF              | call compileext.52AD2F90                | 调用解密函数</p>
+<h2 id="xdbg-启动">xdbg 启动！</h2>
+<p>打开 xdbg，运行学X通客户端，随便点几下确保 CompileExt.node 相关代码已经运行，接着搜索字符串 <code>HmoBjviHurIH+fe.....</code> ，定位到对应的代码行，对比一下</p>
+<figure data-type="image" tabindex="15"><img src="https://blog.diyworld.me/post-images/1713883640615.jpg" alt="" loading="lazy"></figure>
+<p>call compileext.7B6A2F90 即为 call    jiemi</p>
+<p>在对应位置下断点，运行程序，当程序运行到断点处时查看堆栈区即有对应的 key 值。</p>
+<figure data-type="image" tabindex="16"><img src="https://blog.diyworld.me/post-images/1713886315190.jpg" alt="" loading="lazy"></figure>
+<p>拿去尝试解密，确定就是密钥没错了。</p>
+<figure data-type="image" tabindex="17"><img src="https://blog.diyworld.me/post-images/1713886381686.jpg" alt="" loading="lazy"></figure>
+<h2 id="后记">后记</h2>
+<p>最初我是想通过开启 Devtools 调试出key的，但是折腾一阵发现</p>
+<pre><code class="language-js">mainWindow.webContents.openDevTools()
+</code></pre>
+<p>找不到他具体的mainWindow是什么，new BrowserWindow 这条代码也是打包在 exe 中的，其他js文件中都没有。<a href="https://github.com/pd4d10/debugtron">debugtron</a> 这个工具连学X通都识别不到。</p>
+<p>另一个思路是在 js 层 hook api，修改他 crypto 库的文件，console.log(key)，但是 crypto 库也打包进了 exe 里，也只能放弃。</p>
+<p>花了两天，简单的学了下 IDA 和 xdbg 通过动态调试可算把key找到了。从头到尾花了四天，还不错😇</p>
+<hr>
+<p>再更.....</p>
+<p>发现有部分文件在断点处没有 key 的值，解决方法是将 main.jscx 解密后插入对应的代码，再用同一个key加密回去。</p>
+<pre><code class="language-js">
+try { const robotTranslate = require('./test/robotTranslate'); } catch (e) { console.error(e); }
+
+</code></pre>
+<p>确保文件会被加载就可以看到对应key的值了。</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://blog.diyworld.me/post/hb1lIQtV8/">
+              <h3 class="post-title">
+                下一篇：书接上回 小程序解包逆向分析 Sign 生成逻辑
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+        
+          <div id="gitalk-container"></div>
+        
+
+        
+      
+
+      <div class="site-footer">
+  <div class="slogan">生命不息，折腾不止</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://blog.diyworld.me/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: 'df0154d6a9f45f1e95f3',
+        clientSecret: '72bdef4a1fb6001d84fb3f09c9e7c840c4887d68',
+        repo: 'RoromoriYuzu.github.io',
+        owner: 'RoromoriYuzu',
+        admin: ['RoromoriYuzu'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

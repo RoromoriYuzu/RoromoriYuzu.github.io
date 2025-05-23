@@ -1,0 +1,364 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>给青龙面板设置个代理 | 路路森</title>
+<meta name="description" content="生命不息，折腾不止">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://blog.diyworld.me/favicon.ico?v=1747968425405">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://blog.diyworld.me/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://blog.diyworld.me">
+        <img class="avatar" src="https://blog.diyworld.me/images/avatar.png?v=1747968425405" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://blog.diyworld.me">
+        <h1 class="site-title">路路森</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://RoromoriYuzu.github.io/post/note" class="menu purple-link">
+            记录
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">给青龙面板设置个代理</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-08-12</span>
+            
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://blog.diyworld.me/tag/jF5QyLNaDV/">
+                    青龙
+                    
+                  </a>
+                
+              </span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%90%86">搭建代理</a>
+<ul>
+<li><a href="#%E4%BB%8B%E7%BB%8D">介绍</a></li>
+<li><a href="#%E6%90%AD%E5%BB%BA">搭建</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BB%99%E9%9D%92%E9%BE%99%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86">给青龙配置代理</a>
+<ul>
+<li><a href="#%E5%8E%9F%E7%90%86">原理</a></li>
+<li><a href="#docker-%E5%AE%89%E8%A3%85-v2raya">Docker 安装 v2rayA</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3">问题解决</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E9%9D%92%E9%BE%99%E7%AB%AF%E5%8F%A3">修改青龙端口</a>
+<ul>
+<li><a href="#%E9%A1%BA%E4%BE%BF%E4%B8%80%E6%8F%90">顺便一提</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<blockquote>
+<p>用服务器跑脚本，时间长了难免会被封掉 IP，比如我的服务器 IP 就被京东封掉了，阿里云换 IP 要多加钱，没办法只能整一个代理了。</p>
+</blockquote>
+<h2 id="搭建代理">搭建代理</h2>
+<p>这里我用的是 <code>Gost</code></p>
+<h3 id="介绍">介绍</h3>
+<p><code>Gost</code> 是一个功能多样且实用的安全隧道工具，使用的是go语言编写<br>
+这里只记录下快速搭建Socks5的过程，其它的并不涉及，有兴趣的朋友可以去项目主页了解下；<br>
+GitHub项目：https://github.com/go-gost/gost<br>
+Gost文档：https://gost.run/<br>
+<code>Socks5</code>属于明文代理，不要用于科学上网，否则会被阻断端口，可用于正常的跳板使用。</p>
+<h3 id="搭建">搭建</h3>
+<p>常规安装 <code>AMD64</code> 框架机型</p>
+<pre><code class="language-bash">wget &quot;https://github.com/go-gost/gost/releases/download/v3.0.0-beta.2/gost-linux-amd64-3.0.0-beta.2.gz&quot; 
+gzip gost-linux-amd64-3.0.0-beta.2.gz -d
+mv gost-linux-amd64-3.0.0-beta.2  /usr/bin/gost 
+chmod +x /usr/bin/gost
+</code></pre>
+<p>开启一个HTTP代理服务</p>
+<pre><code class="language-bash">gost -L http://:8080
+</code></pre>
+<p>开启多个代理服务</p>
+<pre><code class="language-bash">gost -L http://:8080 -L socks5://:1080 
+## 测试没问题后可以用`nohup`命令挂载到后台运行，重启失效，再次挂载即可重新使用；
+nohup gost -L 账号:密码@:端口 socks5://:端口 &gt; /dev/null 2&gt;&amp;1 &amp;
+</code></pre>
+<p>关闭代理</p>
+<pre><code class="language-bash">kill -9 $(ps aux | grep &quot;gost&quot; | sed '/grep/d' | awk '{print $2}')
+</code></pre>
+<h2 id="给青龙配置代理">给青龙配置代理</h2>
+<p>这里可真是废了太大劲了，根据网上的教程是在环境变量里配置 （先说一句，这样是不行的）</p>
+<pre><code class="language-bash">#配置文件添加变量，使用代理
+export ALL_PROXY=socks5://127.0.0.1:40000
+</code></pre>
+<p>然后通过 curl 测试</p>
+<pre><code class="language-bash">#获取IP地址
+curl ip.sb -s
+</code></pre>
+<p>嗯，输出确实是我的代理服务器的 ip ，然后再按照他说的再加上这几行吧。</p>
+<pre><code class="language-bash">echo '当前代理:' $ALL_PROXY
+echo '开始查询公网IP:'
+curl --silent --location --request GET 'ip.sb'
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://blog.diyworld.me/post-images/1660320061666.png" alt="" loading="lazy"></figure>
+<p>看他的截图整挺好，那我也跑一下试试。</p>
+<p>然后感觉到不对了，跑的有点快啊，不像是走过代理，看一眼代理服务器的输出，确实没有。</p>
+<p>这就是不行的地方了，在跑JS的时候根本没有走代理，但在 <code>curl</code> 的时候是走代理的。</p>
+<p>那也不对啊，我的目的是让 JS 的请求走代理，然后我去青龙的 issue 里看看有没有人提过，有，但都没有解决的方法，并且现有的配置文件里 <code>ProxyUrl=&quot;&quot;</code> 也并不起作用。</p>
+<blockquote>
+<p>之后经过一下午的谷歌和各种尝试终于能让JS也走代理了.....</p>
+</blockquote>
+<h3 id="原理">原理</h3>
+<p>通过 <code>v2rayA</code> 给整个系统套一个全局代理，那JS也肯定也要走这个全局了</p>
+<blockquote>
+<p>v2rayA 是一个支持全局透明代理的 V2Ray Linux 客户端，同时兼容SS、SSR、Trojan(trojan-go)、PingTunnel协议。<br>
+v2rayA 致力于提供最简单的操作，满足绝大部分需求。<br>
+得益于Web客户端的优势，你不仅可以将其用于本地计算机，还可以轻松地将它部署在路由器或NAS上。<br>
+项目地址：https://github.com/v2rayA/v2rayA</p>
+</blockquote>
+<h3 id="docker-安装-v2raya">Docker 安装 v2rayA</h3>
+<pre><code class="language-bash">docker run -d \
+  --restart=always \
+  --privileged \
+  --network=host \
+  --name v2raya \
+  -e V2RAYA_ADDRESS=0.0.0.0:你想要的端口 \
+  -v /lib/modules:/lib/modules:ro \
+  -v /etc/resolv.conf:/etc/resolv.conf \
+  -v /etc/v2raya:/etc/v2raya \
+  mzz2017/v2raya
+</code></pre>
+<p>之后别忘了在防火墙开启相应的端口，然后访问相应的地址就可以看到 GUI 了。</p>
+<p>选择添加节点，有多种方式可以选择，那意味着可以有很多代理可选择，我先用的 HTTP，依次填写完后保存。</p>
+<p>之后选择右上角的设置</p>
+<figure data-type="image" tabindex="2"><img src="https://blog.diyworld.me/post-images/1660321605832.png" alt="" loading="lazy"></figure>
+<p>根据自己想要的设置就行。</p>
+<p>可以这样设置。<br>
+<img src="https://blog.diyworld.me/post-images/1660388719338.png" alt="" loading="lazy"><br>
+然后在 RoutingA 里填写你的自定义设置。</p>
+<p><strong>注意</strong><br>
+使用该方法会影响其他容器的网络，如果你在 <code>透明代理/系统代理实现方式</code> 设置为 <code>redirect </code> ,其他容器会无法联网，青龙在执行 curl 时无法联网，可以执行 JS 但还是不走代理。</p>
+<p>如果你设置为 <code>tproxy </code> 那么青龙执行 JS 时连不上网，其他容器正常。</p>
+<p>为了解决这个问题，需要将容器的网络模式改为 <code>host</code></p>
+<p>以青龙为例：</p>
+<p>青龙Docker不是<code>host</code>的网络模式的话要重新在执行<code>Docker run</code> 命令的时候加上 <code>-net=host</code>。</p>
+<p>例如</p>
+<pre><code class="language-bash">docker run -dit \
+  -v $PWD/ql:/ql/data \
+  --name qinglong \
+  --hostname qinglong \
+  --restart unless-stopped \
+  --net=host \
+  whyour/qinglong:latest
+</code></pre>
+<p>这样有个坏处是<code>host</code> 模式下该容器将无法进行端口映射，容器内部监听的端口将直接监听在宿主上，容易引起端口冲突。</p>
+<p>设置为 <code>redirect </code>模式后，只有在 <code>host</code>  模式下的容器才能正常联网， 在 <code>tproxy </code> 模式下 没有设置  <code>host</code>  模式的容器可以正常联网。</p>
+<p><img src="https://blog.diyworld.me/post-images/1660395343597.png" alt="" loading="lazy"><br>
+这样有点和说明不一样啊！</p>
+<p>我也试过没有用 <code>host</code> 的青龙设置 <code>tproxy </code>，可惜JS还是不走代理。</p>
+<p>只能把其他容器一个一个设置为 <code>host</code> 并且根据需要修改他们的端口，我也不知道有啥别的好方法。<br>
+在删除容器的时候别忘了相关文件的保存。</p>
+<p>相关的问题在 <a href="https://v2raya.org/docs/advanced-application/specify-container-proxy/">文档</a> 里有说明。</p>
+<h3 id="问题解决">问题解决</h3>
+<p>配置完后在JS里执行</p>
+<pre><code class="language-js">var http = require(&quot;https&quot;);
+var iconv = require('iconv-lite');
+var option = { 
+hostname: &quot;myip.ipip.net&quot;,
+path: &quot;&quot;
+}; 
+var req = http.request(option, function(res) {
+res.on(&quot;data&quot;, function(chunk) {
+console.log(iconv.decode(chunk, &quot;utf-8&quot;));
+}); 
+}).on(&quot;error&quot;, function(e) {
+console.log(e.message);
+});
+req.end();
+</code></pre>
+<p>看看你的IP是不是成功变成代理IP 了。</p>
+<h3 id="修改青龙端口">修改青龙端口</h3>
+<p>将 Docker 设置成 host 模式后无法再通过 <code>-p 5700:5700 \</code> 来自定义端口，用默认的 5700 又不安全，只能通过修改容器来修改端口。</p>
+<p>配置文件在 <code>/var/lib/docker/overlay2</code> 文件夹下的某个目录内。</p>
+<p>可以通过目录大小来推断是哪个文件夹，通过命令</p>
+<pre><code class="language-bash">cd /var/lib/docker/overlay2
+du -s ./* | sort -rn | more
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://blog.diyworld.me/post-images/1660368498476.png" alt="" loading="lazy"></figure>
+<p>我的青龙就是这个文件夹。<br>
+如果你安装了宝塔并且有 Docker 的插件，那么可以直接选择<code>目录</code>进入文件夹<br>
+<img src="https://blog.diyworld.me/post-images/1660368621707.png" alt="" loading="lazy"></p>
+<p>需要修改的文件路径在 <code>/merged</code> 文件夹内，文件分别是</p>
+<pre><code class="language-bash">\ql\shell\check.sh
+\ql\shell\api.sh
+\ql\shell\share.sh
+\ql\docker\front.conf
+\ql\docker\docker-entrypoint.sh
+\ql\docker\docker-compose.yml
+\ql\.env
+</code></pre>
+<p>将里面的 5700 端口改成你想要的端口就可以了。</p>
+<h4 id="顺便一提">顺便一提</h4>
+<p>貌似可以通过 <code>cloudflare Warp</code> 来达成刷新 IP</p>
+<p>项目地址 https://github.com/fscarmen/warp</p>
+<p>详细安装方法我就不写了，文档很全。</p>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://blog.diyworld.me/post/5pIS9eTDb/">
+              <h3 class="post-title">
+                下一篇：记一次简单的 JS 逆向分析
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+        
+          <div id="gitalk-container"></div>
+        
+
+        
+      
+
+      <div class="site-footer">
+  <div class="slogan">生命不息，折腾不止</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://blog.diyworld.me/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: 'df0154d6a9f45f1e95f3',
+        clientSecret: '72bdef4a1fb6001d84fb3f09c9e7c840c4887d68',
+        repo: 'RoromoriYuzu.github.io',
+        owner: 'RoromoriYuzu',
+        admin: ['RoromoriYuzu'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

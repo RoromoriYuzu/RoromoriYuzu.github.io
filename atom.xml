@@ -1,0 +1,2313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://blog.diyworld.me</id>
+    <title>路路森</title>
+    <updated>2025-05-23T02:47:26.575Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://blog.diyworld.me"/>
+    <link rel="self" href="https://blog.diyworld.me/atom.xml"/>
+    <subtitle>生命不息，折腾不止</subtitle>
+    <logo>https://blog.diyworld.me/images/avatar.png</logo>
+    <icon>https://blog.diyworld.me/favicon.ico</icon>
+    <rights>All rights reserved 2025, 路路森</rights>
+    <entry>
+        <title type="html"><![CDATA[学X通 PC客户端 JSCX 文件解密]]></title>
+        <id>https://blog.diyworld.me/post/RRblxbtY5/</id>
+        <link href="https://blog.diyworld.me/post/RRblxbtY5/">
+        </link>
+        <updated>2024-04-23T12:16:40.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#electron-%E5%91%B3%E5%93%AA%E9%87%8C%E6%9D%A5">Electron 味哪里来？</a>
+<ul>
+<li><a href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84">目录结构</a></li>
+<li><a href="#%E9%A1%B5%E9%9D%A2%E9%A3%8E%E6%A0%BC">页面风格</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%86%E6%9E%90%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9E%84">分析程序结构</a></li>
+<li><a href="#chatgpt-%E5%A6%82%E6%98%AF%E8%AF%B4%E9%81%93">ChatGPT 如是说道：</a></li>
+<li><a href="#ida-%E5%90%AF%E5%8A%A8">IDA 启动！</a></li>
+<li><a href="#xdbg-%E5%90%AF%E5%8A%A8">xdbg 启动！</a></li>
+<li><a href="#%E5%90%8E%E8%AE%B0">后记</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<blockquote>
+<p>最近需要逆向学X通一些参数的加密过程，但相应功能只在客户端上才有，所以分析网页 JS 行不通。APP用了梆梆企业版加固，在网上找了一圈没找到什么脱壳教程遂放弃。PC端浓浓的 Electron 味，有戏！</p>
+</blockquote>
+<h2 id="electron-味哪里来">Electron 味哪里来？</h2>
+<p>学X通PC客户端是使用 electron + nodejs 框架，用 javascript 开发的跨平台的桌面程序。</p>
+<h3 id="目录结构">目录结构</h3>
+<p>通常使用Electron构建的程序目录都类似以下这样</p>
+<figure data-type="image" tabindex="1"><img src="https://blog.diyworld.me/post-images/1713877029273.jpg" alt="" loading="lazy"></figure>
+<p>最显眼的就是 locales 和 resources，两个文件夹，其中 locales 里面是放的应用程序的本地化（或国际化）资源。resources 里面是程序的相应的主体代码。</p>
+<h3 id="页面风格">页面风格</h3>
+<p>常见的软件比如：Visual Studio Code，Postman，新版网易云音乐，QQNT，你可以在 <a href="https://www.electronjs.org/">Electron</a> 官网底部看到更多。</p>
+<figure data-type="image" tabindex="2"><img src="https://blog.diyworld.me/post-images/1713877835645.webp" alt="" loading="lazy"></figure>
+<p>就连我现在使用的这个 Gridea 都是😂</p>
+<h2 id="分析程序结构">分析程序结构</h2>
+<p>通常程序的主代码都在 resources 文件夹下，打包为 app.asar 。需要打包/解压工具 (npm i -g asar)</p>
+<p>但是学X通并没有打包，也就省去了解包的步骤。</p>
+<figure data-type="image" tabindex="3"><img src="https://blog.diyworld.me/post-images/1713878207402.jpg" alt="" loading="lazy"></figure>
+<p>需要解密的文件是位于 <code>cxstudyinhouse\1.1.8.6\resources\app\electron\renderer</code> 目录下的 MainWindowHelper.jscx，打开是一大串无规则的字符串。</p>
+<figure data-type="image" tabindex="4"><img src="https://blog.diyworld.me/post-images/1713878657852.jpg" alt="" loading="lazy"></figure>
+<p>经过查找解密步骤的实现在 <code>cxstudyinhouse\1.1.8.6\resources\app\module\compile</code> 文件夹下。其中 lib 文件夹内 CompileUtil.js 作用是用于导出模块中的 getDbKey 函数，与解密 jscx 文件关系不大。</p>
+<p>主要解密步骤在 Jscx.js 文件中</p>
+<figure data-type="image" tabindex="5"><img src="https://blog.diyworld.me/post-images/1713879053410.jpg" alt="" loading="lazy"></figure>
+<h2 id="chatgpt-如是说道">ChatGPT 如是说道：</h2>
+<p>这段代码的主要功能是为 Electron 应用程序添加对一个新的文件扩展名 <code>.jscx</code> 的支持。这个新的文件扩展名看起来像是一种预编译的 JavaScript 文件，可能包含一些特殊的优化或安全措施。</p>
+<p>下面是这段代码的详细解析：</p>
+<ol>
+<li>
+<p>首先，它导入了一些 Node.js 的内置模块，比如 <code>fs</code>（文件系统）、<code>v8</code>（V8 JavaScript 引擎）、<code>path</code>（路径处理）和 <code>Module</code>（模块系统）。</p>
+</li>
+<li>
+<p>然后，根据当前的平台（<code>process.platform</code>），它导入了不同的 <code>CompileExt</code> 模块。如果当前平台是 macOS（<code>&quot;darwin&quot;</code>），则导入 <code>../mac/CompileExt</code>；否则，导入 <code>../win/CompileExt</code>。这个 <code>CompileExt</code> 模块可能包含了一些平台特定的编译或解析 <code>.jscx</code> 文件的代码。</p>
+</li>
+<li>
+<p>接下来，它设置了 V8 JavaScript 引擎的一些标志，这里是 <code>--no-lazy</code>，这可能是为了优化 JavaScript 的编译。</p>
+</li>
+<li>
+<p>最后，它为 Node.js 的模块系统添加了一个新的文件扩展名处理器。这个处理器定义了当 Node.js 遇到一个 <code>.jscx</code> 文件时应该如何处理。在这个处理器中，它创建了一个新的 <code>require</code> 函数，设置了一些属性，然后调用了 <code>compileExt.RunFile</code> 函数来处理 <code>.jscx</code> 文件。</p>
+</li>
+</ol>
+<p>总的来说，这段代码的主要目的是为 Electron 应用程序添加对 <code>.jscx</code> 文件的支持，这可能是为了实现一些特殊的优化或安全措施。</p>
+<hr>
+<p>总的逻辑就是将 jscx 文件丢给 <code>../win/CompileExt</code> 解析运行。</p>
+<p>CompileExt.node 是node.js Addon：通过 C++ 编写的扩展模块，用于扩展 Node.js 的功能。<br>
+还需要知道有：N-API（Node-API）是一组稳定的 C 语言 API，用于编写跨平台的 Node.js Addon。N-API 提供了一套抽象层，使得开发者可以更轻松地编写可移植的扩展模块，而无需担心不同版本的 Node.js 或不同平台之间的兼容性问题。</p>
+<p>通过对几个 jscx 文件的观察，内容很像是 Base64 编码过的，但是使用Base64解码又不成功，那么大概率是 AES 或 DES 加密。</p>
+<p>既然 CompileExt.node 可以解析 jscx 文件，那么应该是将加密过的 jscx 文件在内部用 key 解密转回 js 文件后再执行。</p>
+<h2 id="ida-启动">IDA 启动！</h2>
+<p>CompileExt.node 既然是C++编译来的那就反编译查看他的解密逻辑。</p>
+<p>通过搜索字符串 <code>crypto</code> 定位到相关代码段，F5 反编译为C代码</p>
+<figure data-type="image" tabindex="6"><img src="https://blog.diyworld.me/post-images/1713880674248.jpg" alt="" loading="lazy"></figure>
+<p>大胆假设这段就是解密方法！</p>
+<p>可以看到相关的解密代码，是调用了 <code>crypto.createDecipheriv</code> 函数，加密方法也和前面的猜想一样是使用了 <code>aes-128-ecb</code>，第二个参数是key也就是解密所需的密钥，第三个参数iv是空，可以忽略掉。</p>
+<p>重点转移到 key 的值是如何来的</p>
+<figure data-type="image" tabindex="7"><img src="https://blog.diyworld.me/post-images/1713881107481.png" alt="" loading="lazy"></figure>
+<p>查看Node.js的文档</p>
+<figure data-type="image" tabindex="8"><img src="https://blog.diyworld.me/post-images/1713881315978.jpg" alt="" loading="lazy"></figure>
+<p>大胆假设一下，既然需要将 key 传递到 js 代码中那就需要创建一个相应的 js 的 key 字符串，那么v20 很可能就是 key ，又 <code>v20 = &amp;a10; </code> 而 a10 又是作为参数传递进来的</p>
+<figure data-type="image" tabindex="9"><img src="https://blog.diyworld.me/post-images/1713881479013.jpg" alt="" loading="lazy"></figure>
+<p>那么就要看是谁调用了这个函数，给这个函数改个名，点击IDA菜单 <code>View-&gt;Open subviews-&gt;Function calls</code></p>
+<figure data-type="image" tabindex="10"><img src="https://blog.diyworld.me/post-images/1713881639316.jpg" alt="" loading="lazy"></figure>
+<p>可以看到这个函数被调用了三次，先点进第一个看看，可以看到在61行调用了解密函数，a10对应的参数也就是我另起名的key</p>
+<figure data-type="image" tabindex="11"><img src="https://blog.diyworld.me/post-images/1713881824210.jpg" alt="" loading="lazy"></figure>
+<p>在第59行可以看到将key的地址传递给了getKey函数（这是我后修改的名），继续跟进</p>
+<figure data-type="image" tabindex="12"><img src="https://blog.diyworld.me/post-images/1713882013568.jpg" alt="" loading="lazy"></figure>
+<p>Assignment 函数的逻辑是将第二个参数以第三个参数的长度赋值给第一个参数</p>
+<p>举个例子：在第62行的逻辑就是从v4+2，即v33+ 2，开始往后v3即3个字符，赋值给Block。</p>
+<p>以下的几行差不多都是类似的逻辑</p>
+<figure data-type="image" tabindex="13"><img src="https://blog.diyworld.me/post-images/1713882606837.jpg" alt="" loading="lazy"></figure>
+<p>但是他最后是将 *v23 什么的值赋值给 this ，但是我并不知道 *v23的值是怎么来的，他前面也没有过赋值😓</p>
+<p>不过知道了key是在什么地方生成的，那么只需要相应地方打下断点，动态调试一下就知道具体的值了！</p>
+<p>经过之后的测试发现，第一个调用是将前面那一大长串用 getKey 生成的 key 进行解密。</p>
+<p>第二次和第三次调用都是在同一个函数内，区别为第二次才是真的将 jscx 文件解密 ，而第三次同样是将前面的一串字符解密运行。</p>
+<figure data-type="image" tabindex="14"><img src="https://blog.diyworld.me/post-images/1713939845162.jpg" alt="" loading="lazy"></figure>
+<p>解密 jscx 文件要在以下地址下断点</p>
+<p>52AD37A9 | E8 E2F7FFFF              | call compileext.52AD2F90                | 调用解密函数</p>
+<h2 id="xdbg-启动">xdbg 启动！</h2>
+<p>打开 xdbg，运行学X通客户端，随便点几下确保 CompileExt.node 相关代码已经运行，接着搜索字符串 <code>HmoBjviHurIH+fe.....</code> ，定位到对应的代码行，对比一下</p>
+<figure data-type="image" tabindex="15"><img src="https://blog.diyworld.me/post-images/1713883640615.jpg" alt="" loading="lazy"></figure>
+<p>call compileext.7B6A2F90 即为 call    jiemi</p>
+<p>在对应位置下断点，运行程序，当程序运行到断点处时查看堆栈区即有对应的 key 值。</p>
+<figure data-type="image" tabindex="16"><img src="https://blog.diyworld.me/post-images/1713886315190.jpg" alt="" loading="lazy"></figure>
+<p>拿去尝试解密，确定就是密钥没错了。</p>
+<figure data-type="image" tabindex="17"><img src="https://blog.diyworld.me/post-images/1713886381686.jpg" alt="" loading="lazy"></figure>
+<h2 id="后记">后记</h2>
+<p>最初我是想通过开启 Devtools 调试出key的，但是折腾一阵发现</p>
+<pre><code class="language-js">mainWindow.webContents.openDevTools()
+</code></pre>
+<p>找不到他具体的mainWindow是什么，new BrowserWindow 这条代码也是打包在 exe 中的，其他js文件中都没有。<a href="https://github.com/pd4d10/debugtron">debugtron</a> 这个工具连学X通都识别不到。</p>
+<p>另一个思路是在 js 层 hook api，修改他 crypto 库的文件，console.log(key)，但是 crypto 库也打包进了 exe 里，也只能放弃。</p>
+<p>花了两天，简单的学了下 IDA 和 xdbg 通过动态调试可算把key找到了。从头到尾花了四天，还不错😇</p>
+<hr>
+<p>再更.....</p>
+<p>发现有部分文件在断点处没有 key 的值，解决方法是将 main.jscx 解密后插入对应的代码，再用同一个key加密回去。</p>
+<pre><code class="language-js">
+try { const robotTranslate = require('./test/robotTranslate'); } catch (e) { console.error(e); }
+
+</code></pre>
+<p>确保文件会被加载就可以看到对应key的值了。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[书接上回 小程序解包逆向分析 Sign 生成逻辑]]></title>
+        <id>https://blog.diyworld.me/post/hb1lIQtV8/</id>
+        <link href="https://blog.diyworld.me/post/hb1lIQtV8/">
+        </link>
+        <updated>2023-08-14T08:51:57.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E9%80%86%E5%90%91%E5%B0%8F%E7%A8%8B%E5%BA%8F">逆向小程序</a></li>
+<li><a href="#%E5%88%86%E6%9E%90%E4%BB%A3%E7%A0%81">分析代码</a>
+<ul>
+<li><a href="#%E7%94%9F%E6%88%90%E9%80%BB%E8%BE%91">生成逻辑</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BB%93%E8%AF%AD">结语</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<blockquote>
+<p>上一章说到通过直接调用 wasm 来实现生成 Sign，但发现只针对那一个域名接口的请求有效，换个接口就不行了，看来还是要彻底分析他的生成逻辑。</p>
+</blockquote>
+<h2 id="逆向小程序">逆向小程序</h2>
+<p>在小程序打开前就对它抓包，直到页面加载完毕也没发现相关js的请求，而且api的 referer:  都是指向了 https://servicewechat.com，所以可以基本确定相关的js文件都早打包进小程序下载到了本地。</p>
+<p>打开目录 <code>Documents\WeChat Files\Applet</code>  根据修改日期可以确定哪个文件夹对应着小程序包。</p>
+<figure data-type="image" tabindex="1"><img src="https://blog.diyworld.me/post-images/1692004689876.jpg" alt="" loading="lazy"></figure>
+<p>接下来需要对 wxapkg 文件进行解密然后解包，由于微信的更新，在5月之前的解包工具都不能正常的解带有分包的小程序，我用的是 unveilr.exe 转收费前的版本，能正常的解大部分的文件，但还是有点小毛病，相关的解包教程可以去网上找。</p>
+<figure data-type="image" tabindex="2"><img src="https://blog.diyworld.me/post-images/1692004955216.jpg" alt="" loading="lazy"></figure>
+<p>解包完成后可以通过文件的大小，或者是否存在 <code>app.json</code> 文件来确定是否成功解包，将解包后的相应文件夹导入微信开发者工具，开始动态调试。</p>
+<p>因为解包工具比较旧，导入后会出现不少报错，只要根据 <a href="https://developers.weixin.qq.com/miniprogram/dev/reference/configuration/app.html">微信官方文档</a> 稍微改改就可以正常编译，不需要的页面可以去掉，只保留需要分析的地方。</p>
+<p><code>app.json</code> 文件中的 <code>plugins</code>对象内容可以删除，否则会报错未授权使用插件。其他请求登录接口报错的可以抓包拦截下来，修改为原本小程序的返回包。</p>
+<p>如果想要第一屏设置为分包页面，那就将 <code>pages</code> 对象添加对应分包页面，并删除 <code>preloadRule</code> 对象中的分包页面相关信息，否则会报错 <code>pages *** 不应该在分包 subPackages[*] 中</code>，之后重新编译即可进入设置的页面。</p>
+<h2 id="分析代码">分析代码</h2>
+<p>全局搜索关键字 Sign 可以找到相关代码段，而且代码没有做混淆处理，分析起来非常容易。</p>
+<p>比如这一段，一眼就可以看出是 sha1 处理函数，传入字符串，返回sha1字符串</p>
+<pre><code class="language-js">function (e, t) {
+        var n = global.bc(&quot;platform&quot;, &quot;cloud-fe-yunsdk-platform&quot;);
+        e.exports = function (e) {
+            var t, n, r = new Uint8Array(function (e) {
+                var t, n, r, o = [];
+                for (t = 0; t &lt; e.length; t++)(n = e.charCodeAt(t)) &lt; 128 ? o.push(n) : n &lt; 2048 ?
+                    o.push(192 + (n &gt;&gt; 6 &amp; 31), 128 + (63 &amp; n)) : ((r = 55296 ^ n) &gt;&gt; 10 == 0 ? (n =
+                        (r &lt;&lt; 10) + (56320 ^ e.charCodeAt(++t)) + 65536, o.push(240 + (n &gt;&gt; 18 &amp;
+                            7), 128 + (n &gt;&gt; 12 &amp; 63))) : o.push(224 + (n &gt;&gt; 12 &amp; 15)), o.push(
+                                128 + (n &gt;&gt; 6 &amp; 63), 128 + (63 &amp; n)));
+                return o
+            }(e)),
+                o = 16 + (r.length + 8 &gt;&gt;&gt; 6 &lt;&lt; 4);
+            for ((e = new Uint8Array(o &lt;&lt; 2)).set(new Uint8Array(r.buffer)), e = new Uint32Array(e.buffer),
+                n = new DataView(e.buffer), d = 0; d &lt; o; d++) e[d] = n.getUint32(d &lt;&lt; 2);
+            e[r.length &gt;&gt; 2] |= 128 &lt;&lt; 24 - 8 * (3 &amp; r.length), e[o - 1] = r.length &lt;&lt; 3;
+            var a = [],
+                s = [function () {
+                    return u[1] &amp; u[2] | ~u[1] &amp; u[3]
+                }, function () {
+                    return u[1] ^ u[2] ^ u[3]
+                }, function () {
+                    return u[1] &amp; u[2] | u[1] &amp; u[3] | u[2] &amp; u[3]
+                }, function () {
+                    return u[1] ^ u[2] ^ u[3]
+                }],
+                c = function (e, t) {
+                    return e &lt;&lt; t | e &gt;&gt;&gt; 32 - t
+                },
+                i = [1518500249, 1859775393, -1894007588, -899497514],
+                u = [1732584193, -271733879, null, null, -1009589776];
+            for (u[2] = ~u[0], u[3] = ~u[1], d = 0; d &lt; e.length; d += 16) {
+                var l = u.slice(0);
+                for (t = 0; t &lt; 80; t++) a[t] = t &lt; 16 ? e[d + t] : c(a[t - 3] ^ a[t - 8] ^ a[t - 14] ^ a[t -
+                    16], 1), n = c(u[0], 5) + s[t / 20 | 0]() + u[4] + a[t] + i[t / 20 | 0] | 0, u[1] =
+                    c(u[1], 30), u.pop(), u.unshift(n);
+                for (t = 0; t &lt; 5; t++) u[t] = u[t] + l[t] | 0
+            }
+            n = new DataView(new Uint32Array(u).buffer);
+            for (var d = 0; d &lt; 5; d++) u[d] = n.getUint32(d &lt;&lt; 2);
+            return Array.prototype.map.call(new Uint8Array(new Uint32Array(u).buffer), (function (e) {
+                return (e &lt; 16 ? &quot;0&quot; : &quot;&quot;) + e.toString(16)
+            })).join(&quot;&quot;)
+        }
+    }
+</code></pre>
+<p>调用 sha1 传入字符串的函数是</p>
+<pre><code class="language-js">        function l(t, n) {
+            var r = arguments.length &gt; 2 &amp;&amp; void 0 !== arguments[2] &amp;&amp; arguments[2];
+            return function (n) {
+                if (t.nonce = t.nonce || a()(), t.ts = t.ts || s.default.get(!1, !0), &quot;object&quot; == e(t.body))
+                    try {
+                        t.body = JSON.stringify(t.body)
+                    } catch (n) {
+                        t.body = &quot;&quot;
+                    }
+                n = n.map((function (e) {
+                    return t[e]
+                })).join(&quot;;&quot;);
+                var o = i()(n);
+                return r &amp;&amp; console.log(&quot;[SAFE]:&quot;, o, n), {
+                    nonce: t.nonce,
+                    ts: t.ts,
+                    sign: o
+                }
+            }(n)
+        }
+
+</code></pre>
+<p>有了上面的这些，也就不难分析出生成 sign的逻辑了。</p>
+<h3 id="生成逻辑">生成逻辑</h3>
+<p>传入的参数t包含有nonce，ts和body属性，n通过观察前面的代码可以知道是 <code>[&quot;signKey&quot;, &quot;skey&quot;, &quot;body&quot;, &quot;nonce&quot;, &quot;ts&quot;]</code>这样一个数组。</p>
+<p>首先，第一个 if 会检查传入的t.nonce，t.ts 是否存在，如不存在则调用相应函数生成，接着判断body的类型，如果是 object 则将其转换为json，转换失败则置空。然后按照n数组的顺序，将数组内容对应值通过 <code>;</code> 符号连接起来形成这样的字符串 <code>signKey;skey;body;nonce;ts</code> signKey 的值在前面的代码也有(换个域名就不对的原因)，skey 为auto-token。再把生成的字符串传给 i 即 sha1 函数，得出 sign 值。</p>
+<h2 id="结语">结语</h2>
+<p>对于这种没有混淆的代码，甚至不用动态调试都可以看出生成的逻辑，便能省掉让其在微信开发者工具中运行的时间。</p>
+<p>但是动态调试的话可以看到中间变量，减少分析过程的错误。就比如我，想当然的认为最后的L函数必定会传入body，因为post请求的body就在那里摆着，但sha1函数的输出结果总是和实际值对不起来。直到我在开发者工具里下断点调试了好几遍之后才发现，有的请求虽然有body，但并不会将body传入L函数，sha1的输出也自然没有body的事情，不知到是他代码逻辑就是这样，还是说是开发者写的bug 😓</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[逆向 WebPack 打包网站使用 wasm 加密 Sign 参数的逻辑]]></title>
+        <id>https://blog.diyworld.me/post/bZdODaSxn/</id>
+        <link href="https://blog.diyworld.me/post/bZdODaSxn/">
+        </link>
+        <updated>2023-08-10T15:59:16.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#js-%E5%B1%82%E5%8A%A8%E6%80%81%E5%88%86%E6%9E%90">JS 层动态分析</a>
+<ul>
+<li><a href="#x-nonce"><code>x-nonce</code></a></li>
+<li><a href="#x-sign"><code>x-sign</code></a></li>
+</ul>
+</li>
+<li><a href="#webassembly-%E5%88%86%E6%9E%90">WebAssembly 分析</a>
+<ul>
+<li><a href="#%E5%AF%BC%E5%85%A5%E5%87%BD%E6%95%B0">导入函数</a></li>
+<li><a href="#%E5%AF%BC%E5%87%BA%E5%87%BD%E6%95%B0">导出函数</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<blockquote>
+<p>发现一个小程序有个签到，抓包对应网址发现其中有个Sign加密参数，本想着随便试一下，没想到牵扯到那么多东西，就花了整整一个星期的时间来研究。过程可能不太详细，毕竟我也是现学现卖😂甚至js语法都没学通，都是头一次见到的技术 。</p>
+</blockquote>
+<h2 id="js-层动态分析">JS 层动态分析</h2>
+<p>网站地址： aHR0cHM6Ly91bS5pb3V0dS5jbi90eS9hc3NhbS9sdWNreS1kZXRhaWw=</p>
+<p>首先网站，然后进行抓包</p>
+<figure data-type="image" tabindex="1"><img src="https://blog.diyworld.me/post-images/1691684298555.png" alt="" loading="lazy"></figure>
+<p>通过刷新多次请求，发现 <code>x-ts</code> <code>x-sign</code> <code>x-nonce</code> 这三个值是一直在变化的，<code>x-ts</code> 明显是时间戳，接下来需要分析 <code>x-sign</code> <code>x-nonce</code> 这两个值的来源。</p>
+<p><img src="https://blog.diyworld.me/post-images/1691685825981.jpg" alt="" loading="lazy"><br>
+一般直接 Ctrl+Shift+F 搜索字符串可以找到相关函数，但该网站的 js 文件是由 <a href="https://zh.wikipedia.org/zh-cn/Webpack">WebPack</a> 打包过的，代码结构都和上图差不多，字符串全在同一个地方，不好寻找函数。而且打XHR断点也无效，所以找函数位置就花了不少时间。</p>
+<p>打开 F12 查看请求的调用堆栈<br>
+<img src="https://blog.diyworld.me/post-images/1691685352561.jpg" alt="" loading="lazy"></p>
+<p>进入第一个匿名函数，下断点<br>
+<img src="https://blog.diyworld.me/post-images/1691685464495.jpg" alt="" loading="lazy"></p>
+<p>然后一直 F11 步入，直到发出请求也没发现那两个参数的生成，看来重点不在这个函数，那么再往上个函数试试，下断点，慢慢F10或F9。</p>
+<figure data-type="image" tabindex="2"><img src="https://blog.diyworld.me/post-images/1691685965446.jpg" alt="" loading="lazy"></figure>
+<p>步入过程发现目标url，应该离参数的生成不远，继续，调试 WebPack 生成的代码太费时间了，而且还没 Map文件，就找函数的过程花了我两三天，最终找到了生成这两个值的函数。</p>
+<h3 id="x-nonce"><code>x-nonce</code></h3>
+<pre><code class="language-js">    3682: (t,e,r)=&gt;{
+        t = r.nmd(t);
+        var n = o;
+        function o(t, e) {
+            var r = i();
+            return (o = function(t, e) {
+                return r[t -= 447]
+            }
+            )(t, e)
+        }
+        function i() {
+            var t = [&quot;169360Tjwntv&quot;, &quot;502651XRPFzm&quot;, &quot;toString&quot;, &quot;xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx&quot;, &quot;25326684vkpEiT&quot;, &quot;20PuHlQf&quot;, &quot;243FimiQP&quot;, &quot;11SFCgQb&quot;, &quot;48OdOxac&quot;, &quot;69604GYVZvv&quot;, &quot;1598324QxtHuy&quot;, &quot;70pKqhLY&quot;, &quot;3552831YclxpX&quot;, &quot;636306pSQgnQ&quot;, &quot;replace&quot;, &quot;random&quot;, &quot;exports&quot;];
+            return (i = function() {
+                return t
+            }
+            )()
+        }
+        (function(t, e) {
+            for (var r = o, n = t(); ; )
+                try {
+                    if (790495 === parseInt(r(457)) / 1 + parseInt(r(456)) / 2 + -parseInt(r(462)) / 3 * (-parseInt(r(448)) / 4) + parseInt(r(450)) / 5 * (parseInt(r(452)) / 6) + parseInt(r(449)) / 7 * (-parseInt(r(447)) / 8) + parseInt(r(451)) / 9 * (parseInt(r(461)) / 10) + parseInt(r(463)) / 11 * (-parseInt(r(460)) / 12))
+                        break;
+                    n.push(n.shift())
+                } catch (t) {
+                    n.push(n.shift())
+                }
+        }
+        )(i),
+        t[n(455)] = function() {
+            var t = n;
+            return t(459)[t(453)](/[xy]/g, (function(e) {
+                var r = t
+                  , n = 16 * Math[r(454)]() | 0;
+                return (&quot;x&quot; == e ? n : 3 &amp; n | 8)[r(458)](16)
+            }
+            ))
+        }
+    }
+</code></pre>
+<p>其中类似 r(xxx)，t(xxx) 的函数其实都是o函数，是将 t 数组的值取出，这段代码首先经过中间的那段代码调整 t 数组中各个值的位置，然后通过调用o函数，输出指定位置的值。t 数组也穿插了一堆无用值，自己复原t(xxx)非常不方便，可以在相应位置打上断点，然后直接在控制台输入，看返回值是什么。</p>
+<pre><code class="language-js">o(459)
+&gt; 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+</code></pre>
+<p>把函数还原后，问了下 Chatgpt 这是什么算法，因为 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx' 格式看起来好像和 UUID 有关系。</p>
+<figure data-type="image" tabindex="3"><img src="https://blog.diyworld.me/post-images/1691691240524.jpg" alt="" loading="lazy"></figure>
+<p>果然，这段代码的作用是生成一个随机的 UUID 值，既然是随机的那就好说了。</p>
+<h3 id="x-sign"><code>x-sign</code></h3>
+<p>sign 的值是40位字符串，盲猜是将时间戳，UUID 什么的进行SHA-1算出来的结果。</p>
+<figure data-type="image" tabindex="4"><img src="https://blog.diyworld.me/post-images/1691691604023.jpg" alt="" loading="lazy"></figure>
+<p>定位到相关代码，并还原参数。</p>
+<pre><code class="language-js">for (m = function (t) {
+        var e = A;
+        return l.allocate(l.intArrayFromString(t), l.ALLOC_NORMAL)
+    },
+    E = l._getSign(I, m(t.skey), m(t.body), m(n), m(f.toString()), y, e.length),
+    b = new Uint8Array(l.asm.memory.buffer), B = [], w = E; 0 !== b[w];) B.push(b[w]), w += 1;
+return Q = (new TextDecoder).decode(new Uint8Array(B))
+</code></pre>
+<p>m 函数是将传入的 t 字符串转换为ASCII编码的数组，并为其分配内存，然后返回其所在的内存地址，l.ALLOC_NORMAL始终为0，这个函数容易自己实现。去查找 allocate 函数的实现，发现函数内部又牵扯到很多其他值，干脆就自己实现这个函数吧。</p>
+<p>_getSign 函数依次接收以下值的内存地址，并返回固定值赋值给 E。</p>
+<ul>
+<li>I: 不知道是哪里来的值，生成过程很复杂，不过好在一直是个固定值。</li>
+<li>t.skey: 是一个空字符串。</li>
+<li>t.body: 请求正文。</li>
+<li>nonce: 也就是前面生成的随机UUID。</li>
+<li>f.toString(): 其实就是时间戳转字符串。</li>
+<li>y: 不知道是哪里来的值，也是固定值。</li>
+</ul>
+<p>b 是将内存值转为Uint8Array的数组，然后从E位置向后遍历，如果不等于0就存入B数组，正好能存够40个值，再将B数组的ASCII码转回字符串，最后 return 的 Q 就是 sign 的值。</p>
+<p>关键就在 _getSign 函数了，猜测是这个函数通过传入的几个内存地址值，读取相应内存的数据，进行某些计算后，将值写到了相应的 E 位置，然后给B数组遍历的。</p>
+<h2 id="webassembly-分析">WebAssembly 分析</h2>
+<pre><code class="language-js">function et(t) {
+    return function () {
+        var e = A.asm;
+        return L(J, &quot;native function `&quot; + t + &quot;` called before runtime initialization&quot;),
+            e[t] || L(e[t], &quot;exported native function `&quot; + t + &quot;` not found&quot;),
+            e[t].apply(null, arguments)
+    }
+}
+</code></pre>
+<p>转到函数的定义，发现是这样的，没见过，问了问 Chatgpt 又搜了搜，才知道这是一个叫 WebAssembly 的东西。</p>
+<blockquote>
+<p>WebAssembly或称wasm是一个低级编程语言。WebAssembly是便携式的抽象语法树，被设计来提供比JavaScript更快速的编译及执行。WebAssembly将让开发者能运用自己熟悉的编程语言编译，再藉虚拟机引擎在浏览器内执行。</p>
+</blockquote>
+<p>上边这个et函数的作用是导出 wasm 文件中的 getSign 函数，所以获取sign值的逻辑就全在 wasm 里了。</p>
+<figure data-type="image" tabindex="5"><img src="https://blog.diyworld.me/post-images/1691693905964.jpg" alt="" loading="lazy"></figure>
+<p>wasm 文件可以在左侧栏里面找到，没有在网络请求里面发现，但是 js 代码里面有一大串 Base64，估计就是从这里读取转换来的。</p>
+<figure data-type="image" tabindex="6"><img src="https://blog.diyworld.me/post-images/1691694094831.jpg" alt="" loading="lazy"></figure>
+<p>定位到 getSign 函数，参数是6个值，那就是这个函数没错了，wasm 文件内容类似于汇编语言，基本上就是对内存地址里面的值进行 sub，add，and，or 和 入栈出栈 等操作。</p>
+<p>比如：</p>
+<pre><code>global.get $global0 //取全局变量 $global0 的值
+    local.set $var7 // 赋值为 $var7
+    i32.const 256 // 定义值 256
+    local.set $var8 // 把256赋值给 $var8 
+    local.get $var7 //取变量 $var7
+    local.get $var8 //取变量 $var8
+    i32.sub //$var7 - $var8
+    local.set $var9 //把结果设赋值为 $var9 
+    --------------------------------------------------
+    local.get $var9 //取变量 $var9
+    local.get $var6 //取变量 $var6
+    i32.store offset=228 //将变量 $var6 写入到 $var9+228 的地址
+    local.get $var9  //取变量 $var9
+    i32.load offset=252 //加载 $var9 + 252 地址的值
+    local.set $var10    //赋值给 $var10
+
+</code></pre>
+<p>所以只要一步一步的在函数入口跟下去就能知道函数的逻辑，也就知道这个函数做了什么操作，毕竟是汇编语言，读起来没那么难，就是有点繁琐。</p>
+<p>但是......我跟了将近3天，连40位 sign 的第一个值的逻辑都没捋清楚，在这个函数里面各种A套B，B套C，C又套D的操作，一点一点下断点调试及其耗时间。</p>
+<p>像是第一个参数，顺藤摸瓜顺了那么长的藤也没摸到瓜。没办法，太浪费时间，只能放弃这个办法。</p>
+<figure data-type="image" tabindex="7"><img src="https://blog.diyworld.me/post-images/1691727712747.jpg" alt="" loading="lazy"></figure>
+<p>好在还有第二种方法，在 wasm 的算法分析不出来时可以用 nodejs 调用 wasm 导出需要的函数，直接拿来用。</p>
+<h3 id="导入函数">导入函数</h3>
+<p>首先将浏览器内包含getSign函数的文件下载到本地，用 <a href="https://github.com/WebAssembly/wabt">wabt </a> 将 wat 转为 wasm。</p>
+<pre><code class="language-bash">$ wat2wasm test.wat -o test.wasm
+</code></pre>
+<p>接着把wasm文件读入。</p>
+<pre><code class="language-js">const fs = require('fs');
+const wasmFile = 'test.wasm';
+var importObject = {
+    env: {
+       /* 导入函数*/
+    }
+};
+var wasmObject = new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array(fs.readFileSync(wasmFile))), importObject);
+var wasmMemory = wasmObject.exports.memory;
+</code></pre>
+<p>直接运行的话会报错，提示缺少 <code>__assert_fail</code> 导入函数。</p>
+<figure data-type="image" tabindex="8"><img src="https://blog.diyworld.me/post-images/1691736559168.jpg" alt="" loading="lazy"></figure>
+<blockquote>
+<p>importObject 对象是在使用 JavaScript 将 WebAssembly 模块与外部环境集成时的一种机制。它用于定义将从外部环境导入到 WebAssembly 模块中的函数、全局变量等实体。通过使用 importObject，可以在 WebAssembly 模块中使用来自外部环境的功能，实现模块与宿主环境之间的交互。</p>
+</blockquote>
+<p>导入函数就要去原 js 文件中寻找，搜索字符串 <code>__assert_fail</code>，发现只有一个匹配项</p>
+<figure data-type="image" tabindex="9"><img src="https://blog.diyworld.me/post-images/1691736748828.jpg" alt="" loading="lazy"></figure>
+<p>把整个 dt 复制到 env 去试试，直接运行发现没有报错，可以正常读到内存。</p>
+<pre><code class="language-js">console.log(wasmMemory)
+&gt; Memory [WebAssembly.Memory] {}
+</code></pre>
+<h3 id="导出函数">导出函数</h3>
+<p>之后可以试着调用 getSign 函数了，随便输入点内存地址，可以正常输出40位字符串。</p>
+<pre><code class="language-js">console.log(wasmObject.exports.getSign(66264, 66264, 66264, 66264, 66264, 66368, 5));
+&gt; 05685ab5d3b988de577bdee6689fbbc43fa9be62
+</code></pre>
+<p>接下来就是要想办法实现前面的 m 函数，即传入字符串生成对应ASCII数组并返回数组所在位置。</p>
+<pre><code class="language-js">memoryArray = new Uint8Array(wasmMemory.buffer) //将内存数据转换为数组
+writeMark = 70000; // 写入起始位置
+
+//将字符串写入内存
+function writeStringToMemory(string) {
+    function lengthBytesUTF8(str) {
+        var len = 0;
+        for (var i = 0; i &lt; str.length; ++i) {
+            var u = str.charCodeAt(i); 
+            if (u &gt;= 0xD800 &amp;&amp; u &lt;= 0xDFFF) u = 0x10000 + ((u &amp; 0x3FF) &lt;&lt; 10) | (str.charCodeAt(++i) &amp; 0x3FF);
+            if (u &lt;= 0x7F) {
+                ++len;
+            } else if (u &lt;= 0x7FF) {
+                len += 2;
+            } else if (u &lt;= 0xFFFF) {
+                len += 3;
+            } else if (u &lt;= 0x1FFFFF) {
+                len += 4;
+            } else if (u &lt;= 0x3FFFFFF) {
+                len += 5;
+            } else {
+                len += 6;
+            }
+        }
+        return len;
+    }
+
+    function stringToUTF8Array(str, outU8Array, outIdx, maxBytesToWrite) {
+        if (!(maxBytesToWrite &gt; 0))
+            return 0;
+
+        var startIdx = outIdx;
+        var endIdx = outIdx + maxBytesToWrite - 1;
+        for (var i = 0; i &lt; str.length; ++i) {
+            var u = str.charCodeAt(i);
+            if (u &gt;= 0xD800 &amp;&amp; u &lt;= 0xDFFF) u = 0x10000 + ((u &amp; 0x3FF) &lt;&lt; 10) | (str.charCodeAt(++i) &amp; 0x3FF);
+            if (u &lt;= 0x7F) {
+                if (outIdx &gt;= endIdx) break;
+                outU8Array[outIdx++] = u;
+            } else if (u &lt;= 0x7FF) {
+                if (outIdx + 1 &gt;= endIdx) break;
+                outU8Array[outIdx++] = 0xC0 | (u &gt;&gt; 6);
+                outU8Array[outIdx++] = 0x80 | (u &amp; 63);
+            } else if (u &lt;= 0xFFFF) {
+                if (outIdx + 2 &gt;= endIdx) break;
+                outU8Array[outIdx++] = 0xE0 | (u &gt;&gt; 12);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 6) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | (u &amp; 63);
+            } else if (u &lt;= 0x1FFFFF) {
+                if (outIdx + 3 &gt;= endIdx) break;
+                outU8Array[outIdx++] = 0xF0 | (u &gt;&gt; 18);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 12) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 6) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | (u &amp; 63);
+            } else if (u &lt;= 0x3FFFFFF) {
+                if (outIdx + 4 &gt;= endIdx) break;
+                outU8Array[outIdx++] = 0xF8 | (u &gt;&gt; 24);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 18) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 12) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 6) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | (u &amp; 63);
+            } else {
+                if (outIdx + 5 &gt;= endIdx) break;
+                outU8Array[outIdx++] = 0xFC | (u &gt;&gt; 30);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 24) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 18) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 12) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | ((u &gt;&gt; 6) &amp; 63);
+                outU8Array[outIdx++] = 0x80 | (u &amp; 63);
+            }
+        }
+        outU8Array[outIdx] = 0;
+        return outIdx - startIdx;
+    }
+
+    function intArrayFromString(stringy, dontAddNull, length) {
+        var len = length &gt; 0 ? length : lengthBytesUTF8(stringy) + 1;
+        var u8array = new Array(len);
+        var numBytesWritten = stringToUTF8Array(stringy, u8array, 0, u8array.length);
+        if (dontAddNull) u8array.length = numBytesWritten;
+        return u8array;
+    }
+
+    var intArray = intArrayFromString(string, 0);
+    for (var i = 0; i &lt; intArray.length; i++) {
+        memoryArray[writeMark + i] = intArray[i];
+    }
+    var address = writeMark;
+    writeMark += intArray.length;
+    return address;
+}
+</code></pre>
+<p>通过多次尝试，发现在内存地址 70000 之后写数据是不会与其他值冲突影响sign的输出的，所以writeMark是从70000开始的。</p>
+<p>m函数实现了，getSign函数的第2到5个参数的来源也就搞定了。接下来就是研究 getSign 的1，6，7 这三个参数的意义了，1，6明显是和m函数返回值一样标注着数据的所在位置，第7个参数，通过分析 js 代码，貌似是一个数组的长度，是一个固定数值。</p>
+<p>因为 js 代码可读性太差了，我也懒的再去找哪一段的js代码在哪里往内存写入了数据，并得到了地址以传给getSign函数。所以，我反复观察在哪一段地址的内存写入脏数据会影响sign值的输出，最终将范围缩小到了 65500 - 66500 ，看来这一段内存里面有影响到sign生成的参数，也包括了我不知道的参数1和参数6。</p>
+<p>那么，在网页调用getSign函数之前，把 65500 - 66500 这一段内存的值全部取出来，在调用我自己实现的getSign函数前再将其写入到内存里面不就行了？最后实现的 getSign 函数如下</p>
+<pre><code class="language-js">function getSign(skey, body, nonce, timestamp) {
+    Init();
+    var begin = wasmObject.exports.getSign(66264, writeStringToMemory(skey), writeStringToMemory(body), writeStringToMemory(nonce), writeStringToMemory(timestamp), 66368, 5);
+    for (signArray = []; 0 !== memoryArray[begin];)
+        signArray.push(memoryArray[begin]), begin += 1;
+    sign = (new TextDecoder).decode(new Uint8Array(signArray));
+    return sign;
+}
+</code></pre>
+<p>经过测试，与网页上生成的结果一致。<br>
+<img src="https://blog.diyworld.me/post-images/1691740786716.jpg" alt="" loading="lazy"></p>
+<p>像这种分析算法过程太复杂的还不如直接拿来用，直接拿来用才花了我一下午时间。而且这个 wasm 对 bom 和 dom 都没有检测，方便的很。</p>
+<hr>
+<p>wasm相关教程：<br>
+<a href="https://www.bilibili.com/video/BV1tM411K7Xx">Nodejs调用扣取wasm</a><br>
+<a href="https://www.52pojie.cn/thread-1487959-1-1.html">某网站心跳包参数加密的wasm分析</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Docker 笔记]]></title>
+        <id>https://blog.diyworld.me/post/VQwzboRI2/</id>
+        <link href="https://blog.diyworld.me/post/VQwzboRI2/">
+        </link>
+        <updated>2023-02-05T04:29:37.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#docker">Docker</a>
+<ul>
+<li><a href="#docker-run-%E5%92%8C-start-%E7%9A%84%E5%8C%BA%E5%88%AB">docker run 和 start 的区别</a></li>
+</ul>
+</li>
+<li><a href="#docker-%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BD%91%E6%A1%A5">Docker 自定义网桥</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8-macvlan-%E4%B8%BA-docker-%E5%AE%B9%E5%99%A8%E6%8C%87%E5%AE%9A%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BD%91%E6%AE%B5%E7%9A%84%E5%9B%BA%E5%AE%9Aip%E9%9D%99%E6%80%81ip%E5%9C%B0%E5%9D%80">使用 Macvlan 为 Docker 容器指定自定义网段的固定IP/静态IP地址</a>
+<ul>
+<li><a href="#%E7%A1%AE%E5%AE%9A%E7%BD%91%E5%8D%A1%E5%90%8D%E7%A7%B0">确定网卡名称</a></li>
+<li><a href="#%E5%BC%80%E5%90%AF%E7%BD%91%E5%8D%A1%E6%B7%B7%E6%9D%82%E6%A8%A1%E5%BC%8F">开启网卡混杂模式</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA-macvlan-%E7%BD%91%E7%BB%9C">创建 Macvlan 网络</a></li>
+<li><a href="#%E5%8A%A0%E5%85%A5-macvlan-%E7%BD%91%E7%BB%9C">加入 Macvlan 网络</a></li>
+<li><a href="#macvlan%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F%E4%B8%8B%E5%AE%B9%E5%99%A8%E4%B8%8E%E5%AE%BF%E4%B8%BB%E6%9C%BA%E4%BA%92%E9%80%9A">Macvlan网络模式下容器与宿主机互通</a></li>
+</ul>
+</li>
+<li><a href="#docker-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4">Docker 常用命令</a></li>
+<li><a href="#docker%E5%90%AF%E5%8A%A8%E6%8A%A5%E9%94%99">Docker启动报错</a>
+<ul>
+<li><a href="#docker%E8%87%AA%E5%90%AF%E5%8A%A8">Docker自启动</a></li>
+</ul>
+</li>
+<li><a href="#adguardhome-%E5%AE%89%E8%A3%85%E5%8F%8A%E9%83%A8%E7%BD%B2">AdGuardHome 安装及部署</a>
+<ul>
+<li><a href="#1bridge-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F">(1)Bridge 网络模式</a></li>
+<li><a href="#2host-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F">(2)Host 网络模式</a></li>
+<li><a href="#%E5%87%BA%E7%8E%B0%E8%BF%87%E7%9A%84%E9%97%AE%E9%A2%98">出现过的问题</a>
+<ul>
+<li><a href="#%E7%AB%AF%E5%8F%A3%E5%86%B2%E7%AA%81">端口冲突</a></li>
+<li><a href="#docker%E5%AE%B9%E5%99%A8%E4%BF%AE%E6%94%B9dns">Docker容器修改dns</a></li>
+<li><a href="#%E6%8A%A5%E9%94%99">报错</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AA%E6%8C%82%E8%BD%BD%E6%95%B0%E6%8D%AE%E5%8D%B7%E7%9A%84%E5%AE%B9%E5%99%A8">启动一个挂载数据卷的容器</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="docker">Docker</h2>
+<p>挺好的教程 <a href="https://yeasy.gitbook.io/docker_practice/">Docker--从入门到实践</a></p>
+<h3 id="docker-run-和-start-的区别">docker run 和 start 的区别</h3>
+<p><code>docker run</code><br>
+docker run 只在第一次运行时使用，将镜像放到容器中，以后再次启动这个容器时，只需要使用命令docker start 即可。<br>
+docker run相当于执行了两步操作：将镜像放入容器中（docker create）,然后将容器启动，使之变成运行时容器（docker start）。</p>
+<p><code>docker start</code><br>
+docker start的作用是，重新启动已存在的镜像。也就是说，如果使用这个命令，我们必须事先知道这个容器的ID，或者这个容器的名字，我们可以使用docker ps找到这个容器的信息。</p>
+<h2 id="docker-自定义网桥">Docker 自定义网桥</h2>
+<p>需要先安装 <code>brctl</code></p>
+<pre><code class="language-shell">apt-get install bridge-utils
+</code></pre>
+<p>参考：<a href="https://yeasy.gitbook.io/docker_practice/advanced_network/bridge">自定义网桥</a>  注意，自定义的 IP网段 不能和宿主机同网段，否则会冲突导致宿主机连接不上，如果想设置他同网段请看下面的。</p>
+<ol>
+<li>修改 <code>/etc/docker/deamon.json</code> 文件，添加</li>
+</ol>
+<pre><code class="language-json">&quot;bip&quot;: &quot;192.168.2.1/24&quot;
+</code></pre>
+<p>除了默认的 docker0 网桥，用户也可以指定网桥来连接各个容器。</p>
+<p>在启动 Docker 服务的时候，使用 -b BRIDGE或--bridge=BRIDGE 来指定使用的网桥。</p>
+<p>如果服务已经运行，那需要先停止服务，并删除旧的网桥。</p>
+<pre><code class="language-shell">sudo systemctl stop docker
+sudo ip link set dev docker0 down
+sudo brctl delbr docker0
+</code></pre>
+<p>然后创建一个网桥 bridge0。</p>
+<pre><code class="language-shell">sudo brctl addbr bridge0
+sudo ip addr add 192.168.1.0/24 dev bridge0
+sudo ip link set dev bridge0 up
+</code></pre>
+<p>查看确认网桥创建并启动。</p>
+<pre><code class="language-shell">ip addr show bridge0
+4: bridge0: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state UP group default
+link/ether 66:38:d0:0d:76:18 brd ff:ff:ff:ff:ff:ff
+inet 192.168.5.1/24 scope global bridge0
+valid_lft forever preferred_lft forever
+</code></pre>
+<p>在 Docker 配置文件 /etc/docker/daemon.json 中添加如下内容，即可将 Docker 默认桥接到创建的网桥上。</p>
+<pre><code class="language-shell">{
+&quot;bridge&quot;: &quot;bridge0&quot;,
+}
+</code></pre>
+<p>启动 Docker 服务。<br>
+新建一个容器，可以看到它已经桥接到了 bridge0 上。<br>
+可以继续用 brctl show 命令查看桥接的信息。另外，在容器中可以使用 ip addr 和 ip route 命令来查看 IP 地址配置和路由信息。</p>
+<h2 id="使用-macvlan-为-docker-容器指定自定义网段的固定ip静态ip地址">使用 Macvlan 为 Docker 容器指定自定义网段的固定IP/静态IP地址</h2>
+<p><a href="https://www.bilibili.com/video/BV1xF411W7EM">视频教程</a></p>
+<h3 id="确定网卡名称">确定网卡名称</h3>
+<pre><code class="language-shell">ifconfig
+</code></pre>
+<h3 id="开启网卡混杂模式">开启网卡混杂模式</h3>
+<pre><code class="language-shell">ip link set 网卡名 promisc on
+ifconfig 网卡名 promisc
+</code></pre>
+<h3 id="创建-macvlan-网络">创建 Macvlan 网络</h3>
+<pre><code class="language-shell">docker network create -d macvlan --subnet=192.168.1.0/24 --ip-range=192.168.1.0/24 --gateway=192.168.1.1 -o parent=网卡名 -o macvlan_mode=bridge 自定义网络名称
+
+参数解析：
+-d macvlan 加载kernel的模块名
+--subnet 宿主机所在网段
+--ip-range 地址范围
+--gateway 宿主机所在网段网关
+--o parent 继承指定网段的网卡
+
+</code></pre>
+<h3 id="加入-macvlan-网络">加入 Macvlan 网络</h3>
+<pre><code class="language-shell">docker run -itd  --name tomcat --ip=192.168.1.2 --network pub_net tomcat
+
+参数解析：
+--ip 指定容器的IP
+--network 加入的Macvlan网络
+</code></pre>
+<blockquote>
+<p>这样会使Docker启动时的 <code>-p</code> 参数无效。因为 Docker 不会为 macvlan 做端口映射。Macvlan 将容器放在主机的网络上，使端口转发变得多余。除此之外，由于 macvlan 的工作原理，默认无法从主机访问 macvlan ip。</p>
+</blockquote>
+<h3 id="macvlan网络模式下容器与宿主机互通"><a href="https://rehtt.com/index.php/archives/236/">Macvlan网络模式下容器与宿主机互通</a></h3>
+<p>假设现有网段为 <code>192.168.1.0/24</code>  的网络：</p>
+<table>
+<thead>
+<tr>
+<th>名字</th>
+<th>ip</th>
+<th>接口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>宿主机</td>
+<td>192.168.1.10</td>
+<td>eth0</td>
+</tr>
+<tr>
+<td>容器</td>
+<td>192.168.1.20</td>
+<td>macvlan</td>
+</tr>
+</tbody>
+</table>
+<p>建立一个名为macvlan2的macvlan接口，并分配一个ip：</p>
+<table>
+<thead>
+<tr>
+<th>名字</th>
+<th>ip</th>
+<th>接口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macvlan2</td>
+<td>192.168.1.15</td>
+<td>macvlan</td>
+</tr>
+</tbody>
+</table>
+<p>命令：</p>
+<pre><code class="language-shell">ip link add macvlan2 link eth0 type macvlan mode bridge
+ip addr add 192.168.1.15 dev macvlan2
+ip link set macvlan2 up
+</code></pre>
+<p>修改路由，让宿主机到容器 <code>192.168.1.20</code> 的数据经过 <code>macvlan2</code> :</p>
+<pre><code class="language-shell">ip route add 192.168.1.20 dev macvlan2
+</code></pre>
+<p>宿主机 访问 容器的ip：192.168.1.20<br>
+容器 访问 宿主机ip：192.168.1.15</p>
+<h2 id="docker-常用命令"><a href="https://www.runoob.com/docker/docker-command-manual.html">Docker 常用命令</a></h2>
+<pre><code class="language-shell">docker start [容器 ID]:启动一个或多个已经被停止的容器
+
+docker stop [容器 ID]:停止一个运行中的容器
+
+docker restart [容器 ID]:重启容器
+
+docker rm -f [容器 ID] 删除容器
+
+service docker restart 重启docker
+service docker stop  停止docker
+
+docker ps -a 查看所有容器
+
+</code></pre>
+<pre><code class="language-shell">docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+OPTIONS说明：
+
+ -a stdin: 指定标准输入输出内容类型，可选 STDIN/STDOUT/STDERR 三项；
+ -d: 后台运行容器，并返回容器ID；
+ -i: 以交互模式运行容器，通常与 -t 同时使用；
+ -P: 随机端口映射，容器内部端口随机映射到主机的端口
+ -p: 指定端口映射，格式为：主机(宿主)端口:容器端口
+ -t: 为容器重新分配一个伪输入终端，通常与 -i 同时使用；
+ --name=&quot;nginx-lb&quot;: 为容器指定一个名称；
+ --dns 8.8.8.8: 指定容器使用的DNS服务器，默认和宿主一致；
+ --dns-search example.com: 指定容器DNS搜索域名，默认和宿主一致；
+ -h &quot;mars&quot;: 指定容器的hostname；
+ -e username=&quot;ritchie&quot;: 设置环境变量；
+ --env-file=[]: 从指定文件读入环境变量；
+ --cpuset=&quot;0-2&quot; or --cpuset=&quot;0,1,2&quot;: 绑定容器到指定CPU运行；
+ -m :设置容器使用内存最大值；
+ --net=&quot;bridge&quot;: 指定容器的网络连接类型，支持 bridge/host/none/container: 四种类型；
+ --link=[]: 添加链接到另一个容器；
+ --expose=[]: 开放一个端口或一组端口；
+ --volume , -v: 绑定一个卷
+</code></pre>
+<h2 id="docker启动报错">Docker启动报错</h2>
+<p>报错内容</p>
+<p><code>Job for docker. service failed because the control process exited with error code</code></p>
+<p>解决方法 ，检测 <code>/etc/docker/daemon.json</code> 文件格式是否正确</p>
+<h3 id="docker自启动">Docker自启动</h3>
+<ol>
+<li>设置Docker开机自启</li>
+</ol>
+<pre><code class="language-shell">systemctl enable docker
+</code></pre>
+<ol start="2">
+<li>设置容器自动重启
+<ol>
+<li>
+<p>创建容器时设置</p>
+<pre><code class="language-shell">docker run -d --restart=always --name 设置容器名 使用的镜像
+（上面命令  --name后面两个参数根据实际情况自行修改）
+</code></pre>
+<p>Docker 容器的重启策略如下：</p>
+<pre><code class="language-shell">    --restart具体参数值详细信息：
+    no　　　　　　　 // 默认策略,容器退出时不重启容器；
+    on-failure　　  // 在容器非正常退出时（退出状态非0）才重新启动容器；
+    on-failure:3    // 在容器非正常退出时重启容器，最多重启3次；
+    always　　　　  // 无论退出状态是如何，都重启容器；
+    unless-stopped  // 在容器退出时总是重启容器，但是不考虑在 Docker 守护进程启动时就已经停止了的容器。
+</code></pre>
+</li>
+<li>
+<p>修改已有容器，使用update,如果创建时未指定 --restart=always，可通过update 命令设置</p>
+<pre><code class="language-shell">docker update --restart=always 容器ID(或者容器名)
+（容器ID或者容器名根据实际情况修改）
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="adguardhome-安装及部署"><a href="https://isedu.top/index.php/archives/23/">AdGuardHome 安装及部署</a></h2>
+<h3 id="1bridge-网络模式">(1)Bridge 网络模式</h3>
+<pre><code class="language-shell">docker run -d \
+    --name adguardhome \
+    -v $PWD/adguardhome/work:/opt/adguardhome/work \
+    -v $PWD/adguardhome/conf:/opt/adguardhome/conf \
+    -p 53:53/tcp \
+    -p 53:53/udp \
+    -p 3000:3000/tcp \
+    adguard/adguardhome
+</code></pre>
+<h3 id="2host-网络模式">(2)Host 网络模式</h3>
+<blockquote>
+<p>Host 网络模式直接使用宿主机的网络，没有网络隔离，不需要考虑容器端口的映射，在容器启动后可以自由调整被占用的端口。适合在本机使用 (lo­cal­host)，或者直通外网的设备对外开放服务，就比如 VPS 、主路由。</p>
+</blockquote>
+<pre><code class="language-shell">docker run -d \
+    --name adguardhome \
+    --restart unless-stopped \
+    --log-opt max-size=1m \
+    --network host \
+    -v $PWD/adguardhome/work:/opt/adguardhome/work \
+    -v $PWD/adguardhome/conf:/opt/adguardhome/conf \
+    adguard/adguardhome
+</code></pre>
+<h3 id="出现过的问题">出现过的问题</h3>
+<h4 id="端口冲突">端口冲突</h4>
+<p>在 Linux 设备上运行 AdGuard Home，通常会出现 53（本地 DNS 服务器）、68（DHCP 客户端）、80（Http）、443（Https） 端口冲突的问题，可以通过<code>netstat -tunlp | grep</code>端口号 查询占用进程。有两种解决方案：使用不同端口、停用冲突进程。<br>
+如果是通过 Docker 方式运行 AdGuard Home，</p>
+<p>出现 ​listen udp 0.0.0.0：53 bind: address already in use​ 的提示，需要手动处理，方法如下：</p>
+<pre><code class="language-shell">#停止 DNSStubListener
+systemctl stop systemd-resolved
+
+#创建文件夹（如果不存在）
+mkdir /etc/systemd/resolved.conf.d/
+
+#使用 Nano 创建配置文件2021-04-29 16:16:00 星期四
+nano /etc/systemd/resolved.conf.d/adguardhome.conf
+</code></pre>
+<p>在编辑器中粘贴以下内容：</p>
+<pre><code class="language-shell">[Resolve]
+DNS=127.0.0.1
+DNSStubListener=no
+</code></pre>
+<p>保存后执行以下命令。</p>
+<pre><code class="language-shell">#创建备份
+sudo mv /etc/resolv.conf /etc/resolv.conf.backup
+
+#将 /etc/resolv.conf 链接至 /run/systemd/resolve/resolv.conf
+ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf
+
+#重启 DNSStubListener
+systemctl restart systemd-resolved
+</code></pre>
+<p>完成后使用 <code>netstat -tunlp | grep 53</code> 命令检查是否依旧有进程占用 53 端口，如无冲突，重启 AdGuard Home 容器即可。</p>
+<h4 id="docker容器修改dns"><a href="https://www.cnblogs.com/mrnx2004/p/11755240.html">Docker容器修改dns</a></h4>
+<p>设置docker的dns  编辑 /etc/docker/daemmon.json</p>
+<h4 id="报错">报错</h4>
+<pre><code>Job for docker.service failed because the control process exited with error code.
+See &quot;systemctl status docker.service&quot; and &quot;journalctl -xe&quot; for details.
+是因为/etc/docker/daemon.json 填写出错
+</code></pre>
+<h2 id="启动一个挂载数据卷的容器"><a href="https://yeasy.gitbook.io/docker_practice/data_management/volume">启动一个挂载数据卷的容器</a></h2>
+<p>在用 <code>docker run</code> 命令的时候，使用 <code>--mount</code> 标记来将 <code>数据卷</code> 挂载到容器里。在一次 <code>docker run</code> 中可以挂载多个 <code>数据卷</code>。</p>
+<p>下面创建一个名为 <code>web</code> 的容器，并加载一个 <code>数据卷</code> 到容器的 <code>/usr/share/nginx/html</code> 目录。</p>
+<pre><code>
+$ docker run -d -P \
+		--name web \
+		# -v my-vol:/usr/share/nginx/html \
+		--mount source=my-vol,target=/usr/share/nginx/html \
+		nginx:alpine
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[软路由安装 PVE+ikuai主路由+OpenWrt旁路由 显卡直通 ]]></title>
+        <id>https://blog.diyworld.me/post/kSKrjzqqU/</id>
+        <link href="https://blog.diyworld.me/post/kSKrjzqqU/">
+        </link>
+        <updated>2023-01-31T09:46:47.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85-pve">安装 PVE</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E7%BD%91%E5%8D%A1%E7%9B%B4%E9%80%9A">设置网卡直通</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85-ikuai">安装 ikuai</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85openwrt">安装OpenWrt</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E4%B8%BB%E6%97%81%E8%B7%AF%E7%94%B1">设置主&amp;旁路由</a>
+<ul>
+<li><a href="#%E5%85%A8%E9%83%A8%E9%83%BD%E8%B5%B0openwrt">全部都走OpenWrt</a></li>
+<li><a href="#%E9%83%A8%E5%88%86%E8%B5%B0openwrt">部分走OpenWrt</a></li>
+</ul>
+</li>
+<li><a href="#pve%E8%81%94%E7%BD%91">PVE联网</a></li>
+<li><a href="#pve%E7%9A%84local%E5%92%8Clocal-lvm">PVE的local和local-lvm</a></li>
+<li><a href="#pve-%E8%87%AA%E5%8A%A8%E9%87%8A%E6%94%BE%E7%A9%BA%E9%97%B4">PVE 自动释放空间</a></li>
+<li><a href="#%E4%BF%AE%E5%A4%8D%E6%97%81%E8%B7%AF%E7%94%B1%E5%AF%BC%E8%87%B4%E7%9A%84%E7%BB%88%E7%AB%AFmac%E5%9C%B0%E5%9D%80%E9%87%8D%E5%A4%8D%E7%9A%84%E9%97%AE%E9%A2%98">修复旁路由导致的终端MAC地址重复的问题</a></li>
+<li><a href="#%E5%BE%AE%E4%BF%A1%E6%9F%90%E4%BA%9B%E5%8A%9F%E8%83%BD%E5%8A%A0%E8%BD%BD%E6%85%A2">微信某些功能加载慢</a></li>
+<li><a href="#zerotier-%E5%BC%82%E5%9C%B0%E7%BB%84%E7%BD%91">Zerotier 异地组网</a>
+<ul>
+<li><a href="#%E9%85%8D%E7%BD%AEzerotier">配置Zerotier</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEopenwrt">配置Openwrt</a></li>
+</ul>
+</li>
+<li><a href="#%E6%98%BE%E5%8D%A1%E7%9B%B4%E9%80%9A-%E9%80%9A%E8%BF%87-hdmi-%E8%BE%93%E5%87%BA-windows-%E5%9B%BE%E5%83%8F">显卡直通 通过 HDMI 输出 Windows 图像</a>
+<ul>
+<li><a href="#pve-%E9%85%8D%E7%BD%AE">PVE 配置</a>
+<ul>
+<li><a href="#%E4%BF%AE%E6%94%B9grub%E5%90%AF%E5%8A%A8%E6%96%87%E4%BB%B6">修改grub启动文件</a></li>
+<li><a href="#%E5%8A%A0%E8%BD%BD%E7%9B%B4%E9%80%9A%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84linux%E6%A8%A1%E7%BB%84">加载直通所需要的Linux模组</a></li>
+<li><a href="#%E5%B1%8F%E8%94%BDpve%E8%87%AA%E5%B8%A6%E6%A0%B8%E6%98%BE%E7%9B%B8%E5%85%B3%E9%A9%B1%E5%8A%A8">屏蔽PVE自带核显相关驱动</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%98%BE%E5%8D%A1%E5%A3%B0%E5%8D%A1%E7%9B%B8%E5%85%B3%E7%9B%B4%E9%80%9A%E6%A8%A1%E7%BB%84">配置显卡声卡相关直通模组</a></li>
+</ul>
+</li>
+<li><a href="#windows-%E9%85%8D%E7%BD%AE">Windows 配置</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85%E9%A9%B1%E5%8A%A8">安装驱动</a></li>
+<li><a href="#%E6%A3%80%E9%AA%8C%E6%98%AF%E5%90%A6%E6%AD%A3%E5%B8%B8">检验是否正常：</a></li>
+<li><a href="#%E6%9C%80%E5%90%8E">最后</a></li>
+</ul>
+</li>
+<li><a href="#%E9%80%9A%E8%BF%87%E4%BF%AE%E6%94%B9%E5%AF%B9%E5%BA%94%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9B%B4%E9%80%9A">通过修改对应虚拟机配置文件直通</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<p>仅结合自己理解作简要概括，不保证全对。详细步骤在 <a href="https://www.bilibili.com/video/BV1pu411z7v4">软路由安装PVE虚拟机安装OpenWrt iKuai</a></p>
+<blockquote>
+<p>主机 畅网 J4125 i226网卡 四网口 准系统<br>
+内存 联想 DDR4 8G 2666<br>
+硬盘 铠侠 SATA TC10 480GB</p>
+</blockquote>
+<h2 id="安装-pve">安装 PVE</h2>
+<p>首先在 <a href="https://www.proxmox.com/en/downloads">PVE官网</a> 下载 ISO 镜像。</p>
+<figure data-type="image" tabindex="1"><img src="https://blog.diyworld.me/post-images/1675158895806.jpg" alt="" loading="lazy"></figure>
+<p>然后下载写盘工具 <code>Rufus</code> ，插入U盘将镜像写入。</p>
+<p>准备显示屏，键盘和鼠标，插入U盘到主机上，开机自动进入配置页面，具体配置按自己喜好。</p>
+<p>然后找一根网线连接主机 <code>ETH0</code> ，另一端连电脑，打开电脑 <code>网络和共享中心</code> 选择对应 <code>以太网</code> -&gt;<code>属性</code>-&gt;<code>IPv4</code> 修改 IP 地址为 PVE 同一网段。</p>
+<p>在电脑打开 https:// PVE地址:8006/ ，进入配置界面。</p>
+<h2 id="设置网卡直通">设置网卡直通</h2>
+<p>打开PVE节点的shell,输入命令：</p>
+<pre><code class="language-shell">nano /etc/default/grub
+</code></pre>
+<p>将</p>
+<pre><code>GRUB CMDLINE_LINUX_DEFAULT=quiet&quot;
+</code></pre>
+<p>改为：</p>
+<pre><code>GRUB CMDLINE_LINUX_DEFAULT=quiet intel_iommu=on&quot;
+</code></pre>
+<p>编辑完文件后按“Ctl+X”&gt;&quot;Y&quot;&gt;“回车”，继续输入以下命令:</p>
+<pre><code class="language-shell">nano /etc/modules
+</code></pre>
+<p>在文件下面添加新内容</p>
+<pre><code>vfio
+vfio iommu type1
+vfio pci
+vfio virgfd
+</code></pre>
+<p>编辑完文件后按&quot;Ct+X”&gt;“Y”&gt;“回车”，继续输入以下命令。</p>
+<p>最后更新配置信息并重启PVE主机</p>
+<pre><code>update-grub
+update-initramfs -u -k all
+reboot
+</code></pre>
+<p>默认情况下会创建一个名为root的lv作为系统的根分区，大小为整个磁盘空间的25%，还用来保存系统镜像和虚拟机的快照；一个名为data的lvm-thin分区，作为虚拟机的磁盘。<br>
+<img src="https://blog.diyworld.me/post-images/1675183567764.jpg" alt="" loading="lazy"></p>
+<p><a href="https://wzh.one/294.html">相关知识</a></p>
+<h2 id="安装-ikuai">安装 ikuai</h2>
+<p>在 <a href="https://www.ikuai8.com/component/download">ikuai官网</a> 下载ISO镜像，上传在local（pve)。</p>
+<p>点击新建虚拟机，设置名称，选择 ikuai 镜像 ，分配磁盘大小 5G 足够，双核，类别 host ，分配内存 2048 。<br>
+新建完成后开启开机自启，修改引导顺序，分配网口，设置WAN和LIN口。</p>
+<figure data-type="image" tabindex="2"><img src="https://blog.diyworld.me/post-images/1675161884034.jpg" alt="" loading="lazy"></figure>
+<h2 id="安装openwrt">安装OpenWrt</h2>
+<p>我使用的固件是 <code>OpenWrt-Rpi</code> <a href="https://doc.openwrt.cc/2-OpenWrt-Rpi/1-Download/">下载地址</a></p>
+<p>选择 <code>x86_64</code> 设备跳转下载页面</p>
+<p>下载 <code>immortalwrt-x86-64-generic-ext4-combined.img.gz</code> 到本地并解压为 <code>.img</code> 文件</p>
+<p>同样上传在<code>local（pve)</code>，记住 <code>target file</code> 后面的 <strong>上传的文件路径</strong>。</p>
+<p>然后新建虚拟机，设置名称，这里的镜像选择 不使用任何介质 ，磁盘大小随便后期会删除，双核，类别 host ，分配内存 1024 。</p>
+<p>因为不是ISO镜像，所以无法直接选择，想要稍做处理。</p>
+<p>新建完成后进入OpenWrt 节点的 <code>硬件</code> 选项，将硬盘先 <code>分离</code> ，然后 删除 。</p>
+<p>进入 PVE 的shell界面，输入</p>
+<pre><code class="language-shell">qm importdisk [ikuai虚拟机的数字编号] [上传的文件路径] local-lvm
+
+例如 qm importdisk 101 /var/lib/vz/template/iso/immortalwrt-x86-64-generic-ext4-combined.img local-lvm
+</code></pre>
+<p>再次回到OpenWrt 节点的 <code>硬件</code> 选项，这时多出一个 未使用的磁盘 ，选择，编辑，总线改为 <code>SATA</code>，点击添加，然后打开开机自启，修改引导顺序为</p>
+<figure data-type="image" tabindex="3"><img src="https://blog.diyworld.me/post-images/1675161840067.png" alt="" loading="lazy"></figure>
+<p>进入 OpenWrt 的控制台后输入</p>
+<pre><code class="language-shell">vi etc/config/network
+</code></pre>
+<p>将 <code>option ipaddr</code> 修改成想要的地址，重启然后访问即可进入管理页面。</p>
+<h2 id="设置主旁路由">设置主&amp;旁路由</h2>
+<h3 id="全部都走openwrt">全部都走OpenWrt</h3>
+<p>如果将ikuai设置为主路由那么就将LAN口分配给ikuai，同理，设置OpenWrt为主路由就分配给OpenWrt。然后修改相关WAN口配置，设置这两个的网关为对方 IP 地址。</p>
+<p>假如设置ikuai为主路由，OpenWrt为旁路由，那么将LAN口分配给ikuai虚拟机，并设置好WAN口，使用PPPoE拨号，输入宽带账号，并设置 DHCP 里的网关为 OpenWrt 的 IP 地址。<br>
+<img src="https://blog.diyworld.me/post-images/1675167438324.jpg" alt="" loading="lazy"><br>
+OpenWrt 的LAN网关设置为ikuai的ip地址<br>
+<img src="https://blog.diyworld.me/post-images/1675167506314.jpg" alt="" loading="lazy"></p>
+<h3 id="部分走openwrt">部分走OpenWrt</h3>
+<p>和上一个的区别是在ikuai里的网关设置为他自己(貌似这样会使在ikuai网关下的设备无法访问ikuai的管理页面)，然后在想要走 OpenWrt 的设备里网关设置为 OpenWrt 的地址。</p>
+<h2 id="pve联网">PVE联网</h2>
+<p>第一次安装PVE，正常情况下PVE的IP是在我们上网的网段的。没有网络有可能是没有配置DNS服务器地址或DNS地址是软路由网关地址。解决方法有3种：</p>
+<p>1：设置DHCP自动获取网络地址和DNS服务器地址。但是这个会导致自己的PVEIP地址不固定。<br>
+2：在PVE网页页面上设置DNS服务器地址：<br>
+<img src="https://blog.diyworld.me/post-images/1675225459327.png" alt="" loading="lazy"><br>
+3：如果有使用iKuai、openwrt等软路由或者硬路由，可在其DNS设置中开启DNS代理<br>
+<img src="https://blog.diyworld.me/post-images/1675225482457.png" alt="" loading="lazy"></p>
+<h2 id="pve的local和local-lvm">PVE的local和local-lvm</h2>
+<p><img src="https://blog.diyworld.me/post-images/1675241325963.jpg" alt="" loading="lazy"><br>
+<code>local</code> 主要是存储 <code>虚拟机备份文件</code>、<code>上传的ISO镜像</code>、<code>容器模板</code>，在缺省安装时默认分配为磁盘的1/4大小，其中 PVE 系统就安装在这上面。</p>
+<p><code>local-lvm</code> 主要是存储 <code>磁盘映像</code> 和 <code>容器</code> 创建的虚拟机文件和快照就保存在这里面。</p>
+<p><img src="https://blog.diyworld.me/post-images/1675241454332.png" alt="" loading="lazy"><br>
+<img src="https://blog.diyworld.me/post-images/1675241449235.png" alt="" loading="lazy"></p>
+<p>当查看 lvm 的VM磁盘大小时会发现比使用率大得多，这是因为lvm是写时分配。</p>
+<figure data-type="image" tabindex="4"><img src="https://blog.diyworld.me/post-images/1675241545091.png" alt="" loading="lazy"></figure>
+<h2 id="pve-自动释放空间">PVE 自动释放空间</h2>
+<p>要实现自动释放空间，要满足一些条件：</p>
+<p>1、虚拟机硬盘使用scsi接口<br>
+2、虚拟机硬盘开启“丢弃”选项<br>
+3、虚拟机里删除文件后，进行碎片整理或者优化<br>
+4、虚拟硬盘所在的PVE存储类型是“lvm-thin”，如果不是“lvm-thin”，虚拟硬盘类型必须是qcow2<br>
+5、虚拟机选项里面开启“QEMU Guest Agent”，虚拟机的windows系统安装QEMU Guest软件。</p>
+<p>其中，“PVE存储类型使用“lvm-thin”” 是最有效的方法。满足以上一大堆条件后，就可以自动释放空间了。</p>
+<p>处理方法：<br>
+1、关闭需要释放的磁盘的虚拟机<br>
+2、修改硬盘信息（在Discard的复选框打勾）<br>
+<img src="https://blog.diyworld.me/post-images/1675242381534.webp" alt="" loading="lazy"></p>
+<p>3、启动虚拟机，登录虚拟机执行如下命令</p>
+<pre><code class="language-shell">fstrim -av
+</code></pre>
+<p>等命令执行完毕，磁盘空间就释放了。</p>
+<h2 id="修复旁路由导致的终端mac地址重复的问题">修复旁路由导致的终端MAC地址重复的问题</h2>
+<p>在 OpenWrt 软件包里搜索 <code>snmpd</code> 安装<br>
+进入iKuai的管理后台，依次点击“高级应用”→“跨三层应用”→“添加”<br>
+在“SNMP服务器IP”后输入你的LEDE路由管理IP，其他保证默认不变，点击保存即可。</p>
+<h2 id="微信某些功能加载慢">微信某些功能加载慢</h2>
+<p><a href="https://www.right.com.cn/forum/forum.php?mod=viewthread&amp;tid=8086168&amp;page=2&amp;authorid=510570">来源</a><br>
+在 OpenWrt 网络-接口 中 lan 口的 IPV6 关闭就可以了（接口--LAN--一般设置，里面IPV6分配长度直接禁用）</p>
+<p>原因是wan口只有ipv4，但是lan有IPV4和IPV6，怀疑是DNS解析微信的IPV6发生了错误。</p>
+<h2 id="zerotier-异地组网">Zerotier 异地组网</h2>
+<p><a href="https://iuok.me/blog/zerotier/">参考</a></p>
+<h3 id="配置zerotier">配置Zerotier</h3>
+<p>在 <a href="https://my.zerotier.com/">控制台</a> 注册并登陆。创建网络后得到一个 Network ID，填入。<br>
+<img src="https://blog.diyworld.me/post-images/1675333597453.jpg" alt="" loading="lazy"></p>
+<p>在网络管理页面中，Access Control 控制客户端认证方式，如果选择PRIVATE则每个客户端的加入都需要在此页面经由你允许。</p>
+<p>在 IPv4 Auto-Assign 中，可以对客户端的 IP 段进行配置，不和你原来的网络地址冲突即可。<br>
+<img src="https://blog.diyworld.me/post-images/1675333752505.png" alt="" loading="lazy"></p>
+<p>在 Members 中你可以管理该网络下的所有客户端，勾选客户端对应的 Auth? 选框即可让客户端加入此网络。每个客户端在加入的时候会自动分配一个 IP 地址，你还可以手动分配客户端的 IP 地址。</p>
+<figure data-type="image" tabindex="5"><img src="https://blog.diyworld.me/post-images/1675333787301.png" alt="" loading="lazy"></figure>
+<p>如果多个机器互相访问就需要每个机器都安装 Zerotier 客户端并加入同一个网络。</p>
+<p>借助 OpenWrt 和 Zerotier 可以暴露整个局域网到 Zerotier 网络中，只需要 OpenWrt 中的 Zerotier 加入网络即可。</p>
+<p>勾选「自动允许客户端 NAT」即可。</p>
+<figure data-type="image" tabindex="6"><img src="https://blog.diyworld.me/post-images/1675333893017.png" alt="" loading="lazy"></figure>
+<p>OpenWrt 不需要作为你的主路由，它可以通过 LAN 口接入你现有的局域网，关闭 LAN 口的 DHCP 服务，作为旁路由使用。</p>
+<p>你还需要在 Zerotier 控制台中配置静态路由。</p>
+<figure data-type="image" tabindex="7"><img src="https://blog.diyworld.me/post-images/1675333937686.png" alt="" loading="lazy"></figure>
+<p>在添加静态路由的时候Destination填局域网的网络地址，(Via)为下一跳地址，即 OpenWrt 路由器的 Zerotier 地址。</p>
+<p>上面的静态路由配置将192.168.10.0/24局域网和192.168.11.0/24局域网暴露在 Zerotier 网络中。172.22.39.15和172.22.105.60分别是两个 OpenWrt 路由器在 Zerotier 网络中的地址，这两个路由器均配置了自动允许客户端 NAT。</p>
+<p>这样做的优点是管理方便，不需要在每个机器上安装客户端并且加入网络。并且即使你在使用移动网络的时候可以直接访问到家里局域网的 IP，并且还是通过局域网 IP 访问，并不需要修改软件配置。</p>
+<p>在外使用移动网络的情况下，你可以使用192.168.10.0/24或192.168.11.0/24网段的内网地址访问局域网 A 或局域网 B 内的资源。</p>
+<p>如果局域网 A 中的某台设备需要访问局域网 B 中的资源，还是需要在该设备上安装 Zerotier 客户端，并且加入统一 Zerotier 网络，然后就可以通过192.168.11.0/24的内网 IP 地址来访问局域网 B 中的资源了。</p>
+<h3 id="配置openwrt">配置Openwrt</h3>
+<blockquote>
+<p>(可选，如果按照上面设置完成后没有效果可以尝试。)</p>
+</blockquote>
+<ol>
+<li>
+<p>添加新接口<br>
+web界面，网络 -&gt; 接口，添加新接口<br>
+<code>名称</code>  ZeroTier<br>
+<code>协议</code>  选不配置协议<br>
+<code>接口</code>  选z开头的适配器<br>
+<code>高级设置</code>  开机自动运行<br>
+点击 <code>创建接口</code> 按钮，在之后出现的 <code>防火墙设置</code> 页面中， <code>创建/分配防火墙区域</code> 选择 <code>lan</code>，保存并应用。</p>
+</li>
+<li>
+<p>修改防火墙<br>
+web界面，网络 -&gt; 防火墙-&gt;流量规则-&gt; 通信规则，添加：<br>
+<code>名称</code> Allow-ZeroTier-Inbound<br>
+<code>协议</code> UDP<br>
+<code>源区域</code> 任意区域<br>
+<code>目标区域</code> 设备<br>
+<code>目标端口</code> 1-65535<br>
+保存&amp;应用。</p>
+</li>
+</ol>
+<h2 id="显卡直通-通过-hdmi-输出-windows-图像">显卡直通 通过 HDMI 输出 Windows 图像</h2>
+<blockquote>
+<p>网上有部分内容已经过时，所以自己实践重写一遍。写于 2025/2/12，仅在以下环境测试<br>
+CPU J4125<br>
+显卡 Intel(R)UHD Graphics 600<br>
+PVE 版本 7.3-3<br>
+已安装 Windows Server 2019</p>
+</blockquote>
+<h3 id="pve-配置">PVE 配置</h3>
+<h4 id="修改grub启动文件">修改grub启动文件</h4>
+<pre><code class="language-shell">nano /etc/default/grub
+</code></pre>
+<p>将</p>
+<pre><code class="language-shell">GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet intel_iommu=on&quot;    
+</code></pre>
+<p>改为</p>
+<pre><code class="language-shell">GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet intel_iommu=on iommu=pt initcall_blacklist=sysfb_init&quot;
+</code></pre>
+<p>注意：其他教程说的是 要改为 video=efifb:off,vesafb:off  但是我设置后PVE log会疯狂报错</p>
+<pre><code class="language-bash">kvm:vfio_region_write(0000:00:02.0:region2+0xfeb26b4,0x0,4)failed:Device or resource busy
+pve kernel: vfio-pci 0000:00:02.0: BAR 2: can't reserve
+</code></pre>
+<p>搜索后找到帖子 <a href="https://forum.proxmox.com/threads/igd-passthrough-help-pve-kernel-vfio-pci-0000-00-02-0-bar-2-cant-reserve.126340/post-551802">pve kernel: vfio-pci 0000:00:02.0: BAR 2: can't reserve</a> 里面提到 video=vesafb:off video=efifb:off video=simplefb:off have not worked on Proxmox for some time.</p>
+<p>这也是一些人提到的 <code>装的win10那么卡 windows开机特别慢</code> 的原因。</p>
+<h4 id="加载直通所需要的linux模组">加载直通所需要的Linux模组</h4>
+<pre><code class="language-shell">nano /etc/modules
+</code></pre>
+<pre><code class="language-shell">#加入
+vfio
+vfio_iommu_type1
+vfio_pci
+vfio_virqfd
+</code></pre>
+<h4 id="屏蔽pve自带核显相关驱动">屏蔽PVE自带核显相关驱动</h4>
+<pre><code class="language-shell">nano /etc/modprobe.d/pve-blacklist.conf
+</code></pre>
+<pre><code class="language-shell">#加入
+blacklist snd_hda_intel
+blacklist snd_hda_codec_hdmi
+blacklist i915
+</code></pre>
+<p>注意：在我的 PVE 版本里面是 pve-blacklist.conf 文件，其他教程中的 blacklist.conf 对我无效。</p>
+<h4 id="配置显卡声卡相关直通模组">配置显卡声卡相关直通模组</h4>
+<pre><code class="language-shell">lspci -n | grep -E &quot;0300|0403&quot;     
+
+#shell输出以下信息    #J4125  应该和我一样
+00:02.0 0300: 8086:3185 (rev 03)      #00:02 对应显卡，记下 8086:3185
+00:0e.0 0403: 8086:3198 (rev 03)      #00:0e 对应声卡，记下 8086:3198
+</code></pre>
+<pre><code class="language-shell">nano /etc/modprobe.d/vfio.conf
+</code></pre>
+<pre><code class="language-shell">#加入
+options vfio-pci ids=8086:3185,8086:3198
+</code></pre>
+<pre><code class="language-shell"># 更新配置并重启
+update-initramfs -u
+reboot
+
+#重启后查一下
+lsmod | grep vfio
+
+#看是否有类似信息，有基本就配置成功了
+
+vfio_pci                  16384   0
+vfio_pci_core          73728   1     vfio_pci
+vfio_virqfd              16384   1     vfio_pci_core
+irqbypass                16384   2     vfio_pci_core,kvm
+vfio_iommu_type1   40960   0
+vfio                        45056   2      vfio_pci_core,vfio_iommu_type1
+</code></pre>
+<h3 id="windows-配置">Windows 配置</h3>
+<h4 id="安装驱动">安装驱动</h4>
+<p>回到PVE控制面板，找到Windows的虚拟机，先将其关机，然后在硬件中，添加PCI设置， 找到你显卡的型号并添加即可，其它选项默认。</p>
+<figure data-type="image" tabindex="8"><img src="https://blog.diyworld.me/post-images/1739355512940.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://blog.diyworld.me/post-images/1739355527627.webp" alt="" loading="lazy"></figure>
+<p>完成添加PCI 的显卡后，启动虚拟机安装驱动</p>
+<p>进入到windows界面，打开【设备管理器】，最下面的显示适配器中，可以看到有两个显卡</p>
+<figure data-type="image" tabindex="10"><img src="https://blog.diyworld.me/post-images/1739355596348.webp" alt="" loading="lazy"></figure>
+<p>驱动下载地址 <a href="https://newsupport.lenovo.com.cn/driveDownloads_detail.html?driveId=74325">Intel VGA Driver 英特尔集成显卡驱动</a>，必须下载下面历史版本中的 26.20.100.7262 版本，其他版本会报错。下载后双击安装即可。</p>
+<blockquote>
+<p>win10 放置一段时间后会自动安装驱动，不过自动安装的驱动版本并不是 26.20.100.7262 版本，无法正常使用。同理 Windows 自己更新的也一样。</p>
+</blockquote>
+<h4 id="检验是否正常">检验是否正常：</h4>
+<p>设备管理器，能看到显卡的正确型号，并且没有感叹号</p>
+<p>任务管理器，在性能左侧，能看到GPU 的栏目</p>
+<figure data-type="image" tabindex="11"><img src="https://blog.diyworld.me/post-images/1739356118451.webp" alt="" loading="lazy"></figure>
+<h4 id="最后">最后</h4>
+<p>将虚拟机 Windows 关机，然后修改虚拟机的硬件配置，删除刚才添加的核显，添加 PCI 设备声卡，将“显示”选项改为“无”。</p>
+<figure data-type="image" tabindex="12"><img src="https://blog.diyworld.me/post-images/1739356322898.webp" alt="" loading="lazy"></figure>
+<blockquote>
+<p>注意：显示修改为 无 后就无法在 PVE 对应的 控制台处登录了。之后再使用 RDP 登录吧。</p>
+</blockquote>
+<p>虚拟机添加USB设备直通的顺序是</p>
+<ol>
+<li>将USB设备插入到all in one主机中（主机不用关机，虚拟机也不用关机）；</li>
+<li>到虚拟机的硬件中，添加USB设备，选择【使用USB端口】；</li>
+<li>这个时候应该能读取到你的USB设备，并选择，确定；</li>
+</ol>
+<p>注意：添加的USB设备，是支持热插拔的，但是不能换USB口，下次开机启动，也能正常识别，不用重新设置。</p>
+<figure data-type="image" tabindex="13"><img src="https://blog.diyworld.me/post-images/1739356607020.webp" alt="" loading="lazy"></figure>
+<h3 id="通过修改对应虚拟机配置文件直通">通过修改对应虚拟机配置文件直通</h3>
+<p>将 igpu.bin 上传到PVE系统 (网上搜索能找到下载地址，不过我并没有用到)</p>
+<p>进入PVE shell</p>
+<pre><code class="language-shell">nano /etc/pve/qemu-server/&lt;Windows 系统的虚拟机ID&gt;.conf
+</code></pre>
+<pre><code class="language-shell">#顶部添加一段代码让直通输出使用指定的配置文件
+args: -device vfio-pci,host=00:02.0,addr=0x02,x-igd-gms=1,romfile=&lt;你的igpu.bin 路径&gt;
+</code></pre>
+<p>注意：网上大部分教程都有 romfile 参数，但是我在使用的时候会出现了 <code>鼠标指针不见 音频无输出</code> 的问题，在删掉 romfile=&lt;你的igpu.bin 路径&gt; 参数后这些问题都解决了。如果你还存在 <code>鼠标指针不见</code> 的情况可以开启 <code>显示指针轨迹</code>。或者使用其他版本的 igpu.bin。</p>
+<p>开机后，就能直接通过显示器，看到虚拟机中的内容了。不过我在第一次弄的时候输出的画面存在大量噪点和条纹，还以为我哪里弄错了，最后排查出来是热插拔 HDMI 线的原因，不是说这玩意能热插拔的吗？</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ChromeDriver+Selenium+Python 笔记]]></title>
+        <id>https://blog.diyworld.me/post/7wVADr7Oy/</id>
+        <link href="https://blog.diyworld.me/post/7wVADr7Oy/">
+        </link>
+        <updated>2022-11-30T10:00:44.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85">安装</a></li>
+<li><a href="#%E5%B8%B8%E7%94%A8%E8%AF%AD%E5%8F%A5">常用语句</a>
+<ul>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%85%83%E7%B4%A0">获取元素</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E6%9C%AC%E9%A1%B5%E9%9D%A2url">获取本页面URL</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E6%97%A5%E5%BF%97">获取日志</a></li>
+<li><a href="#%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%93%8D%E4%BD%9C">新标签页操作</a></li>
+<li><a href="#%E7%AA%97%E5%8F%A3%E6%93%8D%E4%BD%9C">窗口操作</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%BB%B6%E6%97%B6">设置延时</a></li>
+<li><a href="#%E5%85%B3%E9%97%AD">关闭</a></li>
+<li><a href="#%E6%89%93%E5%8D%B0%E7%BD%91%E9%A1%B5%E6%BA%90%E4%BB%A3%E7%A0%81">打印网页源代码</a></li>
+<li><a href="#%E5%89%AA%E8%B4%B4%E6%9D%BF%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E5%9B%BE%E7%89%87">剪贴板复制粘贴图片</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85-win32clipboard">安装 win32clipboard</a></li>
+<li><a href="#%E5%A4%8D%E5%88%B6%E6%9C%AC%E5%9C%B0%E5%9B%BE%E7%89%87">复制本地图片</a></li>
+<li><a href="#%E8%AF%B7%E6%B1%82%E7%BD%91%E7%BB%9C%E5%9B%BE%E7%89%87">请求网络图片</a></li>
+<li><a href="#%E6%96%B9%E6%B3%95%E4%B8%80">方法一</a></li>
+<li><a href="#%E6%96%B9%E6%B3%95%E4%BA%8C">方法二</a></li>
+<li><a href="#%E6%96%B9%E6%B3%95%E4%B8%89">方法三</a></li>
+<li><a href="#%E6%96%B9%E6%B3%95%E5%9B%9B">方法四</a></li>
+<li><a href="#%E6%96%B9%E6%B3%95%E4%BA%94">方法五</a></li>
+<li><a href="#selenium-%E7%B2%98%E8%B4%B4%E5%9B%BE%E7%89%87">selenium 粘贴图片</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%E6%93%8D%E4%BD%9C">屏幕截图操作</a></li>
+<li><a href="#%E5%89%8D%E8%BF%9B%E5%90%8E%E9%80%80%E5%88%B7%E6%96%B0">前进后退刷新</a></li>
+<li><a href="#%E6%89%A7%E8%A1%8Cjs%E4%BB%A3%E7%A0%81">执行JS代码</a></li>
+<li><a href="#cookies%E6%93%8D%E4%BD%9C">Cookies操作</a></li>
+<li><a href="#%E6%93%8D%E4%BD%9C-localstorage">操作 localstorage</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E6%A0%87%E9%A2%98%E5%86%85%E5%AE%B9">获取标题内容</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E6%B5%8F%E8%A7%88%E5%99%A8%E5%90%8D">获取当前浏览器名</a></li>
+<li><a href="#%E5%85%A8%E5%B1%80%E8%B6%85%E6%97%B6%E6%97%B6%E9%97%B4">全局超时时间</a></li>
+<li><a href="#%E5%85%83%E7%B4%A0%E6%93%8D%E4%BD%9C">元素操作</a></li>
+<li><a href="#%E6%A8%A1%E6%8B%9F%E9%94%AE%E7%9B%98%E8%BE%93%E5%85%A5%E5%92%8C%E6%8C%89%E9%94%AE">模拟键盘输入和按键</a></li>
+<li><a href="#%E9%80%89%E9%A1%B9%E6%93%8D%E4%BD%9C">选项操作</a></li>
+<li><a href="#%E6%A1%86%E6%9E%B6%E6%93%8D%E4%BD%9Cframeiframe">框架操作(Frame/IFrame)</a></li>
+<li><a href="#alert">Alert</a></li>
+<li><a href="#%E5%88%A4%E6%96%AD">判断</a></li>
+<li><a href="#%E9%80%89%E6%8B%A9">选择</a></li>
+<li><a href="#%E6%98%BE%E7%A4%BA%E7%AD%89%E5%BE%85%E5%92%8C%E9%9A%90%E5%BC%8F%E7%AD%89%E5%BE%85">显示等待和隐式等待</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="安装">安装</h2>
+<ol>
+<li>
+<p>安装Python的Selenium库</p>
+<p>打开cmd，输入</p>
+<pre><code class="language-cmd">pip install selenium
+</code></pre>
+</li>
+<li>
+<p>安装Chrome浏览器后，确定Chrome的版本：【设置】-【关于Chrome】中查看<br>
+<img src="https://blog.diyworld.me/post-images/1669802931387.png" alt="版本信息" loading="lazy"></p>
+</li>
+<li>
+<p>安装ChromeDriver<br>
+从镜像索引网站中下载与Chrome相同版本的Chromedriver。<a href="http://chromedriver.storage.googleapis.com/index.html">下载地址</a></p>
+</li>
+</ol>
+<p><img src="https://blog.diyworld.me/post-images/1669802984256.jpg" alt="" loading="lazy"><br>
+<img src="https://blog.diyworld.me/post-images/1669802989775.jpg" alt="" loading="lazy"></p>
+<p>如果网站没有完全匹配的版本，可以选择稍大一点的版本下载。</p>
+<ol start="4">
+<li>将chromedriver配置到环境变量里</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://blog.diyworld.me/post-images/1669803164606.jpg" alt="" loading="lazy"></figure>
+<ol start="5">
+<li>
+<p>测试使用</p>
+<pre><code class="language-python">from selenium import webdriver
+driver = webdriver.Chrome()
+url = 'https://www.baidu.com/'
+driver.get(url)
+</code></pre>
+</li>
+</ol>
+<ul>
+<li>
+<p>一些问题</p>
+<p>Chrome的更新频率非常频繁，与之对应的Chromedriver版本也必须相应更新。如果两者版本的主版本号相差超过1，selenium则会报异常，大概错误信息如下：</p>
+<blockquote>
+<p>发生异常: SessionNotCreatedException<br>
+Message: session not created: This version of ChromeDriver only supports Chrome version 95 Current browser version is 105.0.5195.102 with binary path C:\Program Files (x86)\Google\Chrome\Application\chrome.exe</p>
+</blockquote>
+<p>--disable-dev-shm-usage 的作用</p>
+<p>--disable-dev-shm-usage 是一个启动参数，用于告诉 Chrome 不要使用 /dev/shm（即 POSIX 共享内存）来存放其数据。当使用该参数时，Chrome 会改为在 /tmp 目录下创建临时文件用于处理需要存储在内存中的数据。</p>
+<p>为什么要使用这个参数<br>
+容器环境的内存限制：Docker 容器环境中的 /dev/shm 大小默认为 64MB，这通常小于 Chrome 所需的空间，尤其是在打开多个标签或处理大量数据时。如果不增加这个大小，可能会导致 Chrome 行为异常或崩溃。<br>
+稳定性和兼容性：使用 --disable-dev-shm-usage 参数可以提高在资源受限的环境下运行 Chrome 的稳定性，尤其是自动化测试或数据抓取任务中。</p>
+</li>
+</ul>
+<h2 id="常用语句">常用语句</h2>
+<h3 id="获取元素">获取元素</h3>
+<blockquote>
+<p>find_element_by_* 和 find_elements_by_* 已弃用。</p>
+</blockquote>
+<p><code>find_element()</code>            通过指定方法查找指定的一个元素(需指定两个参数)</p>
+<pre><code class="language-python">By.CLASS_NAME           #通过Class name查找指定的一个元素
+By.CSS_SELECTOR         #通过CSS选择器查找指定的一个元素
+By.ID                   #通过ID查找指定的一个元素
+By.LINK_TEXT            #通过链接文本获取指定的一个超链接(精确匹配)
+By.NAME                 #通过Name查找指定的一个元素
+By.PARTIAL_LINK_TEXT    #通过链接文本获取指定的一个超链接(模糊匹配)
+By.TAG_NAME              #通过标签名查找指定的一个元素
+By.XPATH                #通过Xpath语法来指定的一个元素
+</code></pre>
+<p>例如</p>
+<pre><code class="language-python">from selenium.webdriver.common.by import By
+kw1=driver.find_element(By.ID,'kw')
+</code></pre>
+<h3 id="获取本页面url">获取本页面URL</h3>
+<pre><code class="language-python">c.current_url
+</code></pre>
+<h3 id="获取日志">获取日志</h3>
+<pre><code class="language-python">c.log_types  #获取当前日志类型
+c.get_log('browser')#浏览器操作日志
+c.get_log('driver') #设备日志
+c.get_log('client') #客户端日志
+c.get_log('server') #服务端日志
+</code></pre>
+<h3 id="新标签页操作">新标签页操作</h3>
+<p>如果是新打开的页签，这个时候一定要先移动句柄，再抓取网页内容</p>
+<pre><code class="language-python">newwindow = 'window.open(&quot;https://www.baidu.com&quot;)'
+c.execute_script(newwindow) #浏览器 新窗口打开连接
+c.switch_to.window(c.window_handles[1]) #移动句柄，对新打开页面进行操作
+c.close() #关闭该新打开的页面
+c.switch_to.window(c.window_handles[0]) #不关闭，要移动到上一个页面，我们要移动句柄
+</code></pre>
+<h3 id="窗口操作">窗口操作</h3>
+<pre><code class="language-python">c.maximize_window()#最大化
+c.fullscreen_window() #全屏
+c.minimize_window() #最小化
+c.get_window_position() #获取窗口的坐标
+c.get_window_rect()#获取窗口的大小和坐标
+c.get_window_size()#获取窗口的大小
+c.set_window_position(100,200)#设置窗口的坐标
+c.set_window_rect(100,200,32,50)    #设置窗口的大小和坐标
+c.set_window_size(400,600)#设置窗口的大小
+c.current_window_handle   #返回当前窗口的句柄
+c.window_handles         #返回当前会话中的所有窗口的句柄
+</code></pre>
+<h3 id="设置延时">设置延时</h3>
+<pre><code class="language-python">c.set_script_timeout(5) #设置脚本延时五秒后执行
+c.set_page_load_timeout(5)#设置页面读取时间延时五秒
+</code></pre>
+<h3 id="关闭">关闭</h3>
+<pre><code class="language-python">c.close() #关闭当前标签页
+c.quit() #关闭浏览器并关闭驱动
+</code></pre>
+<h3 id="打印网页源代码">打印网页源代码</h3>
+<pre><code class="language-python">c.page_source
+</code></pre>
+<h3 id="剪贴板复制粘贴图片">剪贴板复制粘贴图片</h3>
+<h4 id="安装-win32clipboard">安装 win32clipboard</h4>
+<p>win32clipboard 集成于 win32api 中，不需要单独安装，直接安装 pywin32 就可以了</p>
+<pre><code class="language-python">pip install pywin32
+</code></pre>
+<h4 id="复制本地图片">复制本地图片</h4>
+<pre><code class="language-python">import win32clipboard
+from PIL import Image
+from io import BytesIO
+
+def copy_image_to_clipboard(img_path: str):
+    '''输入文件名，执行后，将图片复制到剪切板'''
+    image = Image.open(img_path)
+    output = BytesIO()
+    image.save(output, 'BMP')
+    data = output.getvalue()[14:]
+    output.close()
+    win32clipboard.OpenClipboard()
+    win32clipboard.EmptyClipboard()
+    win32clipboard.SetClipboardData(win32clipboard.CF_DIB, data)
+    win32clipboard.CloseClipboard()
+</code></pre>
+<h4 id="请求网络图片">请求网络图片</h4>
+<h4 id="方法一">方法一</h4>
+<pre><code class="language-python">from urllib import request
+from PIL import Image
+img = Image.open(request.urlopen(url))
+</code></pre>
+<h4 id="方法二">方法二</h4>
+<pre><code class="language-python">import requests
+from PIL import Image
+
+response = requests.get(url, stream=True)
+img = Image.open(response.raw)
+img
+
+# 如果想要将PIL图片格式转化为OpenCV图片格式，可以使用如下方法
+import numpy as np
+img = cv.cvtColor(np.array(img), cv.COLOR_RGB2BGR)
+
+</code></pre>
+<h4 id="方法三">方法三</h4>
+<pre><code class="language-python">from io import BytesIO
+
+import requests
+from PIL import Image
+
+response = requests.get(url)
+img = Image.open(BytesIO(response.content))
+img
+
+</code></pre>
+<h4 id="方法四">方法四</h4>
+<pre><code class="language-python">from io import BytesIO
+
+import matplotlib.pyplot as plt
+import requests
+
+response = requests.get(url)
+img = plt.imread(BytesIO(response.content), format=&quot;JPG&quot;)
+plt.imshow(img)
+
+</code></pre>
+<h4 id="方法五">方法五</h4>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+from imageio import imread
+
+# 此方法读取的图像和OpenCV一样，都是numpy.ndarray对象，只不过通道相反
+# img[:,:,::-1] 转化为OpenCV图像格式
+img = imread(url)
+plt.imshow(img)
+plt.show()
+
+</code></pre>
+<h4 id="selenium-粘贴图片">selenium 粘贴图片</h4>
+<pre><code class="language-python">copy_image_to_clipboard('xxx.jpg')
+c.find_element_by_css_selector('.im-editor &gt; div').send_keys(Keys.CONTROL, 'v')
+</code></pre>
+<h3 id="屏幕截图操作">屏幕截图操作</h3>
+<pre><code class="language-python">c.save_screenshot('1.png')#截图，只支持PNG格式
+c.get_screenshot_as_png() #获取当前窗口的截图作为二进制数据
+c.get_screenshot_as_base64() #获取当前窗口的截图作为base64编码的字符串
+</code></pre>
+<h3 id="前进后退刷新">前进后退刷新</h3>
+<pre><code class="language-python">c.forward() #前进
+c.back()  #后退
+c.refresh()#刷新
+</code></pre>
+<h3 id="执行js代码">执行JS代码</h3>
+<p>在Selenium中也可以自定义JS代码并带到当前页面中去执行，如下：</p>
+<pre><code class="language-python">from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
+c=webdriver.Chrome()
+c.get('https://www.baidu.com')
+kw1=c.find_element(By.ID,'kw')
+c.execute_script(&quot;alert('hello')&quot;)
+time.sleep(3)
+c.quit()
+</code></pre>
+<h3 id="cookies操作"><a href="https://www.cnblogs.com/sundahua/p/10202494.html">Cookies操作</a></h3>
+<pre><code class="language-python">c.get_cookie('BAIDUID') #获取指定键的Cookies
+c.get_cookies()         #获取所有的Cookies
+c.add_cookie(x) #添加Cookies  
+c.delete_cookie('BAIDUID') #删除指定键的Cookies内容
+c.delete_all_cookies() #删除所有cookies
+</code></pre>
+<h3 id="操作-localstorage">操作 localstorage</h3>
+<pre><code class="language-python">
+读取value
+
+from selenium import webdriver
+browser = webdriver.Chrome()
+browser.get('http://www.baidu.com/')
+value = browser.execute_script('return localStorage.getItem(&quot;wwwPassLogout&quot;);')
+
+assert value == &quot;0&quot;
+
+
+更新value
+
+from selenium import webdriver
+browser = webdriver.Chrome()
+browser.get('http://www.baidu.com/')
+driver.execute_script('localStorage.setItem(&quot;wwwPassLogout&quot;, &quot;2&quot;);')
+
+assert browser.execute_script('return localStorage.getItem(&quot;wwwPassLogout&quot;);') == &quot;2&quot;
+</code></pre>
+<h3 id="获取标题内容">获取标题内容</h3>
+<pre><code class="language-python">c.title
+</code></pre>
+<h3 id="获取当前浏览器名">获取当前浏览器名</h3>
+<pre><code class="language-python">c.name
+</code></pre>
+<h3 id="全局超时时间">全局超时时间</h3>
+<pre><code class="language-python">c.implicitly_wait(5)
+</code></pre>
+<h3 id="元素操作">元素操作</h3>
+<pre><code class="language-python">kw1.clear()        #清除元素的值
+kw1.click()        #点击元素
+kw1.id             #Selenium所使用的内部ID
+kw1.get_property('background') #获取元素的属性的值
+kw1.get_attribute('id') #获取元素的属性的值
+kw1.location       #不滚动获取元素的坐标
+kw1.location_once_scrolled_into_view  #不滚动且底部对齐并获取元素的坐标
+kw1.parent         #父元素
+kw1.send_keys('')  #向元素内输入值
+kw1.size           #大小
+kw1.submit         #提交
+kw1.screenshot('2.png') #截取元素形状并保存为图片
+kw1.tag_name       #标签名
+kw1.text           #内容，如果是表单元素则无法获取
+kw1.is_selected()  #判断元素是否被选中
+kw1.is_enabled()   #判断元素是否可编辑
+kw1.is_displayed   #判断元素是否显示
+kw1.value_of_css_property('color') #获取CSS元素属性的值
+kw1._upload('2.png') #上传文件
+</code></pre>
+<h3 id="模拟键盘输入和按键">模拟键盘输入和按键</h3>
+<pre><code class="language-python">click(on_element=None)                 #鼠标左键单击
+click_and_hold(on_element=None)        #单击鼠标左键，不松开
+context_click(on_element=None)         #单击鼠标右键
+double_click(on_element=None)          #双击鼠标左键
+drag_and_drop(source,target)           #拖拽到某个元素然后松开
+drag_and_drop_by_offset(source,xoffset,yoffset) #拖拽到某个坐标然后松开
+key_down(value,element=None)     #按下键盘上的某个键
+key_up(value, element=None)      #松开键盘上的某个键
+move_by_offset(xoffset, yoffset)  #鼠标从当前位置移动到某个坐标
+move_to_element(to_element)        #鼠标移动到某个元素
+move_to_element_with_offset(to_element, xoffset, yoffset) #移动到距某个元素（左上角坐标）多少距离的位置
+pause(seconds)                  #暂停所有输入(指定持续时间以秒为单位)
+perform()                       #执行所有操作
+reset_actions()                 #结束已经存在的操作并重置
+release(on_element=None)       #在某个元素位置松开鼠标左键
+send_keys(*keys_to_send)        #发送某个键或者输入文本到当前焦点的元素
+send_keys_to_element(element, *keys_to_send) #发送某个键到指定元素
+</code></pre>
+<p>例如</p>
+<pre><code class="language-python">from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+c=webdriver.Chrome()
+c.get('https://www.baidu.com')
+a=ActionChains(c)
+kw1=c.find_element(By.ID,'kw')
+tj=c.find_element(By.ID,'su')
+tj.send_keys(Keys.CONTROL,'c') #复制
+a.drag_and_drop(kw1,tj).perform()#从输入框拖动到搜索按钮
+kw1.send_keys(Keys.CONTROL,'v')#粘贴
+tj.send_keys(Keys.ENTER)
+time.sleep(3)
+c.close()
+c.quit()
+</code></pre>
+<h3 id="选项操作">选项操作</h3>
+<pre><code class="language-python">from selenium.webdriver.chrome.options import Options
+o = Options()
+
+browser = webdriver.Chrome(options=o)
+</code></pre>
+<pre><code class="language-python">o.set_headless()          #设置启动无界面化
+o.binary_location(value)  #设置chrome二进制文件位置
+o.add_argument(arg)               #添加启动参数
+o.add_extension(path)                #添加指定路径下的扩展应用
+o.add_encoded_extension(base64)      #添加经过Base64编码的扩展应用
+o.add_experimental_option(name,value)         #添加实验性质的选项
+o.debugger_address(value)                #设置调试器地址 
+o.to_capabilities()                    #获取当前浏览器的所有信息
+------------------------------------------------------------------------------
+o.add_experimental_option('excludeSwitches', ['enable-automation'])#开发者模式
+o.add_argument('--disable-blink-features=AutomationControlled') #防止检测
+o.add_argument('--window-size=600,600') #设置窗口大小
+o.add_experimental_option(&quot;detach&quot;, True) #不自动关闭窗口
+o.add_argument('--incognito') #无痕模式
+ o.add_argument('--disable-infobars') #去掉chrome正受到自动测试软件的控制的提示（高版本 Chromium 不再支持禁用信息栏）
+o.add_argument('user-agent=&quot;XXXX&quot;') #添加请求头
+o.add_argument(&quot;--proxy-server=http://200.130.123.43:3456&quot;)#代理服务器访问
+o.add_experimental_option(&quot;prefs&quot;,{&quot;profile.managed_default_content_settings.images&quot;: 2}) #禁止加载图片
+o.add_experimental_option('prefs',
+{'profile.default_content_setting_values':{'notifications':2}}) #禁用浏览器弹窗
+o.add_argument('blink-settings=imagesEnabled=false')  #禁止加载图片
+o.add_argument('lang=zh_CN.UTF-8') #设置默认编码为utf-8
+o.add_extension(create_proxyauth_extension(
+           proxy_host='host',
+           proxy_port='port',
+           proxy_username=&quot;username&quot;,
+           proxy_password=&quot;password&quot;
+       ))# 设置有账号密码的代理
+o.add_argument('--disable-gpu')  # 这个属性可以规避谷歌的部分bug
+o.add_argument('--disable-javascript')  # 禁用javascript
+o.add_argument('--hide-scrollbars')  # 隐藏滚动条
+o.binary_location=r&quot;C:\Users\Administrator\AppData\Local\Google\Chrome\Application&quot; #指定浏览器位置
+o.add_argument('--no-sandbox')  #解决DevToolsActivePort文件不存在的报错
+
+</code></pre>
+<h3 id="框架操作frameiframe">框架操作(Frame/IFrame)</h3>
+<pre><code class="language-python">from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
+c=webdriver.Chrome()
+c.implicitly_wait(10)
+c.get('https://hao.360.com/?a1004')
+#ss=c.find_element(By.CLASS_NAME,'NEWS_FEED_VIDEO_1595850774217HPA70')#不容易找到标签
+c.switch_to.frame(0)#索引
+c.switch_to.frame('NEWS_FEED_VIDEO_1595850774217HPA70-VideoIframe') #ID
+c.switch_to.frame('NEWS_FEED_VIDEO_1595850774217HPA70')#Class
+c.switch_to.frame(c.find_element_by_tag_name(&quot;iframe&quot;))#标签
+time.sleep(3)
+c.close()
+c.quit()
+</code></pre>
+<p>如果我们遍历到最后了如何返回主框架了，可以这样做，如下所示：</p>
+<pre><code class="language-python">c.switch_to.default_content()
+</code></pre>
+<p>这样就可以回到主框架继续进行操作了。如果我们由里往外遍历的话，那么可以这样来做，如下：</p>
+<pre><code class="language-python">c.switch_to.parent_frame()
+</code></pre>
+<h3 id="alert">Alert</h3>
+<p>在弹窗处理中，我们会遇到三种情况，如下：</p>
+<p>浏览器弹出框<br>
+新窗口弹出框<br>
+人为弹出框</p>
+<ol>
+<li>浏览器弹出框</li>
+</ol>
+<p>首先说说浏览器弹出框，想必大家对JavaScript中的Alert，Confirm，Prompt应该不是很陌生，就是弹出框，确认框，输入框；基本方法我们来看下，如下：</p>
+<pre><code class="language-python">from selenium.webdriver.common.alert import Alert
+c=webdriver.Chrome()
+c.implicitly_wait(10)
+c.get('https://www.baidu.com')
+a1=Alert(c)
+a1.accept() #确定
+a1.dismiss() #取消
+a1.authenticate(username,password) #用户身份验证
+a1.send_keys('') #输入文本或按键
+a1.text  #获取弹窗内容
+</code></pre>
+<p>这里我们应对每种情况它上面的方法的对应位置都是会有所变化的，所以我们需要根据具体情况来进行操作，而且还可以使用另一种方法，如下：</p>
+<pre><code class="language-python">c=webdriver.Chrome()
+c.implicitly_wait(10)
+c.get('https://www.baidu.com')
+a1=c.switch_to_alert()
+a1.accept() #确定
+a1.dismiss() #取消
+a1.authenticate(username,password) #用户身份验证
+a1.send_keys('') #输入文本或按键
+a1.text  #获取弹窗内容
+</code></pre>
+<p>注：该类方法必须在有弹框的情况下才有作用，如没有会报错。</p>
+<ol start="2">
+<li>新窗口弹出框</li>
+</ol>
+<p>上面就是浏览器弹出框的处理方法了，如果是新窗口弹出的话那么就不一样了，我们需要通过句柄来定位，前面我们提到过这两个方法。下面我们来看看它们的具体用法，如下：</p>
+<pre><code class="language-python">from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
+c=webdriver.Chrome()
+c.implicitly_wait(10)
+c.get('https://www.baidu.com')
+kw1=c.find_element(By.ID,'kw')
+tj=c.find_element(By.ID,'su')
+hwnd=c.window_handles #所有窗口句柄
+for h in hwnd:
+   if h !=c.current_window_handle:  #如果句柄不是当前窗口句柄则切换                          c.switch_to_window(h)  #切换窗口
+   else:
+       print('无需切换窗口') 
+time.sleep(3)
+c.close()
+c.quit()
+</code></pre>
+<p>注：如果有多个窗口，当你关闭了当前窗口想切换到另一个窗口，你需要把没关闭的窗口切换成当前活动窗口，因为Selenium是不会为你做这件事的。</p>
+<ol start="3">
+<li>人为弹出框</li>
+</ol>
+<p>这类弹出框是我们自己开发的，一般都是使用Div包裹一些其它的元素标签然后形成一个整体，当我们触发某个事件的时候就会出现，否则消失。这种弹出框使用我们的众多Find前缀的方法就能遍历到，很方便，这里不一一细说。</p>
+<h3 id="判断">判断</h3>
+<p>在Selenium中我们在做自动化测试时常无法判断一个元素是否真的显示出来了，因此会各种报错，接下来我们对这些操作进行判断，如果显示出了我们预期的值，那么就进行下一步操作，否则就关闭或者暂停几秒然后再判断，这里我要Selenium中的一个模块-----Expected_Conditions，简称为EC，如下所示：</p>
+<pre><code class="language-python">from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+import time
+c=webdriver.Chrome()
+c.implicitly_wait(10)
+c.get('https://baidu.com')
+t=EC.title_is('百度一下，你就知道')
+print(t(c))
+time.sleep(3)
+c.close()
+c.quit()
+</code></pre>
+<p>这里其实就是判断当前页面的标题是否是我们给定的文本，可以看出这里为True，说明是。</p>
+<p>其它方法，如下所示：</p>
+<pre><code class="language-python">EC.title_contains('')(c)#判断页面标题是否包含给定的字符串
+EC.presence_of_element_located('')(c) #判断某个元素是否加载到dom树里，该元素不一定可见
+EC.url_contains('')(c) #判断当前url是否包含给定的字符串
+EC.url_matches('')(c) #匹配URL
+EC.url_to_be('')(c)  #精确匹配
+EC.url_changes('')(c) #不完全匹配
+EC.visibility_of_element_located('')(c) #判断某个元素是否可见,可见代表元素非隐藏元素
+EC.visibility_of('')(c)   #跟上面一样，不过是直接传定位到的element
+EC.presence_of_all_elements_located('')(c) #判断是否至少有1个元素存在于dom树中
+EC.visibility_of_any_elements_located('')(c) #判断是否至少一个元素可见，返回列表
+EC.visibility_of_all_elements_located('')(c) #判断是否所有元素可见，返回列表
+EC.text_to_be_present_in_element('')(c) #判断元素中的text是否包含了预期的字符串
+EC.text_to_be_present_in_element_value('')(c)#判断元素中value属性是否包含预期的字符串
+EC.frame_to_be_available_and_switch_to_it('')(c) # 判断该frame是否可以switch进去
+EC.invisibility_of_element_located('')(c) #判断某个元素是否不存在于dom树或不可见
+EC.element_to_be_clickable('')(c) #判断某个元素中是否可见并且可点击
+EC.staleness_of('')(c)  #等某个元素从dom树中移除
+EC.element_to_be_selected('')(c)  #判断某个元素是否被选中了,一般用在下拉列表
+EC.element_located_to_be_selected('')(c) #判断元组中的元素是否被选中
+EC.element_selection_state_to_be('')(c) #判断某个元素的选中状态是否符合预期
+EC.element_located_selection_state_to_be('')(c) #跟上面一样，只不过是传入located
+EC.number_of_windows_to_be('')(c)  #判断窗口中的数字是否符合预期
+EC.new_window_is_opened('')(c)  #判断新的窗口是否打开
+EC.alert_is_present('')(c)  #判断页面上是否存在alert
+</code></pre>
+<h3 id="选择">选择</h3>
+<pre><code class="language-python">from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import Select
+import time
+c=webdriver.Chrome()
+c.implicitly_wait(10)
+c.get('http://www.juliwz.cn/forum.php')
+s=Select(c.find_element_by_id('ls_fastloginfield'))#实例化
+res=s.all_selected_options#全部选中子项
+res1=s.options#全部子项
+print(res)
+print(res1)
+time.sleep(3)
+c.close()
+c.quit()
+</code></pre>
+<p>Select里面的方法也是相当多的，如下：</p>
+<pre><code class="language-python">s.first_selected_option  #第一个选中的子项
+s.select_by_index(index) #根据索引选择
+s.select_by_value(value)   #根据值来选择
+s.select_by_visible_text(text)  #根据选项可见文本
+s.deselect_by_index(index)   #根据索引来取消选择
+s.deselect_by_value(value)   #根据值来取消选择
+s.deselect_by_visible_text(text)  #根据可见文本来取消选择
+s.deselect_all()                #取消所有选择
+</code></pre>
+<h3 id="显示等待和隐式等待">显示等待和隐式等待</h3>
+<p>显示等待就是浏览器在我们设置的时间内不断寻找，等到元素后才继续执行，如果没在规定时间内找到，也会抛异常；而隐式等待则是我们设置时间，然后程序去找元素，期间会不断刷新页面，到了时间仍然没找到就抛异常。这里有个常用的模块专门用来实现显示等待和隐式等待的，它就是”wait“。如下：</p>
+<pre><code class="language-python">from selenium.webdriver.support.ui import WebDriverWait
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
+c=webdriver.Chrome()
+c.get('https://www.baidu.com/')
+su=WebDriverWait(c,10).until(lambda x:x.find_element_by_id('su')) 
+su.location_once_scrolled_into_view
+print(su.get_attribute('value'))
+time.sleep(3)
+c.close()
+c.quit()
+</code></pre>
+<p>隐式等待很简单，就一行代码，如下：</p>
+<pre><code class="language-python">c.implicitly_wait(10)
+</code></pre>
+<p>它的等待时间适用于全局的环境，也就是任何地方找不到某个元素，它都将发挥作用，如果找得到，则不会产生作用。</p>
+<hr>
+<p>摘抄自：<a href="https://zhuanlan.zhihu.com/p/343948620">Selenium超级详细的教程</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[常用加密和编码结果的特征小总结]]></title>
+        <id>https://blog.diyworld.me/post/GrXLFXHRK/</id>
+        <link href="https://blog.diyworld.me/post/GrXLFXHRK/">
+        </link>
+        <updated>2022-09-06T07:05:20.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#md5">MD5</a></li>
+<li><a href="#16%E4%BD%8Dmd5">16位MD5</a></li>
+<li><a href="#sha1">SHA1</a></li>
+<li><a href="#sha256">SHA256</a></li>
+<li><a href="#sha384">SHA384</a></li>
+<li><a href="#sha512">SHA512</a></li>
+<li><a href="#url%E7%BC%96%E7%A0%81">URL编码</a></li>
+<li><a href="#base64%E7%BC%96%E7%A0%81">BASE64编码</a></li>
+<li><a href="#unescape%E7%BC%96%E7%A0%81">Unescape编码</a></li>
+<li><a href="#aes%E5%8A%A0%E5%AF%86">AES加密</a></li>
+<li><a href="#%E5%B8%B8%E8%A7%81%E5%8A%A0%E5%AF%86%E5%BD%A2%E5%BC%8F">常见加密形式</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="md5">MD5</h2>
+<p>加密结果是32位的数字加小写字母组合</p>
+<h2 id="16位md5">16位MD5</h2>
+<p>加密结果16位数字加小写字母组合</p>
+<h2 id="sha1">SHA1</h2>
+<p>加密结果是40位数字加小写字母组合</p>
+<h2 id="sha256">SHA256</h2>
+<p>加密结果是64位数字加小写字母组合</p>
+<h2 id="sha384">SHA384</h2>
+<p>加密结果是96位数字加小写字母组合</p>
+<h2 id="sha512">SHA512</h2>
+<p>加密结果是128位数字加小写字母组合</p>
+<h2 id="url编码">URL编码</h2>
+<ul>
+<li>空格-%20</li>
+<li>0 ~ 9 - %30 ~ %39</li>
+<li>abcdefghijklmnopqrstuvwxyz-%61%62%63%64%65%66%67%68%69%6A%6B%6C%6D%6E%6F%70%71%72%73%74%75%76%77%78%79%7A</li>
+</ul>
+<h2 id="base64编码">BASE64编码</h2>
+<p>密文长度随明文长度变化，密文由数字，大小写字母，和字符组成，常会出现==，+，=</p>
+<h2 id="unescape编码">Unescape编码</h2>
+<ul>
+<li>abcd -&gt; %u6261%u6463%u0a0d%u0000
+<ul>
+<li>%u0000表示明文长度为偶数</li>
+<li>%u+4位数字表示两个明文字符</li>
+</ul>
+</li>
+<li>abcde -&gt; %u6261%u6463%u0d65%u000a
+<ul>
+<li>%u000a 即最后密文端表示明文长度为奇数</li>
+<li>2x2+1=5</li>
+</ul>
+</li>
+</ul>
+<h2 id="aes加密">AES加密</h2>
+<p>AES加密由加密模式，填充，数据块，密码，偏移量，输出，字符集组成：</p>
+<p>解密是需要，密码，偏移量，填充方式，数据块这四个值，后两者可能性有限可以手工测试，但前两者是加密者设置的。</p>
+<p>判断：由于输出结果是基于base64或hex,所以可以通过base64和hex解密结果判断是否是AES加密：</p>
+<h2 id="常见加密形式">常见加密形式</h2>
+<p>直接加密，带salt，带密码，带偏移量，带位数的，带模式，带干扰，自定义组合的。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Git 笔记]]></title>
+        <id>https://blog.diyworld.me/post/JzPKfY7vF/</id>
+        <link href="https://blog.diyworld.me/post/JzPKfY7vF/">
+        </link>
+        <updated>2022-08-26T18:32:50.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#git-reset">git reset</a>
+<ul>
+<li><a href="#%E5%9B%9E%E6%BB%9A%E4%BB%A3%E7%A0%81">回滚代码</a></li>
+<li><a href="#%E8%AF%AF%E5%88%A0%E6%81%A2%E5%A4%8D">误删恢复</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4">基本命令</a>
+<ul>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7">设置用户</a></li>
+<li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%80%E4%B8%AAgit%E4%BB%93%E5%BA%93">初始化一个Git仓库</a></li>
+<li><a href="#%E4%BB%93%E5%BA%93%E5%BD%93%E5%89%8D%E7%9A%84%E7%8A%B6%E6%80%81%E4%BB%A5%E5%8F%8A%E4%B8%8B%E4%B8%80%E6%AD%A5%E7%9A%84%E6%8F%90%E7%A4%BA">仓库当前的状态以及下一步的提示</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E6%96%87%E4%BB%B6%E5%88%B0git%E4%BB%93%E5%BA%93">添加文件到Git仓库</a></li>
+<li><a href="#%E6%B7%BB%E5%8A%A0%E8%BF%9C%E7%A8%8B%E5%BA%93">添加远程库</a></li>
+<li><a href="#%E6%8F%90%E4%BA%A4%E5%88%B0%E8%BF%9C%E7%A8%8B%E5%BA%93">提交到远程库</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4%E8%BF%9C%E7%A8%8B%E5%BA%93">删除远程库</a></li>
+<li><a href="#%E5%88%86%E6%94%AF">分支</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="git-reset">git reset</h2>
+<ul>
+<li><code>git reset</code> ：回滚到某次提交。</li>
+<li><code>git reset --soft</code>：此次提交之后的修改会被退回到暂存区。</li>
+<li><code>git reset --hard</code>：此次提交之后的修改不做任何保留，<code>git status</code> 查看工作区是没有记录的。</li>
+</ul>
+<h3 id="回滚代码">回滚代码</h3>
+<p>如果需要删除的 commit 是最新的，那么可以通过 <code>git reset</code> 命令将代码回滚到之前某次提交的状态，但一定要将现有的代码做好备份，否则回滚之后这些变动都会消失。具体操作如下：</p>
+<pre><code class="language-scss">git log // 查询要回滚的 commit_id
+
+git reset --hard commit_id // HEAD 就会指向此次的提交记录
+
+git push origin HEAD --force // 强制推送到远端
+</code></pre>
+<h3 id="误删恢复">误删恢复</h3>
+<p>如果回滚代码之后发现复制错了 commit_id，或者误删了某次 commit 记录，也可以通过下方代码恢复：</p>
+<pre><code class="language-bash">git relog // 复制要恢复操作的前面的 hash 值
+
+git reset --hard hash // 将 hash 换成要恢复的历史记录的 hash 值
+</code></pre>
+<p>注意：删除中间某次提交时最好不要用 <code>git reset</code> 回退远程库，因为之后其他人提交代码时用 <code>git pull</code> 也会把自己的本地仓库回退到之前的版本，容易出现差错进而增加不必要的工作量。</p>
+<h2 id="基本命令">基本命令</h2>
+<h3 id="设置用户">设置用户</h3>
+<pre><code>git config --global user.name &quot;Your Name&quot;
+git config --global user.email &quot;email@example.com&quot;
+</code></pre>
+<h3 id="初始化一个git仓库">初始化一个Git仓库</h3>
+<pre><code> git init
+</code></pre>
+<h3 id="仓库当前的状态以及下一步的提示">仓库当前的状态以及下一步的提示</h3>
+<pre><code>git status
+</code></pre>
+<h3 id="添加文件到git仓库">添加文件到Git仓库</h3>
+<ol>
+<li>使用命令<code>git add &lt;file&gt;</code>，注意，可反复多次使用，添加多个文件；</li>
+</ol>
+<p>​	<code>git add .</code>添加当前目录下的所有文件；</p>
+<ol start="2">
+<li>使用命令<code>git commit</code>；</li>
+</ol>
+<h3 id="添加远程库">添加远程库</h3>
+<pre><code>git clone https://example.com/example.git 
+</code></pre>
+<h3 id="提交到远程库">提交到远程库</h3>
+<pre><code>git push origin [branches]
+</code></pre>
+<h3 id="删除远程库">删除远程库</h3>
+<p>如果添加的时候地址写错了，或者就是想删除远程库，可以用<code>git remote rm &lt;name&gt;</code>命令。使用前，建议先用<code>git remote -v</code>查看远程库信息：</p>
+<pre><code>git remote -v
+origin  git@github.com:michaelliao/learn-git.git (fetch)
+origin  git@github.com:michaelliao/learn-git.git (push)
+</code></pre>
+<p>然后，根据名字删除，比如删除<code>origin</code>：</p>
+<pre><code>git remote rm origin
+</code></pre>
+<p>此处的“删除”其实是解除了本地和远程的绑定关系，并不是物理上删除了远程库。远程库本身并没有任何改动。要真正删除远程库，需要登录到GitHub，在后台页面找到删除按钮再删除。</p>
+<h3 id="分支">分支</h3>
+<ul>
+<li>
+<p>创建分支</p>
+<pre><code>git branch [branch name]
+</code></pre>
+</li>
+<li>
+<p>查看分支</p>
+<pre><code>git branch 
+</code></pre>
+</li>
+<li>
+<p>切换分支</p>
+<pre><code>git checkout [branch name]
+</code></pre>
+</li>
+</ul>
+<p>​	文件会直接从 <code>master</code> 分支复制过来</p>
+<ul>
+<li>
+<p>创建并切换分支</p>
+<pre><code>git checkout -b [branch name]
+</code></pre>
+</li>
+<li>
+<p>删除分支</p>
+<pre><code>git branch -d [branch name]
+</code></pre>
+<p>强制删除</p>
+<pre><code>git branch -D [branch name]
+</code></pre>
+<hr>
+<p>视频教程:<br>
+<a href="https://www.bilibili.com/video/BV15h411f74h?vd_source=06a322702289a4ef5e634eba1c033644">git合并多个commit</a><br>
+<a href="https://www.bilibili.com/video/BV1r3411F7kn?vd_source=06a322702289a4ef5e634eba1c033644">Git工作流和核心原理 | GitHub基本操作 | VS Code里使用Git和关联GitHub</a></p>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[给 IP 配置SSL证书]]></title>
+        <id>https://blog.diyworld.me/post/9E_hTnVEE/</id>
+        <link href="https://blog.diyworld.me/post/9E_hTnVEE/">
+        </link>
+        <updated>2022-08-23T11:01:58.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E8%8E%B7%E5%8F%96%E8%AF%81%E4%B9%A6">获取证书</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85%E8%AF%81%E4%B9%A6">安装证书</a>
+<ul>
+<li><a href="#%E6%89%8B%E5%8A%A8%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">手动修改配置文件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<blockquote>
+<p>在用宝塔申请SSL证书的时候发现不支持IP申请，在网上找了一圈，发现可以通过 ZeroSSL 来申请证书并手动安装上。</p>
+</blockquote>
+<h2 id="获取证书">获取证书</h2>
+<p>去 <a href="zerossl.com">ZeroSSL</a> 官网注册,并申请证书，没啥难度，一笔带过了。</p>
+<h2 id="安装证书">安装证书</h2>
+<p>貌似这样设置的 SSL 证书并不起作用。</p>
+<figure data-type="image" tabindex="1"><img src="https://blog.diyworld.me/post-images/1661252985459.png" alt="" loading="lazy"></figure>
+<h3 id="手动修改配置文件">手动修改配置文件</h3>
+<p>在 <code>/www/server/nginx/conf</code> 目录下新建一个 <code>cert</code> 文件夹来存放证书</p>
+<p>将 <code>ca_bundle.crt</code> <code>certificate.crt</code> 合并为 <code>certificate.crt</code> 。<br>
+即打开<code>certificate.crt</code> ，然后将 <code>ca_bundle.crt</code> 的内容复制粘贴放在后面。</p>
+<p>打开 宝塔-&gt;网站-&gt;设置-&gt;配置文件，将下面几行粘贴进去即可</p>
+<pre><code>    listen               443 ssl;                       #记得打开443端口
+    ssl_prefer_server_ciphers  on;
+    ssl_certificate      cert/certificate.crt; #证书文件的路径
+    ssl_certificate_key  cert/private.key; #证书文件的路径
+    ssl_session_cache   shared:SSL:1m;  
+    ssl_session_timeout 5m;  
+    ssl_ciphers         HIGH:!aNULL:!MD5; 
+</code></pre>
+<p>之后回到软件商店找到 Nginx 重载配置即可。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Ubuntu 下的磁盘分区、挂载、根目录扩容]]></title>
+        <id>https://blog.diyworld.me/post/hNDjscUGr/</id>
+        <link href="https://blog.diyworld.me/post/hNDjscUGr/">
+        </link>
+        <updated>2022-08-18T08:39:49.000Z</updated>
+        <content type="html"><![CDATA[<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%88%86%E5%8C%BA">分区</a>
+<ul>
+<li><a href="#%E8%BF%9B%E5%85%A5-fdisk-%E5%88%86%E5%8C%BA%E5%B7%A5%E5%85%B7">进入 <code>fdisk</code> 分区工具。</a></li>
+</ul>
+</li>
+<li><a href="#%E6%89%A9%E5%AE%B9">扩容</a>
+<ul>
+<li><a href="#%E6%8C%82%E8%BD%BD%E5%88%B0%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95%E5%AE%9E%E7%8E%B0%E6%89%A9%E5%AE%B9">挂载到指定目录实现扩容</a>
+<ul>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98">设置开机自动挂载磁盘</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BB%99%E6%8C%82%E8%BD%BD%E5%88%B0%E6%A0%B9%E7%9B%AE%E5%BD%95%E7%9A%84%E9%80%BB%E8%BE%91%E5%8D%B7%E6%89%A9%E5%AE%B9">给挂载到根目录的逻辑卷扩容</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<br>
+这里是基于 <code>Ubuntu 22.04.1</code>，操作前一定要保存快照！</p>
+<p>关于相关知识的解释   <a href="https://www.cnblogs.com/lijiaman/p/12885649.html">Linux 物理卷(PV)、逻辑卷(LV)、卷组(VG)管理</a>。</p>
+<figure data-type="image" tabindex="1"><img src="https://blog.diyworld.me/post-images/1660814697884.png" alt="这个图不错" loading="lazy"></figure>
+<p>我在 VMware 上安装 Ubuntu 忘记修改默认的硬盘大小，到后来不够用了，所以又增加了64G，并根据网上教程琢磨出了怎么对其扩容。</p>
+<p>步骤都是亲身实践过，成功率应该不小。</p>
+<p>我在网上找教程的时候，全是一大堆复制来复制去的垃圾文章，各种失败，最终根据不多的有用教程整理出了这篇文章。</p>
+<h2 id="分区">分区</h2>
+<p>执行 <code>df -h</code> 查看系统存储空间使用情况</p>
+<pre><code>```bash
+root@diyworld:~# df -h
+Filesystem                         Size  Used Avail Use% Mounted on
+tmpfs                              390M  1.6M  388M   1% /run
+/dev/mapper/ubuntu--vg-ubuntu--lv  9.8G  3.8G  5.5G  41% /  #逻辑卷只有不到10G
+tmpfs                              2.0G   16K  2.0G   1% /dev/shm
+tmpfs                              5.0M     0  5.0M   0% /run/lock
+/dev/sda2                          1.8G  126M  1.5G   8% /boot
+tmpfs                              390M  4.0K  390M   1% /run/user/1000
+```
+</code></pre>
+<p>在新增加磁盘后执行  <code>fdisk -l</code></p>
+<pre><code>```bash
+root@diyworld:~# fdisk -l
+GPT PMBR size mismatch (41943039 != 134217727) will be corrected by write.
+
+Disk /dev/sda: 64 GiB, 68719476736 bytes, 134217728 sectors
+Disk model: VMware Virtual S
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: D3C7888D-E2AE-44A9-A5AC-44D49372AF1C
+
+Device       Start      End  Sectors  Size Type
+/dev/sda1     2048     4095     2048    1M BIOS boot
+/dev/sda2     4096  3719167  3715072  1.8G Linux filesystem
+/dev/sda3  3719168 41940991 38221824 18.2G Linux filesystem
+
+Disk /dev/mapper/ubuntu--vg-ubuntu--lv: 10 GiB, 10737418240 bytes, 20971520 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+```
+</code></pre>
+<p>可以看到新加的 Disk /dev/sda: 64 GiB 以及下面的分区 <code>/dev/sda1</code> <code>/dev/sda2</code> <code>/dev/sda3</code> ，但这几个分区加起来明显不够 64GB，所以需要添加分区。</p>
+<h3 id="进入-fdisk-分区工具">进入 <code>fdisk</code> 分区工具。</h3>
+<pre><code class="language-bash">root@diyworld:~# fdisk /dev/sda
+
+Welcome to fdisk (util-linux 2.37.2).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+GPT PMBR size mismatch (41943039 != 134217727) will be corrected by write.
+This disk is currently in use - repartitioning is probably a bad idea.
+It's recommended to umount all file systems, and swapoff all swap
+partitions on this disk.
+
+
+Command (m for help): 
+
+</code></pre>
+<ol>
+<li>
+<p>输入“n”，按“Enter”，开始新建分区。</p>
+<pre><code class="language-bash">Partition number (4-128, default 4):
+</code></pre>
+</li>
+<li>
+<p>以分区编号选择“4”为例，输入主分区编号“4”，按“Enter”。</p>
+<pre><code class="language-bash">First sector (41940992-134217694, default 41940992): 
+</code></pre>
+</li>
+<li>
+<p>输入新分区的起始磁柱编号，如设置默认值，按“Enter”。本步骤中使用默认起始磁柱编号为例。</p>
+<pre><code class="language-bash">Last sector, +/-sectors or +/-size{K,M,G,T,P} (41940992-134217694, default 134217694): 
+</code></pre>
+</li>
+<li>
+<p>输入新分区的截止磁柱编号，按“Enter”。本步骤中使用默认截止磁柱编号为例。</p>
+<pre><code class="language-bash">Created a new partition 4 of type 'Linux filesystem' and of size 44 GiB.
+</code></pre>
+</li>
+<li>
+<p>输入“p”，按“Enter”，查看新建分区。回显类似如下信息：</p>
+<pre><code class="language-bash">Command (m for help): p
+Disk /dev/sda: 64 GiB, 68719476736 bytes, 134217728 sectors
+Disk model: VMware Virtual S
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: D3C7888D-E2AE-44A9-A5AC-44D49372AF1C
+
+Device        Start       End  Sectors  Size Type
+/dev/sda1      2048      4095     2048    1M BIOS boot
+/dev/sda2      4096   3719167  3715072  1.8G Linux filesystem
+/dev/sda3   3719168  41940991 38221824 18.2G Linux filesystem
+/dev/sda4  41940992 134217694 92276703   44G Linux filesystem
+</code></pre>
+<p>可以看到新的 <code>/dev/sda4</code> 分区。</p>
+</li>
+<li>
+<p>输入“w”，按“Enter”，将分区结果写入分区表中。</p>
+<blockquote>
+<p>如果之前分区操作有误，请输入“q”，则会退出fdisk分区工具，之前的分区结果将不会被保留。</p>
+</blockquote>
+<pre><code class="language-bash">Command (m for help): w
+The partition table has been altered.
+Syncing disks.
+</code></pre>
+<p>表示分区创建完成。</p>
+</li>
+<li>
+<p>执行命令 <code>partprobe</code>，将新的分区表变更同步至操作系统。</p>
+</li>
+</ol>
+<h2 id="扩容">扩容</h2>
+<p>接下来分为两种扩容方式：挂载到指定目录实现扩容，给挂载到根目录的逻辑卷扩容。</p>
+<h3 id="挂载到指定目录实现扩容">挂载到指定目录实现扩容</h3>
+<ol>
+<li>
+<p>执行以下命令，设置新建分区文件系统格式。<br>
+以“ext4” 文件格式为例：</p>
+<pre><code class="language-bash">mkfs -t ext4 /dev/sda4
+</code></pre>
+<blockquote>
+<p>设置xfs文件系统的操作与ext3或者ext4一样，命令为：mkfs -t xfs /dev/vda2</p>
+</blockquote>
+<p>格式化需要等待一段时间，请观察系统运行状态，若回显中进程提示为done，则表示格式化完成。</p>
+</li>
+<li>
+<p>执行以下命令，将新建分区挂载到需要增加空间的目录下，以“/opt”为例。</p>
+<pre><code class="language-bash">mount /dev/vda2 /opt
+</code></pre>
+<blockquote>
+<p>新增加的分区挂载到不为空的目录时，该目录下原本的子目录和文件会被隐藏，所以，新增的分区最好挂载到空目录或者新建目录。如确实要挂载到不为空的目录，可将该目录下的子目录和文件临时移动到其他目录下，新分区挂载成功后，再将子目录和文件移动回来。</p>
+</blockquote>
+</li>
+<li>
+<p>执行以下命令，查看挂载结果。</p>
+<pre><code class="language-bash">root@diyworld:~# df -TH
+Filesystem     Type      Size  Used Avail Use% Mounted on
+/dev/vda1      ext4       43G  2.0G   39G   5% /
+devtmpfs       devtmpfs  509M     0  509M   0% /dev
+tmpfs          tmpfs     520M     0  520M   0% /dev/shm
+tmpfs          tmpfs     520M  7.2M  513M   2% /run
+tmpfs          tmpfs     520M     0  520M   0% /sys/fs/cgroup
+tmpfs          tmpfs     104M     0  104M   0% /run/user/0
+/dev/vda2      ext4       43G   51M   40G   1% /opt
+</code></pre>
+</li>
+</ol>
+<h4 id="设置开机自动挂载磁盘">设置开机自动挂载磁盘</h4>
+<blockquote>
+<p>推荐使用UUID来配置自动挂载数据盘,磁盘的UUID（universally unique identifier）是Linux系统为磁盘分区提供的唯一的标识字符串。</p>
+</blockquote>
+<ol>
+<li>
+<p>执行如下命令，查询磁盘分区的UUID。<br>
+<code>blkid 磁盘分区</code><br>
+以查询磁盘分区 <code>/dev/sda4</code> 的UUID为例：</p>
+<pre><code class="language-bash">blkid /dev/sda4
+</code></pre>
+<p>回显类似如下信息：</p>
+<pre><code class="language-bash">root@diyworld:~# blkid /dev/sda4
+/dev/sda4: PARTUUID=&quot;918dd8ab-8991-3545-b80a-608784543283&quot;
+</code></pre>
+<p>表示 <code>/dev/sda4</code> 的UUID。</p>
+</li>
+<li>
+<p>执行以下命令，使用VI编辑器打开“fstab”文件。</p>
+<pre><code class="language-bash">vi /etc/fstab
+</code></pre>
+<p>按“i”，进入编辑模式。</p>
+<p>将光标移至文件末尾，按“Enter”，添加如下内容。</p>
+<pre><code class="language-bash">UUID=918dd8ab-8991-3545-b80a-608784543283 /opt      ext4 defaults     0   2
+</code></pre>
+<p>以内容上仅为示例，具体请以实际情况为准，参数说明如下：</p>
+<ul>
+<li>第一列为UUID，此处填写查询到的磁盘分区的UUID。</li>
+<li>第二列为磁盘分区的挂载目录，可以通过 <code>df -TH</code> 命令查询。</li>
+<li>第三列为磁盘分区的文件系统格式， 可以通过 <code>df -TH</code> 命令查询。</li>
+<li>第四列为磁盘分区的挂载选项，此处通常设置为defaults即可。</li>
+<li>第五列为Linux dump备份选项。
+<ul>
+<li>0表示不使用Linux dump备份。现在通常不使用dump备份，此处设置为0即可。</li>
+<li>1表示使用Linux dump备份。</li>
+</ul>
+</li>
+<li>第六列为fsck选项，即开机时是否使用fsck检查磁盘。
+<ul>
+<li>0表示不检验。</li>
+<li>挂载点为（/）根目录的分区，此处必须填写1。<br>
+根分区设置为1，其他分区只能从2开始，系统会按照数字从小到大依次检查下去。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>按“ESC”后，输入“:wq”，按“Enter”，保存设置并退出编辑器。</p>
+</li>
+</ol>
+<h3 id="给挂载到根目录的逻辑卷扩容">给挂载到根目录的逻辑卷扩容</h3>
+<ol>
+<li>
+<p>创建 PV</p>
+<pre><code class="language-bash">#pvcreate用于创建物理卷,可以使用磁盘直接创建物理卷，也可以使用磁盘分区创建物理卷
+    root@diyworld:~# pvcreate /dev/sda4
+    Physical volume &quot;/dev/sda4&quot; successfully created.
+</code></pre>
+</li>
+<li>
+<p>将新创建的PV加入VG中<br>
+通过lvs命令，得知根分区所属VG是 <code>ubuntu-vg</code></p>
+<pre><code class="language-bash">root@diyworld:~# lvs
+LV        VG        Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+ubuntu-lv ubuntu-vg -wi-ao---- 10.00g 
+</code></pre>
+</li>
+<li>
+<p>PV加入VG</p>
+<pre><code class="language-bash">root@diyworld:~# vgextend ubuntu-vg /dev/sda4
+Volume group &quot;ubuntu-vg&quot; successfully extended
+</code></pre>
+<p>PV加入VG后，查看一下VG的可用容量在 52G 左右，先记以下。</p>
+<pre><code class="language-bash">root@diyworld:~# vgs
+VG        #PV #LV #SN Attr   VSize   VFree  
+ubuntu-vg   2   1   0 wz--n- &lt;62.22g &lt;52.22g
+</code></pre>
+</li>
+<li>
+<p>扩容根分区<br>
+由于这里只有一个逻辑卷，如果有多个逻辑卷可以执行以下命令查看所挂载的目录</p>
+<pre><code class="language-bash"> root@diyworld:~# cat /etc/fstab | grep ubuntu-vg
+ # / was on /dev/ubuntu-vg/ubuntu-lv during curtin installation
+</code></pre>
+<p>可以看到 <code>ubuntu-vg</code> 挂载到了 <code>/</code> 根目录，那接下来就是对它扩容。</p>
+<p>语法格式 : lvextend [参数] 逻辑卷</p>
+<p>常用参数：<br>
+-L	指定逻辑卷的大小（容量单位）<br>
+-l	指定逻辑卷的大小（PE个数）</p>
+<p>这里的 <code>+52G</code> 就是前面让记一下的数，不能超过 <code>VFree</code>的大小。</p>
+<p>逻辑卷地址可以用 <code>lvscan</code> 命令查看。</p>
+<pre><code class="language-bash">root@diyworld:~# lvextend -L +52G /dev/ubuntu-vg/ubuntu-lv 
+Size of logical volume ubuntu-vg/ubuntu-lv changed from 10.00 GiB (2560 extents) to 62.00 GiB (15872 extents).
+Logical volume ubuntu-vg/ubuntu-lv successfully resized.
+
+</code></pre>
+</li>
+<li>
+<p>更新逻辑卷信息</p>
+<pre><code class="language-bash">root@diyworld:~# resize2fs /dev/ubuntu-vg/ubuntu-lv 
+    resize2fs 1.46.5 (30-Dec-2021)
+    Filesystem at /dev/ubuntu-vg/ubuntu-lv is mounted on /; on-line resizing    required
+    old_desc_blocks = 2, new_desc_blocks = 8
+    The filesystem on /dev/ubuntu-vg/ubuntu-lv is now 16252928 (4k) blocks long.
+</code></pre>
+</li>
+<li>
+<p>验证扩容后的容量</p>
+</li>
+</ol>
+<pre><code class="language-bash">    root@diyworld:~# df -Th
+    Filesystem                        Type   Size  Used Avail Use% Mounted on
+    tmpfs                             tmpfs  390M  1.6M  388M   1% /run
+    /dev/mapper/ubuntu--vg-ubuntu--lv ext4    61G  4.5G   54G   8% /
+    tmpfs                             tmpfs  2.0G   16K  2.0G   1% /dev/shm
+    tmpfs                             tmpfs  5.0M     0  5.0M   0% /run/lock
+    /dev/sda2                         ext4   1.8G  245M  1.4G  15% /boot
+    tmpfs                             tmpfs  390M  4.0K  390M   1% /run/user/1000
+</code></pre>
+<hr>
+<p>相关参考来源：<br>
+<a href="https://blog.51cto.com/u_11451275/3207840">实战 | Linux根分区扩容</a><br>
+<a href="https://support.huaweicloud.com/usermanual-dss/dss_01_2313.html">Linux系统盘扩容后处理（fdisk）</a></p>
+]]></content>
+    </entry>
+</feed>
